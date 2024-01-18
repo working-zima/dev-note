@@ -1,3 +1,3 @@
 # Table of contents
 
-* [frontend-survival](README.md)
+* [프론트 생존코스 10기](README.md)
