@@ -6,9 +6,9 @@
 
 ## Body
 
-- [1주차 프론트엔드 개발 환경](week1/README.md)
-  - [1. 개발 환경](week1/development-environment.md)
-  - [2. TypeScript](week1/typescript.md)
-  - [3. React](week1/react.md)
-  - [4. Testing Library](week1/testing-library.md)
-  - [5. Parcel & ESLint](week1/parcel-eslint)
+- [1주차 프론트엔드 개발 환경](/week01/README.md)
+  - [1. 개발 환경](/week01/development-environment.md)
+  - [2. TypeScript](/week01/typescript.md)
+  - [3. React](/week01/react.md)
+  - [4. Testing Library](/week01/testing-library.md)
+  - [5. Parcel & ESLint](/week01/parcel-eslint)
