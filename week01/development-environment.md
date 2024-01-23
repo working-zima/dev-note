@@ -287,9 +287,34 @@ cat .nvmrc
     `'@testing-library/jest-dom/extend-expect'` 설정 대신
     `jest-setup.js`파일에 `import '@testing-library/jest-dom'`를 추가해주세요.
 
-    [최신 버전 참고 문서](https://github.com/testing-library/jest-dom#usage)
+    ```javascript
+    module.exports = {
+      testEnvironment: 'jsdom',
+      setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+      transform: {
+        '^.+\\.(t|j)sx?$': [
+          '@swc/jest',
+          {
+            jsc: {
+              parser: {
+                syntax: 'typescript',
+                jsx: true,
+                decorators: true,
+              },
+              transform: {
+                react: {
+                  runtime: 'automatic',
+                },
+              },
+            },
+          },
+        ],
+      },
+      testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/dist/'],
+    };
+    ```
 
-    </aside>
+    [최신 버전 참고 문서](https://github.com/testing-library/jest-dom#usage)
 
 13. Parcel 설치
 
