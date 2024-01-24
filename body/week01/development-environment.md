@@ -116,6 +116,11 @@ cat .nvmrc
 
 ## TypeScript + React + Jest + ESLint + Parcel(번들러, 빌드 도구, 만능 도구) 개발 환경 세팅
 
+오래된 참고 자료:
+
+- [React + TypeScript + Parcel](https://github.com/ahastudio/CodingLife/tree/main/20211008/react)
+- [usestore-ts 세팅 예제](https://github.com/ahastudio/CodingLife/tree/main/20220726/react)
+
 1. 먼저, 적절한 작업 폴더를 준비합니다.
 
    ```bash

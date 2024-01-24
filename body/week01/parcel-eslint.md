@@ -169,6 +169,8 @@ npm start
 npm run lint && npm run check
 ```
 
+[야샬님의 eslintrc 설정 분석](./Appendix/eslintsrc-study.md)
+
 ### Parcel 실행시 오류 상황 발생
 
 어느날 Parcel을 실행하였는데, 아래와 같은 메시지와 함께 실행이 되지 않았습니다.
