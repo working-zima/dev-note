@@ -48,7 +48,7 @@ UI 테스트에 특화된 라이브러리입니다.
 본질에 집중하지 못하고 너무 많은 테스트 코드를 작성할 위험이 있다.  
 유지보수를 돕기 위해 테스트 코드를 작성하는데, 테스트 코드를 잘못 작성하면 오히려 유지보수를 저해할 수 있다.
 
-### 참고 영상:
+### 참고 영상
 
 [프론트엔드(Front-end)도 테스트해야 하나요?](https://www.youtube.com/watch?v=-kUmsKRmOnA)  
 [Mocking 때문에 테스트 코드를 작성하기 어렵나요](https://www.youtube.com/watch?v=RoQtNLl-Wko)
