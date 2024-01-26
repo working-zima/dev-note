@@ -68,8 +68,8 @@ const name = '홍길동';
 
 ## 타입 별칭과 인터페이스
 
-복잡한 오브젝트의 타입을 재사용하기 위해 타입을 정의할 수 있습니다.  
-`interface`가 가지는 대부분의 기능은 `type`에서도 동일하게 사용 가능합니다.  
+복잡한 오브젝트의 타입을 재사용하기 위해 타입을 정의할 수 있습니다.\
+`interface`가 가지는 대부분의 기능은 `type`에서도 동일하게 사용 가능합니다.\
 이 둘의 가장 핵심적인 차이는, 타입은 새 프로퍼티를 추가하도록 개방될 수 없는 반면, 인터페이스의 경우 항상 확장될 수 있다는 점입니다.
 
 ```typescript
@@ -110,7 +110,7 @@ function sub(x: number, y: number): string {
 
 ## Union Type
 
-여러 타입 중 하나입니다.  
+여러 타입 중 하나입니다.\
 예를 들어 `boolean`은 `true | false`라고 볼 수 있습니다.
 
 ```typescript
@@ -136,7 +136,7 @@ function fetchProducts({ category }: { category: Category }) {
 }
 ```
 
-레거시 환경 또는 코드 때문에 쓰지 않을 수 없습니다.  
+레거시 환경 또는 코드 때문에 쓰지 않을 수 없습니다.\
 `ReactNode` 같은 게 대표적입니다.
 
 ```typescript
@@ -271,12 +271,12 @@ function identity<Type>(arg: Type): Type {
 
 현실적으로 TypeScript를 쓰는 가장 큰 이유입니다.
 
-오래된 라이브러리의 경우 `d.ts` 파일만 따로 패키지로 제공됩니다.  
+오래된 라이브러리의 경우 `d.ts` 파일만 따로 패키지로 제공됩니다.\
 패키지 이름은 `@types/블라블라` 형태입니다.
 
 - [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)
 - [DefinitelyTyped/types](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types)
   → 전체 목록은 너무 많아서 GitHub 웹 페이지에서 다 볼 수도 없습니다.
 - [DefinitelyTyped/types/react](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react)
-  → React는 여기서 확인할 수 있습니다.  
+  → React는 여기서 확인할 수 있습니다.\
   React 18이 바로 나오고(`index.d.ts`), 이전 버전은 하위 폴더(디렉터리)로 따로 관리되고 있습니다.

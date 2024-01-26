@@ -16,7 +16,7 @@
 
 ### 노드 버전을 관리해야하는 이유
 
-개발자마다 서로 다른 노드 버전을 사용할 수 있기 때문에 버전을 변경하며 사용하야 하는 경우가 있습니다.
+개발자마다 서로 다른 노드 버전을 사용할 수 있기 때문에 버전을 변경하며 사용하야 하는 경우가 있습니다.\
 노드 설치 또는 버전 관리는 `nvm`과 `fnm` 등에서 기능을 제공하고 있습니다. 여기서는`fnm`으로 노드 버전을 관리해보겠습니다.
 
 ### fnm 설치
@@ -143,11 +143,11 @@ cat .nvmrc
    npm init -y
    ```
 
-4. 잊지 말고 `.gitignore` 파일을 작성합니다.  
+4. 잊지 말고 `.gitignore` 파일을 작성합니다.
     `node_modules`를 커밋하는 일을 미연에 방지합니다.
 
    ```bash
-   tooch gitignore
+   touch .gitignore
    ```
 
    `.gitignore` 파일에 Parcel 캐시 추가:
@@ -173,10 +173,6 @@ cat .nvmrc
    (주석 풀기)
 
    ```json
-   "jsx": "preserve"
-
-   // 또는
-
    "jsx": "react-jsx"
    ```
 
@@ -227,7 +223,7 @@ cat .nvmrc
 
    브라우저 환경에서 돌아가는 JavaScript 모듈 사용한 TypeScript 통합 React 프로젝트에 JavaScript 설정 파일로 작성된 XO 스타일 가이드를 npm으로 패키지 설치하게 됩니다.
 
-8. `.eslintrc.js` 파일을 적절히 수정한다.
+8. `.eslintrc.js` 파일을 적절히 수정한다.\
    아직 Jest를 설치하지 않았지만, 여기서 미리 `jest: true`를 잡아주면 좋다.
 
    ```json

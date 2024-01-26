@@ -6,9 +6,10 @@
 
 ### Zero Configuration
 
-- 특별한 설정 없이 바로 사용 가능한 빌드 도구입니다.  
-  단순히 파일만 합쳐주는 것이 아닌 변환까지 포함됩니다.  
+- 특별한 설정 없이 바로 사용 가능한 빌드 도구입니다.\
+  단순히 파일만 합쳐주는 것이 아닌 변환까지 포함됩니다.\
   내부적으로 SWC를 사용해 기존 도구보다 빠릅니다(ES Module을 적극 활용하는 Vite도 엄청나게 빠름).
+
 - 참고:
   - [Parcel - Blazing fast, zero configuration web application bundler](https://github.com/ahastudio/til/tree/main/parcel)
   - [Vite](https://github.com/ahastudio/til/tree/main/vite)
@@ -110,7 +111,7 @@ mkdir static
 
 #### 빌드 + 정적 서버 실행
 
-배포하고 싶다면 아래와 같이 실행합니다.  
+배포하고 싶다면 아래와 같이 실행합니다.\
 `dist`폴더에서 확인할 수 있습니다.
 
 ```bash
