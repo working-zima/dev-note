@@ -170,7 +170,7 @@ npm start
 npm run lint && npm run check
 ```
 
-[야샬님의 eslintrc 설정 분석](./Appendix/eslintsrc-study.md)
+[야샬님의 eslintrc 설정 분석](./appendix/eslintsrc-study.md)
 
 ### Parcel 실행시 오류 상황 발생
 
