@@ -12,3 +12,7 @@
 - React
 - Testing Library
 - Parcel & ESLint
+
+## 빠르게 시작하는 세팅 가이드
+
+[240122](./appendix/quick-setting-guide.md)

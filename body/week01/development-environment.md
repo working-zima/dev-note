@@ -96,7 +96,9 @@ fnm이 설정된 기본 버전으로 설정된 Node.js 버전을 현재 터미�
 
 ```bash
 mkdir my-project
+
 cd my-project
+
 fnm use default
 ```
 
