@@ -150,6 +150,14 @@ env: {
 },
 ```
 
+```json
+extends: [
+  'plugin:react/recommended',
+  'plugin:react/jsx-runtime',
+  'xo',
+],
+```
+
 ### `.eslintignore` 파일 작성
 
 ```json
@@ -187,7 +195,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: [
     '@testing-library/jest-dom/extend-expect',
-    './jest.setup',
   ],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', {
@@ -263,7 +270,7 @@ touch .parcelrc
 
 ```bash
 mkdir -p src/components
-touch index.html src/main.tsx src/App.tsx src/App.test.tsx src/components/Greeting.test.tsx src/components/Greeting.tsx
+touch index.html src/main.tsx src/main.test.tsx src/App.tsx src/App.test.tsx src/components/Greeting.test.tsx src/components/Greeting.tsx
 ```
 
 ## 기타

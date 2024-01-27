@@ -247,6 +247,16 @@ cat .nvmrc
    },
    ```
 
+    `plugin:react/jsx-runtime`을 추가합니다.
+
+      ```json
+    extends: [
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
+        'xo',
+    ],
+   ```
+
 9. 잊지 않고 `.eslintignore` 파일을 작성한다.
 
    ```json
@@ -329,6 +339,12 @@ cat .nvmrc
     ```
 
     [최신 버전 참고 문서](https://github.com/testing-library/jest-dom#usage)
+
+    jest.config.js 수정
+
+    ```javascript
+    setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+    ```
 
 13. Parcel 설치
 
