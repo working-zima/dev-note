@@ -15,4 +15,4 @@
 
 ## 빠르게 시작하는 세팅 가이드
 
-[240122](./appendix/quick-setting-guide.md)
+[240122](../../appendix/quick-setting-guide.md)

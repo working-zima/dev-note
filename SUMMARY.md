@@ -17,5 +17,5 @@
 
 ## APPENDIX
 
-- [Quick Setting Guide](body/week01/appendix/quick-setting-guide.md)
-- [Ignore Setting](body/week01//appendix/ignore-setting.md)
+- [Quick Setting Guide](appendix/quick-setting-guide.md)
+- [Ignore Setting](appendix/ignore-setting.md)
