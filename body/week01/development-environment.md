@@ -248,6 +248,8 @@ cat .nvmrc
    ```
 
     `plugin:react/jsx-runtime`을 추가합니다.
+    `react/jsx-runtime`은 React 17부터 소개된 새로운 JSX 변환 방식을 활용하는 플러그인입니다.\
+    JSX 변환을 위해 `react/jsx-runtime` 모듈을 사용하도록 `Babel`에 지시합니다.
 
       ```json
     extends: [
