@@ -1,5 +1,15 @@
 # 3. React
 
+## 학습 키워드
+
+- React란?
+- React 컴포넌트
+- React 리렌더링
+- IoC(Inversion of Control)
+- Library vs Framework
+
+## 참고 문서
+
 [React 공식문서](https://ko.legacy.reactjs.org/)\
 [React Beta 문서](https://react.dev/)\
 요즘 React 사용법을 다룬 문서. 베타 버전이고 완성도가 낮지만 (+ 한국어 버전이 없지만) 이것부터 읽는 걸 권장합니다.

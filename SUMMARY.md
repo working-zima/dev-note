@@ -12,5 +12,5 @@
   - [3. React](body/week01/react.md)
   - [4. Testing Library](body/week01/testing-library.md)
   - [5. Parcel & ESLint](body/week01/parcel-eslint.md)
-    - [Parcer](body/week01/parcel/parcel.md)
-    - [ESLint](body/week01/parcel/eslint.md)
+    - [Parcer](body/week01/parcel-eslint/parcel.md)
+    - [ESLint](body/week01/parcel-eslint/eslint.md)

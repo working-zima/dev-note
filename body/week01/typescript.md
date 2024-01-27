@@ -1,9 +1,31 @@
 # 2. TypeScript
 
-간단히 REPL을 쓰고 싶다면 ts-node를 실행하면 됩니다.
+## 학습 키워드
+
+- REPL
+- TypeScript
+  - Interface vs Type
+  - 타입 추론
+  - Union Type vs Intersection Type
+  - Optional Parameter
+
+## REPL
+
+간단히 `Read-Eval-Print Loop` 대화형 환경을 쓰고 싶다면 ts-node를 실행하면 됩니다.
 
 ```bash
 npx ts-node
+```
+
+이후 명령을 입력하면 그 명령을 읽고 해석하여 실행한 뒤 결과를 출력합니다.
+REPL 환경에서 나가고 싶다면 아래의 키 조합을 입력합니다.
+
+```bash
+Ctrl + D
+
+# 또는
+
+Ctrl + C
 ```
 
 ## 타입 지정

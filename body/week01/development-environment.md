@@ -1,5 +1,16 @@
 # 1. 개발 환경
 
+## 학습 키워드
+
+- Node.js
+- NPM(Node Package Manager)
+  - package.json / package-lock.json
+  - node_modules
+  - npx
+- ES Modules vs CommonJS
+
+## 개발 환경 세팅
+
 글을 읽기 전에 개발 환경 세팅은 언제든 바뀔 수 있다는 것을 알고 계셔야 합니다.\
 그렇기 때문에 앞으로 나오게 될 내용이 정상적으로 작동하지 않거나 효율적인 내용이 아닐 수 있습니다.\
 따라서 구체적인 내용보다는 전체적인 흐름을 파악한다는 느낌으로 읽으시는 것을 추천드립니다.
