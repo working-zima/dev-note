@@ -278,6 +278,11 @@ cat .nvmrc
 
 #### `.vscode/settings.json` 파일 작성
 
+```bash
+mkdir .vscode
+touch .vscode/settings.json
+```
+
 ```json
 {
   "editor.codeActionsOnSave": {
