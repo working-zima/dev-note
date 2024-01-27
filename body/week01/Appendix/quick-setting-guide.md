@@ -218,6 +218,25 @@ module.exports = {
 npm i -D parcel
 ```
 
+### 정적 파일을 복사하도록 도와주는 Parcel 리포터(reporter) 설치
+
+```bash
+npm i -D parcel-reporter-static-files-copy
+```
+
+### .parcelrc 파일 작성
+
+```bash
+touch .parcelrc
+```
+
+```json
+{
+  "extends": ["@parcel/config-default"],
+  "reporters": ["...", "parcel-reporter-static-files-copy"]
+}
+```
+
 ## `package.json` 수정
 
 ### `"main": "index.js"` 변경
