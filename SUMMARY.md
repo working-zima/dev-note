@@ -20,3 +20,4 @@
 - [1주차 추가 자료](appendix/README.md)
   - [Quick Setting Guide](appendix/quick-setting-guide.md)
   - [Ignore Setting](appendix/ignore-setting.md)
+  - [Build & Deploy](appendix/build-deploy.md)

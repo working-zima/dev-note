@@ -16,11 +16,9 @@
 
 ```bash
 # index.html로 띄우기
-
 npx parcel index.html
 
 # 포트 지정
-
 npx parcel index.html --port 8080
 ```
 
@@ -108,6 +106,8 @@ mkdir static
 ![refresh](../img/refresh.png)
 
 ### 빌드 + 정적 서버 실행
+
+[빌드, 배포란](../../../appendix/build-deploy.md)
 
 배포하고 싶다면 아래와 같이 실행합니다.\
 `dist`폴더에서 확인할 수 있습니다.
