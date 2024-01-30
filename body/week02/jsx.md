@@ -16,7 +16,9 @@
 
 JavaScript 코드 안에 마크업(HTML 코드)을 쉽게 작성하고 구조화하는 데 있습니다.
 
-## XML-like syntax extension to ECMAScript
+## Syntactic sugar
+
+> XML-like syntax extension to ECMAScript
 
 JSX(JavaScript XML)는 JavaScript 코드에서 XML과 유사한 문법을 사용하여 React 엘리먼트를 작성할 수 있게 하는 확장 문법입니다.\
 JSX는 XML처럼 작성된 부분을 `React.createElement`을 쓰는 JavaScript 코드로 변환합니다.\
@@ -318,6 +320,59 @@ Virtual DOM(VDOM)을 시각적으로 탐색하고 디버깅하는 데 사용됩�
 > “이 접근방식이 React의 **선언적 API**를 가능하게 합니다”
 
 VDOM이 무엇이고, 왜 쓰는지 안다면 활용할 수 있는 [최적화 기법](https://ko.reactjs.org/docs/optimizing-performance.html)이 존재함.
+
+#### 선언적 API
+
+어떤 작업을 수행하는 방법보다는 원하는 결과를 정의하는 방식으로 설계된 응용 프로그래밍 인터페이스를 나타냅니다.
+
+React 프레임워크에서의 JSX는 선언적 API의 예입니다.\
+JSX를 사용하면 UI의 최종 모양을 정의하고, React가 이를 어떻게 렌더링할지에 대한 구현 세부 사항은 React 라이브러리가 처리합니다.
+
+### key
+
+key는 React에서 리스트 아이템을 고유하게 식별하는 데 사용되는 특별한 속성입니다. 각각의 리스트 아이템은 key 속성을 가져야 하며, 이 값은 리스트 내에서 고유해야 합니다.
+
+#### React에서 리스트를 사용할 때 key는 권장되는 이유
+
+key를 사용하지 않을 경우 리스트의 아이템 순서가 변경될 때 React는 각각의 아이템을 완전히 새로 렌더링해야 합니다.\
+
+하지만 key를 사용하면 React는 아이템이 식별 가능하므로 변경된 아이템만 업데이트할 수 있습니다.
+
+만약 key를 사용하지 않는다면 Virtual DOM과 New Virtual DOM의 `2, 3, 4, 5`은 같은 값이지만 숫자가 다르기 때문에 모두 수정해야 합니다.
+
+```jsx
+// Virtual DOM
+
+1, 2, 3, 4, 5
+```
+
+```jsx
+// New Virtual DOM
+
+2, 3, 4, 5, 6
+```
+
+하지만 key를 가지고 있다면 순서가 바뀌더라도 같은 값임을 알기 때문에 1을 6으로 수정하는 것만으로 업데이트를 할 수 있습니다.
+
+### index를 key로 사용하면 안되는 이유
+
+index를 key로 사용하는 경우에는 React가 각각의 아이템을 식별하는 유일한 값이 index이기 때문에, 만약 아이템의 순서가 변경되면 React는 새로운 index를 가진 아이템으로 간주합니다.
+
+```jsx
+// Virtual DOM
+
+1, 2, 3, 4, 5
+```
+
+```jsx
+// New Virtual DOM
+
+2, 1, 3, 4, 5
+```
+
+따라서, index를 key로 사용하는 것은 특히 동적인 리스트에서 아이템이 추가되거나 삭제되는 상황에서 문제가 발생할 수 있습니다.
+
+고유한 key를 사용하면 React는 각 아이템을 정확하게 식별할 수 있어서 순서의 변경이 있더라도 효율적인 업데이트를 수행할 수 있습니다.
 
 ## 참고 자료
 
