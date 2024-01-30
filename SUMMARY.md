@@ -14,6 +14,8 @@
   - [5. Parcel & ESLint](body/week01/parcel-eslint.md)
     - [Parcer](body/week01/parcel-eslint/parcel.md)
     - [ESLint](body/week01/parcel-eslint/eslint.md)
+- [2주차 JSX](body/week02/README.md)
+  - [1. JSX](body/week02/jsx.md)
 
 ## APPENDIX
 
