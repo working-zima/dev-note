@@ -138,6 +138,7 @@ JSX 대신 `React.createElement`를 직접 사용해서 `React Element` 트리�
 
 ### JSX Runtime
 
+JSX Runtime은 React의 일부로 제공되는 라이브러리로서, 런타임에서 JSX 코드를 해석하고 `React.createElement` 호출로 변환합니다.\
 JSX Runtime은 _jsx란 함수를 직접 지원합니다.
 
 JSX 코드
@@ -171,6 +172,8 @@ function App() {
 ```
 
 17버전 변환된 JS 코드
+
+JSX를 변환하는 데 사용되는 jsx 함수를 `_jsx`로 별칭(alias)하여 현재 파일에서 사용할 수 있도록 가져오는 역할을 합니다.
 
 ```jsx
 // Inserted by a compiler (don't import it yourself!)
