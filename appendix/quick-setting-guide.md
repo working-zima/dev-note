@@ -106,6 +106,12 @@ npm i -D eslint
 npx eslint --init
 ```
 
+ESLint v8은 아직 Airbnb style guide를 지원하지 않기 때문에 Airbnb config 사용하는 경우(v7)을 설치
+
+```bash
+npm i -D eslint@7
+```
+
 ### eslint 선택지에서 아래의 항목 선택
 
 ```bash
