@@ -23,3 +23,4 @@
   - [Quick Setting Guide](appendix/quick-setting-guide.md)
   - [Ignore Setting](appendix/ignore-setting.md)
   - [Build & Deploy](appendix/build-deploy.md)
+- [2주차 추가 자료](appendix/airbnb-setting.md)

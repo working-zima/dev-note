@@ -1,4 +1,4 @@
-# 2주차 과제 ESLint 세팅 공부
+# 2주차 과제 버전 ESLint 세팅 공부
 
 ## package.json
 
@@ -294,3 +294,325 @@ ESLint는 `rules` 옵션으로 명시된 규칙을 `extends` 옵션을 통해서
 - "off" : 비활성화
 - "warn" : 경고
 - "error" : 오류
+
+```javascript
+// .eslintrc.js
+
+rules: {
+    indent: ['error', 2],
+    'no-trailing-spaces': 'error',
+    curly: 'error',
+    'brace-style': 'error',
+    'no-multi-spaces': 'error',
+    'space-infix-ops': 'error',
+    'space-unary-ops': 'error',
+    'no-whitespace-before-property': 'error',
+    'func-call-spacing': 'error',
+    'space-before-blocks': 'error',
+    'keyword-spacing': ['error', { before: true, after: true }],
+    'comma-spacing': ['error', { before: false, after: true }],
+    'comma-style': ['error', 'last'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'space-in-parens': ['error', 'never'],
+    'block-spacing': 'error',
+    'array-bracket-spacing': ['error', 'never'],
+    'object-curly-spacing': ['error', 'always'],
+    'key-spacing': ['error', { mode: 'strict' }],
+    'arrow-spacing': ['error', { before: true, after: true }],
+    'import/no-extraneous-dependencies': ['error', {
+      devDependencies: [
+        '**/*.test.js',
+        '**/*.test.jsx',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+      ],
+    }],
+    'import/extensions': ['error', 'ignorePackages', {
+      js: 'never',
+      jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
+    }],
+    'react/jsx-filename-extension': [2, {
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    }],
+    'react/prop-types': [2, { skipUndeclared: true }],
+    'react/require-default-props': 'off',
+    'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
+},
+```
+
+- `indent: ['error', 2]`\
+: 들여쓰기에 대한 규칙으로, 2칸으로 지정되어 있습니다.
+
+```javascript
+// ✓ 좋아요
+function hello (name) {
+  console.log('hi', name)
+}
+
+// ✗ 피하세요
+function hello (name) {
+    console.log('hi', name)
+}
+```
+
+- `'no-trailing-spaces': 'error'`\
+: 줄 끝에 공백이 있는지 확인하는 규칙으로, 공백이 있으면 오류로 표시됩니다.
+
+- `curly: 'error'`\
+: 블록 문(statement)에서 항상 중괄호를 사용하도록 하는 규칙입니다.
+
+```javascript
+// ✓ 좋아요
+if (options.quiet !== true) console.log('done')
+
+// ✓ 좋아요
+if (options.quiet !== true) {
+  console.log('done')
+}
+
+// ✗ 피하세요
+if (options.quiet !== true)
+  console.log('done')
+```
+
+- `'brace-style': 'error'`\
+: 중괄호의 스타일을 관리하는 규칙으로, 들여쓰기 방식을 '1tbs' 스타일을 강제합니다.
+
+```javascript
+// ✓ 좋아요
+if (condition) {
+  // ...
+} else {
+  // ...
+}
+
+// ✗ 피하세요
+if (condition) {
+  // ...
+}
+else {
+  // ...
+}
+```
+
+- `'no-multi-spaces': 'error'`\
+: 연속된 여러 개의 공백을 허용하지 않고, 하나의 공백만 허용하는 것을 강제합니다.\
+즉, 코드에서 아래와 같이 여러 개의 공백이 연속되어 있으면 에러를 발생시킵니다.
+
+```javascript
+const id =    1234 // ✗ 피하세요
+const id = 1234 // ✓ 좋아요
+```
+
+- `'space-infix-ops': 'error'`\
+: 공백사이에 연산자를 넣어주세요.
+
+```javascript
+var message = 'hello, '+name+'!' // ✗ 피하세요
+var message = 'hello, ' + name + '!' // ✓ 좋아요
+```
+
+- `'space-unary-ops': 'error'`\
+: 단항 연산자 뒤에 공백이 있어야 합니다.
+
+```javascript
+typeof!admin // ✗ 피하세요
+typeof !admin // ✓ 좋아요
+```
+
+- `'no-whitespace-before-property': 'error'`\
+:객체의 속성 앞에 공백을 허용하지 않습니다.
+
+```javascript
+user .name      // ✗ 피하세요
+user.name       // ✓ 좋아요
+```
+
+- `'func-call-spacing': 'error'`\
+: 함수식별자와 호출사이에는 공백이 없어야 합니다.
+
+```javascript
+console.log ('hello') // ✗ 피하세요
+console.log('hello')  // ✓ 좋아요
+```
+
+- `'space-before-blocks': 'error'`\
+: 블록 앞에 공간이 있어야 합니다.
+
+```javascript
+if (admin){...}     // ✗ 피하세요
+if (admin) {...}    // ✓ 좋아요
+```
+
+- `'keyword-spacing': ['error', { before: true, after: true }]`\
+: 예약어 앞 뒤에는 공백을 추가합니다.
+
+```javascript
+if (condition) { ... }   // ✓ 좋아요
+if(condition) { ... }    // ✗ 피하세요
+```
+
+- `comma-spacing: ['error', { before: false, after: true }]`\
+: 쉼표 뒤에 공백을 강제하고 앞에는 허용하지 않습니다.
+
+```javascript
+var list = [1, 2, 3, 4] // ✓ 좋아요
+var list = [1,2,3,4] // ✗ 피하세요
+```
+
+- `'comma-style': ['error', 'last']`\
+: 쉼표를 사용할 경우 현재 행 끝에 있어야 합니다.
+
+```javascript
+  var obj = {
+  foo: 'foo'
+  ,bar: 'bar'   // ✗ 피하세요
+}
+
+var obj = {
+  foo: 'foo',
+  bar: 'bar'   // ✓ 좋아요
+}
+```
+
+- `'comma-dangle': ['error', 'always-multiline']`\
+: 단일 줄의 객체 또는 배열 리터럴에서 마지막 쉼표를 두는 것은 허용되지 않습니다.\
+여러 줄의 객체 또는 배열 리터럴에서 항상 마지막 쉼표를 요구합니다.
+
+```javascript
+// ✓ 좋아요
+var foo = {
+  bar: "baz",
+  qux: "quux",
+};
+
+var foo = { bar: "baz", qux: "quux" };
+
+// ✗ 피하세요
+var foo = {
+  bar: "baz",
+  qux: "quux"
+};
+
+var foo = { bar: "baz", qux: "quux", };
+```
+
+- `'space-in-parens': ['error', 'never']`\
+: 괄호 안에 공백을 허용하지 않습니다.
+
+```javascript
+getName( name )     // ✗ 피하세요
+getName(name)       // ✓ 좋아요
+```
+
+- `'block-spacing': 'error'`\
+: 한 줄에 중괄호로 처리할 경우 공백을 추가합니다.
+
+```javascript
+function foo () {return true}    // ✗ 피하세요
+function foo () { return true }  // ✓ 좋아요
+```
+
+- `'array-bracket-spacing': ['error', 'never']`\
+: 배열 표기 시에 대괄호 안에 공백을 허용하지 않도록 하는 규칙입니다.\
+이 규칙은 `ESLint v8.53.0`에서 더 이상 사용되지 않습니다.\
+`@stylistic/eslint-plugin-js.`에서 해당 규칙을 사용하세요.
+
+```javascript
+// ✗ 피하세요
+var [ x, y ] = z;
+var [ x,y ] = z;
+
+// ✓ 좋아요
+var [x, y] = z;
+var [x,y] = z;
+```
+
+- `'object-curly-spacing': ['error', 'always']`\
+: 객체 리터럴에서 중괄호 주위에 항상 공백을 사용합니다.
+
+```javascript
+// ✗ 피하세요
+var obj = { 'foo': 'bar'};
+var obj = {'foo': 'bar' };
+var {x} = y;
+
+// ✓ 좋아요
+var obj = { 'foo': 'bar' };
+var { x } = y;
+```
+
+- `'key-spacing': ['error', { mode: 'strict' }]`\
+: 콜론 & 키와 값 사이에 오직 하나의 공백만 허용하도록 하는 규칙입니다.
+
+```javascript
+var obj = { 'key' : 'value' }    // ✗ 피하세요
+var obj = { 'key' :'value' }     // ✗ 피하세요
+var obj = { 'key':  'value' }      // ✗ 피하세요
+var obj = { 'key':'value' }      // ✗ 피하세요
+
+var obj = { 'key': 'value' }     // ✓ 좋아요
+```
+
+- `'arrow-spacing': ['error', { before: true, after: true }]`\
+: 화살표 기능에서 화살표 앞과 뒤에 하나 이상의 공백이 있어야 합니다.
+
+```javascript
+// ✗ 피하세요
+()=> {};
+() =>{};
+(a)=> {};
+(a) =>{};
+a =>a;
+a=> a;
+()=> {'\n'};
+() =>{'\n'};
+
+// ✓ 좋아요
+() => {};
+(a) => {};
+a => a;
+() => {'\n'};
+```
+
+- `'import/no-extraneous-dependencies': ['error', {devDependencies: ['**/*.test.js','**/*.test.jsx','**/*.test.ts','**/*.test.tsx',],}]`\
+: 프로젝트의 의존성(import)에 관한 것으로, 특정 파일 패턴에 대한 예외를 지정합니다.\
+테스트 또는 개발환경을 구성하는 파일에서는 devDependency 사용을 허용.\
+테스트 파일들(`.test.js, .test.jsx, .test.ts, .test.tsx`)이 개발 의존성으로 간주되어 개발 의존성이 불필요하게 프로덕션 코드에 섞이는 것을 방지할 수 있습니다.
+
+- `'import/extensions': ['error', 'ignorePackages', {js: 'never', jsx: 'never', ts: 'never', tsx: 'never',}],`\
+: 파일을 import 할 때 파일에 명시적인 확장자를 사용할 것인지에 대한 설정을 지정합니다.\
+ignorePackages 옵션이 사용되어 패키지(import 되는 외부 라이브러리 등)에 대해서는 확장자를 무시하도록 설정되어 있습니다.\
+프로젝트 내의 파일에 대해서는 반드시 확장자를 명시해야 하지만, 외부 패키지에 대해서는 확장자를 생략할 수 있습니다.
+
+- `'react/jsx-filename-extension': [2, {extensions: ['.js', '.jsx', '.ts', '.tsx'],}],`\
+: React 컴포넌트를 작성할 때 파일의 확장자를 명시적으로 지정하도록 강제합니다.\
+JSX 코드를 작성할 때는 `.js, .jsx, .ts, .tsx` 확장자를 사용해야 합니다.
+
+  - 0: 규칙을 비활성화합니다.
+  - 1: 규칙을 경고로 설정합니다.
+  - 2: 규칙을 에러로 설정합니다.
+
+- `'react/prop-types': [2, { skipUndeclared: true }]`\
+: PropTypes는 React에서 타입 체크를 위해서 사용되는 라이브러리입니다.\
+컴포넌트의 props에 대한 유효성을 검사하는 데 사용되는 기능입니다.\
+propTypes 블록이 선언되어 있지 않은 컴포넌트에 대해서는 규칙이 적용되지 않도록 만듭니다.
+
+  - 0: 규칙을 비활성화합니다.
+  - 1: 규칙을 경고로 설정합니다.
+  - 2: 규칙을 에러로 설정합니다.
+
+- `'react/require-default-props': 'off'`\
+: React 컴포넌트의 propTypes에 대한 기본값(default props)을 요구 여부를 설정하는 규칙입니다\
+propTypes에 대한 기본값이 없어도 경고나 에러를 표시하지 않습니다.
+
+- `'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }]`\
+: 라벨(label)과 연결된 폼 컨트롤(form control)이 있어야 하는지 여부를 체크하는 규칙입니다.\
+라벨이나 연결된 폼 컨트롤 중 어느 하나만 존재해도 규칙을 위반하지 않는다는 것을 나타냅니다.
+
+## 참고
+
+[ESLint 상세 설정 가이드](https://www.daleseo.com/eslint-config/)
+[JavaScript Standard Style](https://standardjs.com/rules-kokr)
