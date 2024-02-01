@@ -19,8 +19,8 @@
 
 ## APPENDIX
 
-- [1주차 추가 자료](appendix/README.md)
+- [추가 자료](appendix/README.md)
   - [Quick Setting Guide](appendix/quick-setting-guide.md)
   - [Ignore Setting](appendix/ignore-setting.md)
   - [Build & Deploy](appendix/build-deploy.md)
-- [2주차 추가 자료](appendix/airbnb-setting.md)
+  - [2주차 과제 ESLint](appendix/airbnb-setting.md)
