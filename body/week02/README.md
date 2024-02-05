@@ -15,4 +15,15 @@ React를 쓰면서 생각보다 많은 분들이 JSX에 대해선 자세히 모�
 
 ### 배운 점
 
+Virtual DOM에 관해 공부했습니다. 제 수준의 코드를 작성하는데 직접적인 도움이 되지 않아 미뤄두었던 내용이었는데 생각보다 궁금증을 많이 해결해줬습니다.\
+특히 React에서 key를 사용해야 하는 이유에 대한 궁금증이 있었는데, Virtual DOM과 New Virtual DOM을 비교할 때 key를 사용하여 변경된 값인지 아닌지를 판단한다는 것을 알게 되어 해소되었습니다.＂
+
 ### 공부해야할 점
+
+트레이너님이 추가로 보면 좋을 자료의 링크를 보내주었습니다.
+
+-[DOM 트리](https://ko.javascript.info/dom-nodes)
+
+- [Virtual DOM and Internals – React](https://legacy.reactjs.org/docs/faq-internals.html)
+
+- [Understanding Your UI as a Tree – React](https://react.dev/learn/understanding-your-ui-as-a-tree)
