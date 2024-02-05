@@ -22,7 +22,7 @@ Virtual DOM에 관해 공부했습니다. 제 수준의 코드를 작성하는�
 
 트레이너님이 추가로 보면 좋을 자료의 링크를 보내주었습니다.
 
--[DOM 트리](https://ko.javascript.info/dom-nodes)
+- [DOM 트리](https://ko.javascript.info/dom-nodes)
 
 - [Virtual DOM and Internals – React](https://legacy.reactjs.org/docs/faq-internals.html)
 
