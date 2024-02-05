@@ -7,11 +7,11 @@
 
 ## 목차
 
-- 개발 환경
-- TypeScript
-- React
-- Testing Library
-- Parcel & ESLint
+- [개발 환경](./development-environment.md)
+- [TypeScript](./typescript.md)
+- [React](./react.md)
+- [Testing Library](./testing-library.md)
+- [Parcel & ESLint](./parcel-eslint.md)
 
 ## 빠르게 시작하는 세팅 가이드
 
@@ -29,7 +29,7 @@ ESLint와 Prettier은 둘 다 코드를 교정해주는 것인데 어떤 차이�
 또한 parcel에 대해 공부하며 번들링, 빌드, 배포에 대해 알게 되었습니다.\
 항상 CRA를 사용하면서 따로 공부할 필요성을 느끼지 못했는데 이번에 하나씩 직접 파일을 세팅해보면서 필요성을 느끼게 되어 도움이 많이 되었습니다.
 
-### 공부해야할 점
+### 고민해야할 점
 
 아직 Prettier과 ESLint간의 문제를 해결하지 못했습니다.\
 결국 VSC 설정을 초기화 한후 ESLint만 사용하고 있습니다.\
