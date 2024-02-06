@@ -126,6 +126,12 @@ F/E와 B/E가 서로 데이터 교환하기 위해 사용되는 경량의 데이
 사람과 기계 모두 이해하기 쉽고, 다양한 프로그래밍 언어에서 파싱 및 생성이 용이한 특징을 가지고 있습니다.\
 `string` 이면서 `object` 형태를 띕니다.
 
+```json
+// JSON 예시
+
+'{"result":true, "count":42}'
+```
+
 ### 데이터 결론
 
 F/E는 이 데이터를 사용자가 볼 수 있도록 UI를 구성합니다.\
@@ -157,6 +163,8 @@ DSL은 크게 두 가지 유형으로 나눌 수 있습니다.
   작성한 부분은 자바스크립트의 일부로 동작하면서도 도메인에 특화된 쿼리 언어로 간주되어 내부 DSL에 가까워집니다.
 
     ```javascript
+    // JavaScript의 확장
+
     const query = User.find({ age: { $gte: 18 } });
     ```
 
@@ -191,6 +199,83 @@ function addOne(arr) {
 }
 ```
 
+## 컴포넌트 계층 구조
+
+React의 강력한 특징 둘 중 하나:
+
+- “컴포넌트 기반”
+- "자체 상태를 관리하는 캡슐화된 컴포넌트를 단순하게 구축하고, 이를 결합하여 복잡한 UI를 만듭니다."
+
+### SRP(단일 책임 원칙)
+
+객체 지향 프로그래밍에서 한 클래스가 하나의 일만 해야 한다는 개념입니다.
+각 클래스는 한 가지 역할만 맡고 있어야 합니다.
+
+### 컴포넌트를 나누는 몇 가지 기준
+
+몇 가지 기준:
+
+- 컴포넌트 크기\
+: 컴포넌트가 너무 커지면, 하나의 컴포넌트가 여러 가지 역할을 수행하고 있을 가능성이 높습니다.
+
+- CSS 클래스\
+: CSS 클래스나 기준으로 컴포넌트를 나눕니다.
+
+```jsx
+<div class="product">
+  <div class="thumbnail">
+  ...
+  </div>
+  <div class="price">
+  ...
+  </div>
+<div>
+```
+
+- Design’s Layer 기준\
+: 디자인의 계층 구조를 기반으로 컴포넌트를 나눕니다.
+
+![thinking-in-react_ui_outline](./img/thinking-in-react_ui_outline.png)
+
+- Information Architecture 기준\
+: SON Schema나 다른 정보 구조 기반의 기준을 활용하여 컴포넌트를 나눕니다.\
+실제로 엄청 많이 쓰게 되며 자연스러운 SRP를 위해서 사실상 강제됩니다.
+
+```jsx
+[
+  { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
+  { category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit" },
+  { category: "Fruits", price: "$2", stocked: false, name: "Passionfruit" },
+  { category: "Vegetables", price: "$2", stocked: true, name: "Spinach" },
+  { category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin" },
+  { category: "Vegetables", price: "$1", stocked: true, name: "Peas" }
+]
+```
+
+작은 컴포넌트(부품)를 만들어서 조립합니다.\
+조합은 가지수를 폭발적으로 늘릴 수 있는 가장 전형적인 방법입니다.
+
+### Atomic Design
+
+우리가 잘 알고 있는 계층형 구조를 몇 가지 카테고리로 묶은 개념입니다.\
+웹 페이지나 앱을 작은 구성 요소로 분해하여 재사용 가능한 형태로 조립하는 방법을 제안합니다.
+
+## Extract Function
+
+> [Extract Function](https://refactoring.com/catalog/extractFunction.html)
+>
+
+> [Inline Function](https://refactoring.com/catalog/inlineFunction.html)
+>
+
+아주 흔히 쓰이는 SRP를 위한 수단. 변화의 크기(영향 범위)를 제약한다.
+
+일단 길게 코드를 작성하고, 적절히 자를 수 있는 부분이 보일 때 “함수로 추출”한다.
+
+또는 코드를 작성하기 어려운 상황에 직면했을 때 함수로 추출. 바로 다른 파일을 만들어야 한다고 생각하지 않아도 됨.
+
+컴포넌트 나누는 기준이 애매하면 다시 하나의 컴포넌트로 합쳤다가(Inline Method) 다시 나눠줘도 됨.
+
 ## 참고 자료
 
 - [Thinking in React](https://beta.reactjs.org/learn/thinking-in-react)
@@ -202,3 +287,6 @@ function addOne(arr) {
 - [면접을 위한 CS 전공지식 노트](https://thebook.io/080326/)
 - [명령형 프로그래밍](https://ko.wikipedia.org/wiki/명령형_프로그래밍)
 - [선언형 프로그래밍](https://ko.wikipedia.org/wiki/선언형_프로그래밍)
+- [React](https://reactjs.org/)
+- [SRP (Single Responsibility Principle)](https://ko.wikipedia.org/wiki/단일_책임_원칙)
+- [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/)
