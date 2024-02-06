@@ -16,6 +16,9 @@
     - [ESLint](body/week01/parcel-eslint/eslint.md)
 - [2주차 JSX](body/week02/README.md)
   - [1. JSX](body/week02/jsx.md)
+- [3주차 React로 사고하기](body/week03/README.md)
+  - [1. React Component](body/week03/react-component.md)
+  - [2. React State](body/week03/react-state.md)
 
 ## APPENDIX
 
