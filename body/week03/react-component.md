@@ -260,13 +260,21 @@ React의 강력한 특징 둘 중 하나:
 우리가 잘 알고 있는 계층형 구조를 몇 가지 카테고리로 묶은 개념입니다.\
 웹 페이지나 앱을 작은 구성 요소로 분해하여 재사용 가능한 형태로 조립하는 방법을 제안합니다.
 
-## Extract Function
+## 리팩터링(Refactoring) 기법
 
-> [Extract Function](https://refactoring.com/catalog/extractFunction.html)
->
+### Extract Function
 
-> [Inline Function](https://refactoring.com/catalog/inlineFunction.html)
->
+![Extract Function](./img/extract-func.png)
+
+`printDetails` 함수를 추출하여 코드의 가독성을 향상시켰습니다.\
+주석을 달았을 만큼 설명이 필요하다면 설명할 수 있는 함수로 바꾸어 주는 것이 좋을 수 있습니다.
+
+### Inline Function
+
+![Inline Function](./img/inline-func.png)
+
+`moreThanFiveLateDeliveries` 함수를 인라인하여 직접 `getRating` 함수 내에서 조건을 처리하도록 변경했습니다.\
+함수 본문이 함수명만큼이나 명확할 경우 굳이 함수를 나누기 보다는 합치는 것이 좋을 수 있습니다.
 
 아주 흔히 쓰이는 SRP를 위한 수단. 변화의 크기(영향 범위)를 제약한다.
 
@@ -275,6 +283,39 @@ React의 강력한 특징 둘 중 하나:
 또는 코드를 작성하기 어려운 상황에 직면했을 때 함수로 추출. 바로 다른 파일을 만들어야 한다고 생각하지 않아도 됨.
 
 컴포넌트 나누는 기준이 애매하면 다시 하나의 컴포넌트로 합쳤다가(Inline Method) 다시 나눠줘도 됨.
+
+## React component 와 props
+
+### Props
+
+나눠진 컴포넌트를 서로 연결하는 방법입니다.\
+부모 컴포넌트는 props를 줌으로써 몇몇의 정보를 자식 컴포넌트에게 전달할 수 있습니다.\
+객체, 배열, 함수를 포함한 모든 JavaScript 값을 전달할 수 있습니다.\
+TypeScript를 잘 쓰거나 잘못 쓰게 되는 포인트 중 하나입니다.\
+적절한 균형점을 잡는 게 중요합니다.\
+테스트 코드를 작성하면 재사용성을 평가하기 쉬워집니다.
+
+#### 자식 컴포넌트 내부에서 props 읽기
+
+```typescript
+type ProductTableProps = {
+  products: Product[];
+}
+
+// 1번 방법
+function ProductTable(props: ProductTableProps) {
+  const products = props.products;
+}
+
+// 2번 방법
+function ProductTable(props: ProductTableProps) {
+  const { products } = props;
+}
+
+// 3번 방법
+function ProductTable({ products }: ProductTableProps) {
+}
+```
 
 ## 참고 자료
 
@@ -290,3 +331,7 @@ React의 강력한 특징 둘 중 하나:
 - [React](https://reactjs.org/)
 - [SRP (Single Responsibility Principle)](https://ko.wikipedia.org/wiki/단일_책임_원칙)
 - [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/)
+- [Extract Function](https://refactoring.com/catalog/extractFunction.html)
+- [Inline Function](https://refactoring.com/catalog/inlineFunction.html)
+- [Passing Props to a Component](https://beta.reactjs.org/learn/passing-props-to-a-component)
+- [Components와 Props](https://ko.reactjs.org/docs/components-and-props.html)
