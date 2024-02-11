@@ -23,6 +23,7 @@
 ## APPENDIX
 
 - [추가 자료](appendix/README.md)
+  - [Git Training 가이드](git-training.md)
   - [Quick Setting Guide](appendix/quick-setting-guide.md)
   - [Ignore Setting](appendix/ignore-setting.md)
   - [Build & Deploy](appendix/build-deploy.md)
