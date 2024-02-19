@@ -167,7 +167,7 @@ app.get("/products", (req, res) => {
 
 ## 참고 자료
 
-[Express](https://expressjs.com/ko/)
-[Express 설치](https://expressjs.com/ko/starter/installing.html)
-[ts-node](https://github.com/TypeStrong/ts-node)
+[Express](https://expressjs.com/ko/)\
+[Express 설치](https://expressjs.com/ko/starter/installing.html)\
+[ts-node](https://github.com/TypeStrong/ts-node)\
 [Express 예제](https://expressjs.com/ko/starter/hello-world.html)
