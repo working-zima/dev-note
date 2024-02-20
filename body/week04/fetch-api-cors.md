@@ -1,4 +1,4 @@
-# 1. Fetch API & CORS
+# 2. Fetch API & CORS
 
 ## 학습 키워드
 
