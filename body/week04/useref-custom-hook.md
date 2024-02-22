@@ -162,8 +162,8 @@ if (playing) {
 
 ## 참고 자료
 
-[beta 문서의 useRef](https://react.dev/reference/react/useRef)
-[공식 문서의 useRef](https://ko.legacy.reactjs.org/docs/hooks-reference.html#useref)
-[Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)
-[자신만의 Hook 만들기](https://ko.legacy.reactjs.org/docs/hooks-custom.html)
+[beta 문서의 useRef](https://react.dev/reference/react/useRef)\
+[공식 문서의 useRef](https://ko.legacy.reactjs.org/docs/hooks-reference.html#useref)\
+[Reusing Logic with Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)\
+[자신만의 Hook 만들기](https://ko.legacy.reactjs.org/docs/hooks-custom.html)\
 [Hook의 규칙](https://ko.legacy.reactjs.org/docs/hooks-rules.html)
