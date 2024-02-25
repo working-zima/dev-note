@@ -28,14 +28,14 @@ React의 state는 “변경”을 다루기 위한 요소입니다.\
 중복을 최소화하고 코드의 재사용성을 높이는 것을 목표로 합니다.\
 
 1. 컴포넌트 재사용\
-: 비슷한 UI 요소가 여러 곳에서 사용되는 경우 해당 요소를 컴포넌트로 추상화하고 여러 곳에서 재사용할 수 있습니다.
+   : 비슷한 UI 요소가 여러 곳에서 사용되는 경우 해당 요소를 컴포넌트로 추상화하고 여러 곳에서 재사용할 수 있습니다.
 2. 컴포넌트 상속 및 확장\
-: React 클래스 컴포넌트를 사용하는 경우, 컴포넌트 상속을 통해 공통 기능을 가진 부모 컴포넌트를 만들고, 이를 상속하여 여러 자식 컴포넌트에서 재사용할 수 있습니다.
+   : React 클래스 컴포넌트를 사용하는 경우, 컴포넌트 상속을 통해 공통 기능을 가진 부모 컴포넌트를 만들고, 이를 상속하여 여러 자식 컴포넌트에서 재사용할 수 있습니다.
 3. 코드 분리와 모듈화\
-: 코드를 여러 파일이나 모듈로 나누어 관리함으로써 중복을 방지할 수 있습니다.
+   : 코드를 여러 파일이나 모듈로 나누어 관리함으로써 중복을 방지할 수 있습니다.
 4. 고차 컴포넌트 (Higher Order Components, HOC)\
-: 함수를 인자로 받아 컴포넌트를 반환하는 함수입니다.\
-이를 사용하여 여러 컴포넌트에서 공통 로직을 추상화할 수 있습니다.
+   : 함수를 인자로 받아 컴포넌트를 반환하는 함수입니다.\
+   이를 사용하여 여러 컴포넌트에서 공통 로직을 추상화할 수 있습니다.
 
 ### SSOT(Single Source of Truth)
 
@@ -62,10 +62,20 @@ function MyComponent() {
 }
 ```
 
+### setState
+
+state를 직접 변경하게 되면 리액트는 state가 변경된 것을 감지하지 못하고, 새로운 state로 화면이 re-render되지 않습니다.\
+setState는 updating process를 trigger하기 때문에 setState를 통해 state 변경하게 되면 화면을 re-render할 수 있습니다.\
+중요한 점은 setState는 즉각적인 명령이 아닌 요청을 하는 역할이라는 것 입니다.\
+리액트는 컴포넌트가 re-render 될 때까지 state를 갱신하지 않습니다.\
+setState는 비동기 적으로 작동합니다.\
+state 변경사항을 대기열에 넣고 컴포넌트에게 새로운 state를 사용하기 위해 re-render를 해야 한다고 알립니다.\
+setState를 연속적으로 호출하면 실시간으로 처리하지 않고 setState를 모아서 종합적으로 처리합니다.
+
 ### React State의 조건
 
 1. 변경되는 데이터여야 합니다.\
-변경되지 않는 건 state로 다룰 가치가 없습니다.
+   변경되지 않는 건 state로 다룰 가치가 없습니다.
 
 2. 부모 컴포넌트가 props를 통해 전달할 수 있다면 state가 아닙니다.
 
@@ -79,15 +89,15 @@ import selectCategories from '../utils/selectCategories';
 // 안좋은 예
 type ProductTableProps = {
   products: Product[];
-}
+};
 
 function ProductTable({ products }: ProductTableProps) {
   // props를 state로 사용하게 되면서 업데이트를 위해 useEffect까지 사용하게 됩니다.
   const [categories, setCategories] = useState<String[]>([]);
 
   useEffect(() => {
-    setCategories(selectCategories(products))
-  }, [products])
+    setCategories(selectCategories(products));
+  }, [products]);
 
   return (
     <table className="products-table">
@@ -110,11 +120,10 @@ function ProductTable({ products }: ProductTableProps) {
   );
 }
 
-
 // 좋은 예
 type ProductTableProps = {
   products: Product[];
-}
+};
 
 function ProductTable({ products }: ProductTableProps) {
   // props를 이용해 계산(selectCategories) 가능하기 때문에
@@ -153,13 +162,13 @@ TypeScript를 잘 쓰면 직접 관리하는 상태의 수를 줄여줄 수 있�
 두 개 이상의 컴포넌트 간에 상태를 공유하기 위해 주로 lifting state up 이라는 개념을 사용합니다.
 
 1. 두 컴포넌트를 조정하려면 상태를 공통 부모로 이동시킵니다.\
-두 컴포넌트 간의 상태를 동시에 변경하려면 해당 상태를 두 컴포넌트의 공통 부모로 이동시킵니다.\
+   두 컴포넌트 간의 상태를 동시에 변경하려면 해당 상태를 두 컴포넌트의 공통 부모로 이동시킵니다.\
 
 2. 그 후 공통 부모로부터 정보를 props로 전달합니다.\
-공통 부모 컴포넌트로 상태를 끌어올렸다면, 해당 상태 정보를 자식 컴포넌트로 props를 통해 전달합니다.
+   공통 부모 컴포넌트로 상태를 끌어올렸다면, 해당 상태 정보를 자식 컴포넌트로 props를 통해 전달합니다.
 
 3. 마지막으로 이벤트 핸들러를 전달하여 자식이 부모의 상태를 변경할 수 있도록 하세요.\
-자식 컴포넌트에서 부모의 상태를 변경해야 할 경우, 부모가 정의한 이벤트 핸들러를 자식 컴포넌트로 전달하여 상태를 변경하게 합니다.
+   자식 컴포넌트에서 부모의 상태를 변경해야 할 경우, 부모가 정의한 이벤트 핸들러를 자식 컴포넌트로 전달하여 상태를 변경하게 합니다.
 
 ### Inverse Data Flow
 
@@ -187,7 +196,7 @@ TypeScript(정확히는 JavaScript)는 함수가 일급(first-class) 객체다. 
 
 ```jsx
 const foo = () => {
-  console.log("foobar");
+  console.log('foobar');
 };
 foo(); // 변수를 사용해 호출
 // foobar
@@ -197,15 +206,14 @@ foo(); // 변수를 사용해 호출
 
 ```jsx
 function sayHello() {
-  return "Hello, ";
+  return 'Hello, ';
 }
 function greeting(helloMessage, name) {
   console.log(helloMessage() + name);
 }
 // `sayHello`를 전달인자로 `greeting` 함수에 전달
-greeting(sayHello, "JavaScript!");
+greeting(sayHello, 'JavaScript!');
 // Hello, JavaScript!
-
 ```
 
 - 함수 반환
@@ -213,7 +221,7 @@ greeting(sayHello, "JavaScript!");
 ```jsx
 function sayHello() {
   return () => {
-    console.log("Hello!");
+    console.log('Hello!');
   };
 }
 ```
@@ -240,4 +248,5 @@ function select<ItemType, ValueType>(
 - [“Lifting State Up”](https://ko.reactjs.org/docs/lifting-state-up.html)
 - [Sharing State Between Components](https://beta.reactjs.org/learn/sharing-state-between-components)
 - [일급 함수](https://developer.mozilla.org/ko/docs/Glossary/First-class_Function)
-- [1급 객체(first-class object)란?](https://jcsoohwancho.github.io/2019-10-18-1%EA%B8%89-%EA%B0%9D%EC%B2%B4(first-class-object)%EC%9D%B4%EB%9E%80/)
+- [1급 객체(first-class object)란?](<https://jcsoohwancho.github.io/2019-10-18-1%EA%B8%89-%EA%B0%9D%EC%B2%B4(first-class-object)%EC%9D%B4%EB%9E%80/>)
+- [[10분 테코톡] 무비의 React의 state](https://www.youtube.com/watch?v=NpTizz_qgtA)
