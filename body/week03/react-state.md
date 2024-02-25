@@ -62,7 +62,7 @@ function MyComponent() {
 }
 ```
 
-### setState
+#### setState
 
 state를 직접 변경하게 되면 리액트는 state가 변경된 것을 감지하지 못하고, 새로운 state로 화면이 re-render되지 않습니다.\
 setState는 updating process를 trigger하기 때문에 setState를 통해 state 변경하게 되면 화면을 re-render할 수 있습니다.\
@@ -71,6 +71,64 @@ setState는 updating process를 trigger하기 때문에 setState를 통해 state
 setState는 비동기 적으로 작동합니다.\
 state 변경사항을 대기열에 넣고 컴포넌트에게 새로운 state를 사용하기 위해 re-render를 해야 한다고 알립니다.\
 setState를 연속적으로 호출하면 실시간으로 처리하지 않고 setState를 모아서 종합적으로 처리합니다.
+
+#### 내부적인 아이디어
+
+`useState` 함수가 React 내부에서 어떻게 동작하는지에 대한 간소화 버전입니다.\
+
+1. useState 사용한 첫 렌더링\
+
+   - `useState`가 호출됩다.\
+   - `componentHooks`배열의 0번째에 는 값이 없기 때문에 조건문을 스킵합니다.\
+   - `useState`를 사용하면 첫 렌더링에 `initialState`와 - `setState`를 `pair` 초기화 합니다.\
+   - `currentHookIndex`가 0이기 때문에 초기화된 `pair`를 - `componentHooks` 배열의 0번에 추가합니다.\
+   - 프로젝트에서 다수의 `useState` 사용을 위해 `currentHookIndex`의 숫자를 바꿔줍니다(0에서 1로).\
+   - 0번 `pair`를 반환합니다.
+
+2. setState 사용\
+
+   - `setState`로 변경될 값이 `pair`의 값 자리에 초기화 됩니다.\
+   - `updateDOM`함수가 호출됩니다.\
+   - `useState`가 호출됩니다.\
+   - `pair`가 있기 때문에 조건문이 실행되며 변경된 `pair`를 반환합니다.
+
+3. 만약 다수의 useState가 있을 경우\
+
+   - 첫 렌더링에서 이전 `useState`가 `currentHookIndex`를 1로 증가된 상태입니다(0에서 1로).\
+   - `componentHooks`배열의 1번 인덱스에는 값이 없기 때문에 `pair`에 `initialState`와 `setState`를 초기화 합니다.\
+     (예시: componentHooks = [[stateA, setA], [stateB, setB], ..])\
+
+```jsx
+let componentHooks = [];
+let currentHookIndex = 0;
+
+function useState(initialState) {
+  let pair = componentHooks[currentHookIndex];
+  if (pair) {
+    // 이것은 첫 번째 렌더링이 아나가 때문에 상태 페어가 이미 존재합니다.
+    // 해당 페어를 반환하고 다음 Hook 호출을 위해 준비합니다.
+    currentHookIndex++;
+    return pair;
+  }
+
+  // 렌더링이 처음이라면 새로운 상태 페어를 생성하고 저장합니다.
+  pair = [initialState, setState];
+
+  function setState(nextState) {
+    // 사용자가 상태 변경을 요청하면 새로운 값을 상태 페어에 넣습니다.
+    pair[0] = nextState;
+    updateDOM();
+  }
+
+  // 향후 렌더링을 위해 상태 페어를 저장하고 다음 Hook 호출을 위해 준비합니다.
+  componentHooks[currentHookIndex] = pair;
+  currentHookIndex++;
+  return pair;
+}
+
+// DOM 업데이트 함수
+function updateDOM() {...}
+```
 
 ### React State의 조건
 
