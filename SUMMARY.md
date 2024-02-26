@@ -25,6 +25,11 @@
   - [3. React의 Hook](body/week04/react-hook.md)
   - [4. useRef & Custom Hook](body/week04/useref-custom-hook.md)
   - [5. usehooks-ts](body/week04/usehooks-ts.md)
+- [5주차 테스트](body/week05/README.md)
+  - [1. TDD](body/week05/tdd.md)
+  - [2. React Testing Library](body/week05/react-testing-library.md)
+  - [3. MSW](body/week05/msw.md)
+  - [4. Playwright](body/week05/playwright.md)
 
 ## APPENDIX
 
