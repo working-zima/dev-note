@@ -20,27 +20,27 @@ npm i -D msw
 
 ```jsx
 module.exports = {
-	testEnvironment: 'jsdom',
-	**setupFilesAfterEnv**: [
-		'@testing-library/jest-dom/extend-expect',
-		'**<rootDir>/src/setupTests.ts**',
-	],
-	transform: {
-		'^.+\\.(t|j)sx?$': ['@swc/jest', {
-			jsc: {
-				parser: {
-					syntax: 'typescript',
-					jsx: true,
-					decorators: true,
-				},
-				transform: {
-					react: {
-						runtime: 'automatic',
-					},
-				},
-			},
-		}],
-	},
+ testEnvironment: 'jsdom',
+ **setupFilesAfterEnv**: [
+  '@testing-library/jest-dom/extend-expect',
+  '**<rootDir>/src/setupTests.ts**',
+ ],
+ transform: {
+  '^.+\\.(t|j)sx?$': ['@swc/jest', {
+   jsc: {
+    parser: {
+     syntax: 'typescript',
+     jsx: true,
+     decorators: true,
+    },
+    transform: {
+     react: {
+      runtime: 'automatic',
+     },
+    },
+   },
+  }],
+ },
 };
 ```
 
@@ -117,8 +117,6 @@ test('App', async () => {
 
 테스트 환경(Node.js 기반) 외에 웹 브라우저도 지원하기 때문에, API 스펙은 나왔지만 아직 구현되지 않은 경우 임시로 사용할 수도 있다. 단순히 임시 서버를 만들 거라면 Express를 쓰는 게 더 낫지만, 테스트 코드도 지원하면서 겸사겸사 웹 브라우저를 지원하는 용도로는 나쁘지 않은 선택이다.
 
-- [GitHub에서 만든 fetch polyfill](https://github.com/github/fetch)
-
 ## 참고 자료
 
 - [MSW](https://mswjs.io/)
@@ -126,3 +124,4 @@ test('App', async () => {
 - [아샬의 Mock Service Worker (MSW)](https://github.com/ahastudio/til/blob/main/mock-api/msw.md)
 - [Mocking REST API](https://mswjs.io/docs/getting-started/mocks/rest-api)
 - [Integrate mocking into Node](https://mswjs.io/docs/getting-started/integrate/node)
+- [GitHub에서 만든 fetch polyfill](https://github.com/github/fetch)

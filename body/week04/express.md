@@ -45,7 +45,7 @@ ts-node 설치\
 npm i -D ts-node
 ```
 
-ESLint
+ESLint 설치
 
 TypeScript를 사용하기 때문에 `What type of modules does your project use?` 항목에서 `JavaScript modules (import/export)` 선택
 
@@ -70,14 +70,14 @@ touch app.js
 ```
 
 ```typescript
-import express from "express";
+import express from 'express';
 
 const port = 3000;
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
 });
 
 app.listen(port, () => {
@@ -122,43 +122,43 @@ CRUD에 대해 HTTP Method를 대입. Read는 Collection(복수)과 Item(Element
 ### Thinking in React 예제
 
 ```javascript
-app.get("/products", (req, res) => {
+app.get('/products', (req, res) => {
   const products = [
     {
-      category: "Fruits",
-      price: "$1",
+      category: 'Fruits',
+      price: '$1',
       stocked: true,
-      name: "Apple",
+      name: 'Apple',
     },
     {
-      category: "Fruits",
-      price: "$1",
+      category: 'Fruits',
+      price: '$1',
       stocked: true,
-      name: "Dragonfruit",
+      name: 'Dragonfruit',
     },
     {
-      category: "Fruits",
-      price: "$2",
+      category: 'Fruits',
+      price: '$2',
       stocked: false,
-      name: "Passionfruit",
+      name: 'Passionfruit',
     },
     {
-      category: "Vegetables",
-      price: "$2",
+      category: 'Vegetables',
+      price: '$2',
       stocked: true,
-      name: "Spinach",
+      name: 'Spinach',
     },
     {
-      category: "Vegetables",
-      price: "$4",
+      category: 'Vegetables',
+      price: '$4',
       stocked: false,
-      name: "Pumpkin",
+      name: 'Pumpkin',
     },
     {
-      category: "Vegetables",
-      price: "$1",
+      category: 'Vegetables',
+      price: '$1',
       stocked: true,
-      name: "Peas",
+      name: 'Peas',
     },
   ];
   res.send({ products });
