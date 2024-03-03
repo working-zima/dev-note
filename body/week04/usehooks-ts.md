@@ -61,9 +61,32 @@ export function useEffectOnce(effect) {
 
 ### [useFetch](https://usehooks-ts.com/react-hook/use-fetch)
 
-정말 간단히 쓸 때 좋음.
+```tsx
 
-몇 가지 기능이 살짝 더 있는 useFetch 라이브러리가 따로 있다.
+interface Restaurant {
+  id: string;
+  category: string;
+  name: string;
+  menu: {
+    id: string;
+    name: string;
+    price: number;
+  }[];
+}
+
+interface Restaurants {
+  [restaurants: string]: Restaurant[];
+}
+
+// useFetch가 엔드포인트에서 가져오는 데이터의 타입
+const { data, error } = useFetch<Restaurants>('http://url');
+```
+
+![useFetch data](./img/use-fetch-data.png)
+
+정말 간단히 쓸 때 좋습니다.
+
+몇 가지 기능이 살짝 더 있는 useFetch 라이브러리가 따로 있습니다.
 
 - [use-http](https://use-http.com/)
 
