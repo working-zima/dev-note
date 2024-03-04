@@ -39,3 +39,4 @@
   - [Ignore Setting](appendix/ignore-setting.md)
   - [Build & Deploy](appendix/build-deploy.md)
   - [2주차 과제 ESLint](appendix/airbnb-setting.md)
+  - [5주차 과제 Test Code](appendix/test-code-study/README.md)

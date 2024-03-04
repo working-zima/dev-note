@@ -42,7 +42,7 @@ npx jest --watchAll
 테스트 케이스를 정의할 때 크게 두 가지 방법을 사용합니다:
 
 1. test 함수로 개별 테스트를 나열하는 방식.(`App.test.ts`)
-2. BDD 스타일로 주체-행위 중심으로 테스트를 조직화하는 방식.(`App.spec.ts`)
+2. [BDD 스타일](../week01/testing-library.md)로 주체-행위 중심으로 테스트를 조직화하는 방식.(`App.spec.ts`)
 
 ### Red
 
@@ -55,9 +55,12 @@ test('add', () => {
 ```
 
 BDD 스타일로 테스트 대상과 행위를 명확히 드러냅니다.
+(`it()`과 `test()`는 동일)
 
 ```jsx
+// 대상 (add는)
 describe('add', () => {
+  // 행위 (두 숫자의 합을 반환)
   it('returns sum of two numbers', () => {
     expect(add(1, 2)).toBe(3);
   });
@@ -66,13 +69,20 @@ describe('add', () => {
 
 #### Describe - Context - It 패턴
 
+어떤 기능은 상황에 따라서 다르게 작동할 수 있습니다.
+
+#### DCI 스타일 Red
+
 다양한 경우를 고려해 봅니다.
 
 ```jsx
 const context = describe;
 
+// 대상 (add는)
 describe('add', () => {
+  // 경우 (인자가 없을 때)
   context('with no argument', () => {
+    // 행위 (0을 반환)
     it('returns zero', () => {
       expect(add()).toBe(0);
     });

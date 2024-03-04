@@ -32,12 +32,65 @@ test('add', () => {
 
 ### BDD 스타일의 테스트 코드
 
+소프트웨어가 사양(specification)에 잘 맞는지 맞지 않는지 확인합니다.\
+구현을 하기 위해 기능(소프트웨어가 어떻게 동작하는지) 목록을 만듭니다.\
+주로 "Given-When-Then"의 템플릿을 사용하여 테스트 케이스를 표현합니다.
+
+#### Given-When-Then
+
+간단한 예를 들어보겠습니다.
+
+전자렌지에 3분만 돌리면 완성되는 기능이 있습니다.\
+여기서 여기서 우리가 해야 하는 건 '전자렌지에 3분만 돌리는 것'입니다.\
+그럼 완성이 되는 일이 벌어집니다.\
+Given-When-Then 템플릿으로 정리해보겠습니다.
+
+```json
+// when
+전자렌지에 3분만 돌리면
+
+// then
+완성
+```
+
+더 정확하게는 700와트 전자렌지를 준비하고, 3분이란 시간이 주어졌을 때 주어진 시간동안 전자렌지를 돌리면 요리가 완성 기능이 있습니다.\
+Given-When-Then 템플릿으로 정리해보겠습니다.
+
+```json
+// Given
+파워는 700와트, 기계는 전자렌지, 시간은 3분이 주어짐
+
+// when
+주어진 시간동안 전자렌지를 돌리면
+
+// then
+요리가 완성
+```
+
+#### Describe, It
+
+게임에서 JUMP 기능을 만드려고 하려고 합니다.\
+JUMP라는 대상의 행동에 대해 설명해줘야 합니다.\
+이 때 `Describe`로 대상을, `It`으로 대상의 행동을 설명합니다.
+
+Describe "JUMP"\
+It should push the hero off the floor\
+It should put the hero in teh air for 10 seconds
+
+#### 코드 예시
+
+`describe`에 주어를, `it`에 기능을 묘사합니다.
+
 ```jsx
-// 주어
+// 주어: given (add는)
 describe('add', () => {
-  // 행동
+  // 행동 (두 숫자가 주어지면, 두 숫자의 합을 반환)
   it('returns sum of two numbers', () => {
-    expect(add(1, 2)).toBe(3);
+    // when
+    const result = add(1, 2);
+
+    // then ()
+    expect(result).toBe(3);
   });
 });
 ```

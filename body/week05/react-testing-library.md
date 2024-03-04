@@ -235,7 +235,7 @@ fireEvent.change(getByLabelText(/username/i), {target: {value: 'a'}})
 
 ### 예시2
 
-BDD 스타일로 코드를 바꾸고, 입력 등이 잘 작동하는지 확인해 봅시다.
+DCI 스타일로 코드를 바꾸고, 입력 등이 잘 작동하는지 확인해 봅시다.
 
 ```jsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -302,6 +302,17 @@ describe('TextField', () => {
 
 `jest.mock()`는 자동으로 모듈을 mock 해줍니다.\
 `jest.mock()` 함수는 첫 번째 인자로 넘어온 모듈 내의 모든 함수를 자동으로 목(mock) 함수로 바꿔줍니다.
+단일 함수나 객체의 메소드를 모킹할 때 사용되는 `jest.fn()`과 다르게 모듈 전체를 모킹할 때 사용됩니다.
+
+```jsx
+// axios 모듈을 모킹하여 비어있는 객체로 대체
+jest.mock('axios', () => ({}));
+
+// 또는 모듈을 상대 경로로 지정하여 모킹
+jest.mock('../exampleModule', () => ({
+  functionName: jest.fn(),
+}));
+```
 
 ```jsx
 jest.mock(moduleName, factory, options);
