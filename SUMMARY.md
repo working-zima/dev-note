@@ -30,6 +30,11 @@
   - [2. React Testing Library](body/week05/react-testing-library.md)
   - [3. MSW](body/week05/msw.md)
   - [4. Playwright](body/week05/playwright.md)
+- [6주차 External Store](body/week06/README.md)
+  - [1. External Store](body/week06/external-store.md)
+  - [2. TSyringe](body/week06/t-syringe.md)
+  - [3. Redux 따라하기](body/week06/redux.md)
+  - [4. usestore-ts](body/week06/usestore-ts.md)
 
 ## APPENDIX
 
