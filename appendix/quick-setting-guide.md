@@ -1,6 +1,6 @@
 # 빠르게 시작하는 개발 환경 가이드
 
-## fnm 설치
+## Fast Node Manager 설치
 
 ### Mac 사용자
 
@@ -110,6 +110,8 @@ ESLint v8은 아직 Airbnb style guide를 지원하지 않기 때문에 Airbnb c
 
 ```bash
 npm i -D eslint@7
+
+npx eslint --init
 ```
 
 ### eslint 선택지에서 아래의 항목 선택
@@ -279,6 +281,42 @@ mkdir -p src/components
 touch index.html src/main.tsx src/main.test.tsx src/App.tsx src/App.test.tsx src/components/Greeting.test.tsx src/components/Greeting.tsx
 ```
 
+### index.html
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <title>React Demo App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>
+```
+
+### main.tsx
+
+```tsx
+import ReactDOM from 'react-dom/client';
+
+import App from './App';
+
+function main() {
+  const container = document.getElementById('root');
+  if (!container) {
+    return;
+  }
+
+  const root = ReactDOM.createRoot(container);
+  root.render(<App />);
+}
+
+main();
+```
+
 ## 기타
 
 ### 프로젝트 버전 확인
@@ -302,3 +340,16 @@ touch .vscode/settings.json
     "source.fixAll.eslint": true
   }
 }
+```
+
+### MSW 패키지 설치
+
+```bash
+npm i -D msw@0.36.4
+```
+
+## usehooks-ts 설치
+
+```bash
+npm i usehooks-ts
+```

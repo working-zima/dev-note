@@ -22,11 +22,11 @@
 # index.html로 띄우기
 npx parcel index.html
 
+#만약 실행할 때 포트 지정만 입력하고 싶다면 아래 설정이 필요합니다.
+
 # 포트 지정
 npx parcel index.html --port 8080
 ```
-
-만약 실행할 때 포트 지정만 입력하고 싶다면 아래 설정이 필요합니다.
 
 ## 설정
 
