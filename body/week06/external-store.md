@@ -330,10 +330,10 @@ export default Counter;
 
 ## 참고 자료
 
-- [관심사의 분리](https://ko.wikipedia.org/wiki/관심사_분리)\
-- [Layered Architecture](https://devmoony.tistory.com/178)\
-- [Flux](https://facebookarchive.github.io/flux/docs/in-depth-overview)\
-- [Flux (한국어)](https://haruair.github.io/flux/docs/overview.html)\
-- [React - useState의 경쟁자 useReducer](https://www.youtube.com/watch?v=E7bNzWrlKTE)\
-- [Redux의 핵심](https://ko.redux.js.org/tutorials/essentials/part-1-overview-concepts)\
+- [관심사의 분리](https://ko.wikipedia.org/wiki/관심사_분리)
+- [Layered Architecture](https://devmoony.tistory.com/178)
+- [Flux](https://facebookarchive.github.io/flux/docs/in-depth-overview)
+- [Flux (한국어)](https://haruair.github.io/flux/docs/overview.html)
+- [React - useState의 경쟁자 useReducer](https://www.youtube.com/watch?v=E7bNzWrlKTE)
+- [Redux의 핵심](https://ko.redux.js.org/tutorials/essentials/part-1-overview-concepts)
 - [forceUpdate와 같은 것이 있습니까?](https://ko.reactjs.org/docs/hooks-faq.html#is-there-something-like-forceupdate)
