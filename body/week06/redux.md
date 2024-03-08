@@ -240,7 +240,8 @@ Reflect.get(target, propertyKey[, receiver])
 : 가져올 속성의 이름.
 
 - receiver Optional\
-: 대상 속성이 접근자라면 this의 값으로 사용할 값. Proxy와 함께 사용하면, 대상을 상속하는 객체를 사용할 수 있습니다.
+: 대상 속성이 접근자라면 this의 값으로 사용할 값.\
+Proxy와 함께 사용하면, 대상을 상속하는 객체를 사용할 수 있습니다.
 
 ```jsx
 const object1 = {
@@ -259,7 +260,7 @@ console.log(Reflect.get(array1, 1));
 
 ## Redux 따라하기
 
-`src/stores/BaseStore.ts` 파일
+### `src/stores/BaseStore.ts` 파일
 
 ```tsx
 export type Action<Payload> = {
@@ -325,7 +326,7 @@ export default class BaseStore<State> {
 }
 ```
 
-`src/stores/Store.ts` 파일
+### `src/stores/Store.ts` 파일
 
 ```tsx
 import { singleton } from 'tsyringe';
@@ -386,7 +387,7 @@ export default class Store extends BaseStore<State> {
 }
 ```
 
-`src/hooks/useDispatch.ts` 파일
+### `src/hooks/useDispatch.ts` 파일
 
 ```tsx
 import { container } from 'tsyringe';
@@ -405,7 +406,7 @@ export default function useDispatch<Payload>() {
 }
 ```
 
-`src/hooks/useSelector.ts` 파일
+### `src/hooks/useSelector.ts` 파일
 
 ```tsx
 import { container } from 'tsyringe';
@@ -452,7 +453,7 @@ export default function useSelector<T>(selector: Selector<T>): T {
 }
 ```
 
-Dispatch와 Selector 사용.
+### Dispatch와 Selector 사용.
 
 ```tsx
 const dispatch = useDispatch();
@@ -499,7 +500,7 @@ export default class ObjectStore {
 }
 ```
 
-`src/stores/CounterStore.ts` 파일
+### `src/stores/CounterStore.ts` 파일
 
 ```tsx
 import { singleton } from 'tsyringe';
@@ -522,7 +523,7 @@ export default class CounterStore extends ObjectStore {
 }
 ```
 
-`src/hooks/useObjectStore.ts` 파일
+### `src/hooks/useObjectStore.ts` 파일
 
 ```tsx
 import { useEffect } from 'react';
@@ -543,7 +544,7 @@ export default function useObjectStore<T extends ObjectStore>(store: T) {
 }
 ```
 
-`src/hooks/useCounterStore.ts` 파일
+### `src/hooks/useCounterStore.ts` 파일
 
 ```tsx
 import { container } from 'tsyringe';
