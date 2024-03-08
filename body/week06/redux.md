@@ -219,6 +219,44 @@ function decrease() {
 }
 ```
 
+## Reflect
+
+Proxy와 같이 중간에서 가로챌 수 있는 JavaScript 작업에 대한 메서드를 제공하는 내장 객체입니다.\
+함수 객체가 아니므로 생성자로 사용할 수 없습니다.
+
+### Reflect.get()
+
+Reflect.get() 정적 메서드는 객체의 속성을 가져오는 함수입니다.\
+target[propertyKey]와 비슷합니다.
+
+```jsx
+Reflect.get(target, propertyKey[, receiver])
+```
+
+- target\
+: 속성을 가져올 대상 객체.
+
+- propertyKey\
+: 가져올 속성의 이름.
+
+- receiver Optional\
+: 대상 속성이 접근자라면 this의 값으로 사용할 값. Proxy와 함께 사용하면, 대상을 상속하는 객체를 사용할 수 있습니다.
+
+```jsx
+const object1 = {
+  x: 1,
+  y: 2,
+};
+
+console.log(Reflect.get(object1, 'x'));
+// Expected output: 1
+
+const array1 = ['zero', 'one'];
+
+console.log(Reflect.get(array1, 1));
+// Expected output: "one"
+```
+
 ## Redux 따라하기
 
 `src/stores/BaseStore.ts` 파일
