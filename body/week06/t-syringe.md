@@ -111,14 +111,14 @@ TSyringe의 store으로 `count`를 관리
 /* eslint-disable no-shadow */
 import { singleton } from 'tsyringe';
 
-type listener = () => void;
+type Listener = () => void;
 
 @singleton()
 class CounterStore {
   count = 0;
 
   // 변수 listeners는 각 컴포넌트의 forceUpdate를 담을 set 객체
-  listeners = new Set<listener>();
+  listeners = new Set<Listener>();
 
   // 컴포넌트 각각의 forceUpdate를 호출
   publish() {
