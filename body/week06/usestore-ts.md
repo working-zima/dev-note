@@ -243,7 +243,7 @@ import { Store, Action } from 'usestore-ts';
 
 @singleton()
 @Store()
-export default class CounterStore {
+class CounterStore {
   count = 0;
 
   @Action()
@@ -256,6 +256,9 @@ export default class CounterStore {
     this.count -= step;
   }
 }
+
+// export default에서 decorator 적용이 안 되는 문제가 있기 때문에 분리해서 작성
+export default CounterStore;
 ```
 
 ### 커스텀 Hook 작성
