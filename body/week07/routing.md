@@ -113,19 +113,51 @@ HTTP 또는 HTTPS와 같이 사용되는 통신 프로토콜을 나타냅니다.
 
 ## Routing
 
-일반적인 웹 사이트는 URL에 따라 다른 웹 페이지를 보여준다.\
-하나의 웹 페이지를 하나의 컴포넌트로 만들고, URL에 따라 적절한 컴포넌트가 보이게 함으로써 구현 가능함.
+일반적인 웹 사이트는 URL에 따라 다른 웹 페이지를 보여줍니다.\
+하나의 웹 페이지를 하나의 컴포넌트로 만들고, URL에 따라 적절한 컴포넌트가 보이게 함으로써 구현 가능합니다.
 
 ```jsx
 function App() {
   const { pathname } = window.location;
 
+  // pathname에 따라 다른 컴포넌트 라우팅
   return (
     <div>
       <Header />
       <main>
         {pathname === '/' && <HomePage />}
         {pathname === '/about' && <AboutPage />}
+      </main>
+      <Footer />
+    </div>
+  );
+}
+```
+
+page들을 따로 뽑아줄 수도 있습니다.
+
+```tsx
+import Header from './components/Header';
+import Footer from './components/Footer';
+
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+
+const pages = {
+  '/': HomePage,
+  '/about': AboutPage,
+};
+
+export default function App() {
+  const path = window.location.pathname;
+
+  const Page = Reflect.get(pages, path) || HomePage;
+
+  return (
+    <div>
+      <Header />
+      <main>
+        <Page />
       </main>
       <Footer />
     </div>
