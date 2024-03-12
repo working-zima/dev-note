@@ -26,7 +26,7 @@
 npm i -D msw@0.36.4
 ```
 
-### Jest 테스트 프레임워크 설정
+### Jest 테스트 프레임워크 설정 (이 과정을 잊을 확률 높음, 꼭 확인해 볼 것)
 
 `jest.config.js` 파일의 “setupFilesAfterEnv” 속성에 `setupTests.ts` 파일 추가.
 
