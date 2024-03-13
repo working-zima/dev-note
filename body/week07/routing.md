@@ -118,15 +118,15 @@ HTTP 또는 HTTPS와 같이 사용되는 통신 프로토콜을 나타냅니다.
 
 ```jsx
 function App() {
-  const { pathname } = window.location;
+  const path = window.location.pathname;
 
   // pathname에 따라 다른 컴포넌트 라우팅
   return (
     <div>
       <Header />
       <main>
-        {pathname === '/' && <HomePage />}
-        {pathname === '/about' && <AboutPage />}
+        {path === '/' && <HomePage />}
+        {path === '/about' && <AboutPage />}
       </main>
       <Footer />
     </div>

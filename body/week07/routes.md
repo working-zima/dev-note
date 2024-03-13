@@ -4,15 +4,23 @@
 
 - 라우터란?
 - React Router
-  - Browser Router
   - Route
+  - Browser Router
   - Memory Router
 
 ## React Router
 
+```bash
+npm i react-router-dom
+```
+
+### Route
+
 간단히 코드 옮기기.
 
 ```jsx
+// App.tsx
+
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -31,9 +39,13 @@ function App() {
   }
 ```
 
+### Browser Router
+
 브라우저 라우터 내려주기.
 
 ```jsx
+// main.tsx
+
 import { BrowserRouter } from 'react-router-dom';
 
 root.render((
@@ -43,9 +55,40 @@ root.render((
 ));
 ```
 
+### Memory Router
+
+#### Type declaration
+
+```tsx
+declare function MemoryRouter(
+  props: MemoryRouterProps
+): React.ReactElement;
+
+interface MemoryRouterProps {
+  basename?: string;
+  children?: React.ReactNode;
+  initialEntries?: InitialEntry[];
+  initialIndex?: number;
+  future?: FutureConfig;
+}
+```
+
+`<MemoryRouter>`는 내부적으로 위치를 배열로 저장합니다.\
+`<BrowserHistory>`나 `<HashHistory>`와 달리 브라우저의 history 스택과 같은 외부 소스에 묶여 있지 않으므로, 테스트와 같이 history 스택에 완전한 제어가 필요한 시나리오에 적합합니다.
+
+- `initialEntries`: 초기 진입점(엔트리 포인트)을 설정합니다.\
+기본값은 ["/"]로 루트(/) URL에 대한 단일 진입점이 설정합니다.
+
+- `initialIndex`: 초기 인덱스를 설정합니다.\
+기본값은 initialEntries의 마지막 인덱스입니다.
+
 테스트 코드에선 메모리 라우터 사용.
 
 ```jsx
+// App.test.tsx
+
+const context = describe;
+
 describe('App', () => {
   function renderApp(path: string) {
     render((
@@ -67,10 +110,10 @@ describe('App', () => {
     it('renders the about page', () => {
       renderApp('/about');
 
-      screen.getByText(/About/);
+      screen.getByText(/This is test/);
     });
   });
-});d
+});
 ```
 
 ## 참고 자료
