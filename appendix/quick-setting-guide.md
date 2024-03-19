@@ -428,8 +428,15 @@ touch .vscode/settings.json
 npm i -D msw@0.36.4
 ```
 
-## usehooks-ts 설치
+### usehooks-ts 설치
 
 ```bash
 npm i usehooks-ts
+```
+
+### 프로젝트에 알 수 없는 오류가 있을 때
+
+```bash
+rm -rf .parcel-cache
+rm -rf dsit
 ```
