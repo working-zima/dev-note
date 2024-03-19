@@ -357,7 +357,7 @@ touch .parcelrc
 ## 기본 코드 작성
 
 ```bash
-mkdir -p src/components
+mkdir -p src/components static
 touch index.html src/main.tsx src/main.test.tsx src/App.tsx src/App.test.tsx src/components/Greeting.test.tsx src/components/Greeting.tsx
 ```
 

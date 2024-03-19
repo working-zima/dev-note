@@ -3,6 +3,7 @@
 ## 학습 키워드
 
 - className
+- 의미있는 마크업
 
 ## className
 
