@@ -242,6 +242,8 @@ module.exports = {
     'react/prop-types': [2, { skipUndeclared: true }],
     'react/require-default-props': 'off',
     'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
   },
 };
 ```
