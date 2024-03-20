@@ -434,6 +434,33 @@ npm i -D msw@0.36.4
 npm i usehooks-ts
 ```
 
+### styled-components 설치
+
+```bash
+npm i styled-components
+npm i -D @types/styled-components @swc/plugin-styled-components
+```
+
+#### .swcrc 파일 작성
+
+```json
+{
+  "jsc": {
+    "experimental": {
+      "plugins": [
+        [
+          "@swc/plugin-styled-components",
+          {
+            "displayName": true,
+            "ssr": true
+          }
+        ]
+      ]
+    }
+  }
+}
+```
+
 ### 프로젝트에 알 수 없는 오류가 있을 때
 
 ```bash
