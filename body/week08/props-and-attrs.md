@@ -188,6 +188,95 @@ export default function Switch() {
 }
 ```
 
+### HTML attribute warnings
+
+위의 코드대로 작성했을 경우 HTML 속성 경고가 발생할 수 있습니다.\
+
+```bash
+Warning: Received "true" for a non-boolean attribute
+```
+
+위 경고는 styled-component에서 `<div>` 또는 `<a>`와 같은 HTML DOM 요소에 Boolean attribute가 아닌 비표준 속성에 boolean값을 전달하면 발생합니다.
+
+해결 방법으로 두 가지가 있습니다.
+
+#### 문제의 코드 예시
+
+`red`속성에 대한 경고가 발생합니다.
+
+```tsx
+const Link = props => (
+  <a {...props} className={props.className}>
+    {props.text}
+  </a>
+)
+
+const StyledComp = styled(Link)`
+  color: ${props => (props.red ? 'red' : 'blue')};
+`
+
+<StyledComp text="Click" href="https://www.styled-components.com/" red />
+```
+
+위의 코드는 아래와 같은 HTML 요소를 렌더링합니다.
+
+```html
+<a text="Click" href="https://www.styled-components.com/" red="true" class="[generated class]">Click</a>
+```
+
+#### transient props(일시적인 props)를 사용
+
+문제가 되는 속성에 prefix `$`를 붙여 사용합니다.
+
+```tsx
+const Link = ({ className, text, ...props }) => (
+  <a {...props} className={className}>
+    {text}
+  </a>
+)
+
+// red 속성에 prefix $를 붙여 사용합니다.
+const StyledComp = styled(Link)`
+  color: ${props => (props.$red ? 'red' : 'blue')};
+`
+
+
+<StyledComp text="Click" href="https://www.styled-components.com/" $red />
+```
+
+#### destructure props(props 구조분해)를 사용
+
+구조분해 할당을 사용하여 속성을 직접 추출하여 사용합니다.
+
+```tsx
+// 이전에는 Link 컴포넌트의 props를 인자로 받았지만,
+// 여기서는 className, red, text 속성을 직접 추출하여 사용합니다.
+const Link = ({ className, red, text, ...props }) => (
+  <a {...props} className={className}>
+    {text}
+  </a>
+)
+
+
+const StyledComp = styled(Link)`
+  color: ${props => (props.red ? 'red' : 'blue')};
+`
+
+
+<StyledComp text="Click" href="https://www.styled-components.com/" red />
+```
+
+위의 코드는 아래와 같은 HTML 요소를 렌더링합니다.\
+`red` 속성이 보이지 않습니다.
+
+```html
+<a href="https://www.styled-components.com/" class="[generated class]">Click</a>
+```
+
+#### Boolean attribute (HTML)
+
+`disabled`, `checked`, `readonly`, `required`가 있습니다.
+
 ## 참고 자료
 
 - [Passed props](https://styled-components.com/docs/basics#passed-props)

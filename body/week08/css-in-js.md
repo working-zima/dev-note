@@ -3,6 +3,7 @@
 ## 학습 키워드
 
 - CSS in JS 란
+- CSS
 
 ## CSS-in-JS 란
 

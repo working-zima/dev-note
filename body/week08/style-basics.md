@@ -77,6 +77,32 @@ export default function Greeting() {
 }
 ```
 
+## 의미있는 마크업
+
+```tsx
+export default function Greeting() {
+  return (
+    <p className="greeting">
+      Hello, world!
+    </p>
+  );
+}
+```
+
+간혹 `class`를 `"greeting font-size-16"`과 같이 스타일 설명을 붙이는 경우가 있습니다.\
+의미론적으로 볼때 `class`는 해당 html 태그의 역할에 대한 것일 뿐입니다.\
+만약 스타일 설명을 붙였는데 테마가 바뀌게 된다면 스타일 설명도 틀려지는 문제도 발생할 수 있습니다.
+
+```tsx
+export default function Greeting() {
+  return (
+    <p className="greeting font-size-16">
+      Hello, world!
+    </p>
+  );
+}
+```
+
 ## 참고자료
 
 - [스타일링과 CSS](https://ko.legacy.reactjs.org/docs/faq-styling.html)

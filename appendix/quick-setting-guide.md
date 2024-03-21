@@ -443,6 +443,12 @@ npm i styled-components
 npm i -D @types/styled-components @swc/plugin-styled-components
 ```
 
+#### styled-reset 설치
+
+```bash
+npm i styled-reset
+```
+
 #### .swcrc 파일 작성
 
 ```json
