@@ -36,10 +36,17 @@
   - [3. Redux 따라하기](body/week06/redux.md)
   - [4. usestore-ts](body/week06/usestore-ts.md)
 - [7주차 React Router](body/week07/README.md)
-  - [Routing](body/week07/routing.md)
-  - [Routes](body/week07/routes.md)
-  - [Router](body/week07/router.md)
-  - [Navigation](body/week07/navigation.md)
+  - [1.Routing](body/week07/routing.md)
+  - [2. Routes](body/week07/routes.md)
+  - [3. Router](body/week07/router.md)
+  - [4. Navigation](body/week07/navigation.md)
+- [8주차 CSS-in-JS](body/week08/README.md)
+  - [1. Design System](body/week08/design-system.md)
+  - [2. Style Basics](body/week08/style-basics.md)
+  - [3. CSS in JS](body/week08/css-in-js.md)
+  - [4. styled-components](body/week08/styled-components.md)
+  - [5. props와 attrs](body/week08/props-and-attrs.md)
+  - [6. Global Style & Theme](body/week08/global-style-theme.md)
 
 ## APPENDIX
 
