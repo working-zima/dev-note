@@ -14,11 +14,20 @@ React 컴포넌트 입장에서는 “전역”처럼 여겨집니다.\
 “Prop Drilling” 문제를 우아하게 해결할 수 있는 방법 중 하나입니다.\
 (React로 한정하면 Context도 쓸 수 있습니다)
 
-의존성 설치
+### 의존성 주입(Dependency Injection)
+
+의존성 주입이란 외부에서 의존 객체를 생성하여 넘겨주는 것을 의미합니다.\
+의존성을 외부에서 주입 받아 의존성을 없애고 객체간 결합도를 낮춥니다.
+
+### reflect-metadata
+
+#### reflect-metadata 의존성 설치
 
 ```bash
 npm i tsyringe reflect-metadata
 ```
+
+#### reflect-metadata 적용
 
 모든 프로그램이 시작하는 `src/main.tsx` 파일과 `src/setupTests.ts` 파일에서 reflect-metadata 임포트.
 reflect-metadata는 TypeScript에서는 런타임에 타입 정보를 사용하기 위해 사용하는 polyfill.
@@ -36,7 +45,108 @@ setupFilesAfterEnv: [
 ],
 ```
 
-싱글톤으로 관리할 CounterStore 클래스를 준비:
+### 데코레이터 함수
+
+```tsx
+// @ 기호는 타입스크립트에게 데코레이터임을 알려줍니다.
+
+@expression
+```
+
+데코레이터는 일종의 함수 입니다.\
+함수를 일급 시민으로서의 기능을 지원하는 모든 언어는 데코레이터를 구현할 수 있습니다.\
+클래스 선언, 메서드, 접근자, 프로퍼티 또는 매개 변수에 `@expression`을 장식해주면, 런타임에서 데코레이터 함수를 호출합니다.\
+데코레이터 아래의 메소드나 클래스 인스턴스가 만들어지는 런타임에 실행이되며 매번 실행되는 것은 아닙니다.
+
+#### 데코레이터 팩토리
+
+데코레이터가 런타임에 호출할 표현식을 반환하는 함수입니다.
+
+```tsx
+function color(value: string) { // 데코레이터 팩토리
+    return function (target) { // 데코레이터
+        // 'target'과 'value' 변수를 가지고 무언가를 수행합니다.
+  };
+}
+```
+
+#### 여러 데코레이터를 사용할 때 수행 단계
+
+1. 각 데코레이터의 표현은 위에서 아래로 평가됩니다.
+2. 그런 다음 결과는 아래에서 위로 함수로 호출됩니다.
+
+```tsx
+// @experimentalDecorators
+function first() {
+  console.log("first(): factory evaluated"); // 1
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log("first(): called"); // 4
+  };
+}
+
+function second() {
+  console.log("second(): factory evaluated"); // 2
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log("second(): called"); // 3
+  };
+}
+
+class ExampleClass {
+  @first()
+  @second()
+  method() {}
+}
+```
+
+콘솔 출력입니다.
+
+```bash
+[LOG]: "first(): factory evaluated"
+[LOG]: "second(): factory evaluated"
+[LOG]: "second(): called"
+[LOG]: "first(): called"
+```
+
+### singleton
+
+`TSyringe`에서 제공하는 클래스 데코레이터 팩토리로, 해당 클래스를 전역 컨테이너 내에서 싱글톤으로 등록합니다.
+싱글톤으로 등록되면, 여러 곳에서 동일한 인스턴스를 공유하고, 외부에서 인스턴스를 직접 생성하지 못하게 클래스의 생성자를 막습니다.
+
+### container
+
+IoC 컨테이너는 프로그램에서 필요한 부품들을 관리해주는데 도움이 되는 도구입니다.\
+IoC 컨테이너는 토큰이라는 것을 주고, 그에 따른 인스턴스나 값이나 객체를 돌려줍니다.
+즉, 부품들 간의 의존성을 쉽게 해결할 수 있도록 도와주는 도구입니다.
+
+#### container.resolve()
+
+의존성 주입 컨테이너에서 사용되는 메서드로, 특정한 토큰에 해당하는 객체를 가져오는 데 사용됩니다.\
+주어진 토큰에 대한 인스턴스를 생성하거나 이미 생성된 인스턴스를 반환합니다.\
+코드에서 직접적인 객체 생성과 의존성 해결을 피할 수 있으며, 유연성과 테스트 용이성을 향상시킬 수 있습니다.
+
+#### 사용 예시
+
+```tsx
+import {singleton} from "tsyringe";
+
+// Foo 클래스를 singleton으로 등록
+@singleton()
+class Foo {
+  constructor() {}
+}
+```
+
+```tsx
+// some other file
+import "reflect-metadata";
+import {container} from "tsyringe";
+import {Foo} from "./foo";
+
+// Foo에 해당하는 인스턴스 생성 또는 반환
+const instance = container.resolve(Foo);
+```
+
+### 싱글톤으로 관리할 CounterStore 클래스를 준비
 
 ```tsx
 import { singleton } from 'tsyringe';
@@ -61,7 +171,7 @@ class CounterStore {
 }
 ```
 
-싱글톤 CounterStore 객체를 사용:
+### 싱글톤 CounterStore 객체를 사용
 
 ```tsx
 import { container } from 'tsyringe';
@@ -471,3 +581,4 @@ export default CounterStore;
 - [TSyringe](https://github.com/microsoft/tsyringe)
 - [reflect-metadata](https://github.com/rbuckton/reflect-metadata)
 - [The problem with passing props](https://beta.reactjs.org/learn/passing-data-deeply-with-context#the-problem-with-passing-props)
+- [Decorators](https://www.typescriptlang.org/ko/docs/handbook/decorators.html)
