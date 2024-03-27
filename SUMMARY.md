@@ -48,6 +48,11 @@
   - [5. props와 attrs](body/week08/props-and-attrs.md)
   - [6. Global Style & Theme](body/week08/global-style-theme.md)
 - [9주차 온라인 쇼핑몰 기본 기능 개발](body/week09/README.md)
+  - [1. 개발하기 전 준비](body/week09/before-coding.md)
+  - [2. 목록 보기](body/week09/list-view.md)
+  - [3. 상품 상세 보기](body/week09/view-product-detail.md)
+  - [4. 장바구니 보기](body/week09/view-product-cart.md)
+  - [5. 장바구니 상품 담기](body/week09/add-to-cart.md)
 
 ## APPENDIX
 
