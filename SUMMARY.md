@@ -47,6 +47,7 @@
   - [4. styled-components](body/week08/styled-components.md)
   - [5. props와 attrs](body/week08/props-and-attrs.md)
   - [6. Global Style & Theme](body/week08/global-style-theme.md)
+- [9주차 온라인 쇼핑몰 기본 기능 개발](body/week09/README.md)
 
 ## APPENDIX
 
