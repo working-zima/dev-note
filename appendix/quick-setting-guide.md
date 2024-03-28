@@ -815,13 +815,6 @@ setupFilesAfterEnv: [
 ],
 ```
 
-### 프로젝트에 알 수 없는 오류가 있을 때
-
-```bash
-rm -rf .parcel-cache
-rm -rf dist
-```
-
 ### CodeceptJS
 
 #### CodeceptJS 설치
@@ -874,6 +867,13 @@ touch .vscode/settings.json
 6. /tests/.eslintrc.js 파일 생성
 
 7. .gitignore 에 output/ 추가
+
+### 프로젝트에 알 수 없는 오류가 있을 때
+
+```bash
+rm -rf .parcel-cache
+rm -rf dist
+```
 
 ## 참고 링크
 
