@@ -102,9 +102,12 @@ React Router로 여러 페이지를 표현하기 위해 `routes`와 `Layout`을 
 
 ## Test Helper
 
-테스트 코드에서 styled-components의 `Theme`과 React Router의 `Link` 등을 사용할 때 문제가 발생하지 않도록, React Testing Library의 render를 한번 감싼 테스트용 헬퍼 함수를 준비.
+테스트 코드에서 styled-components의 `Theme`과 React Router의 `Link` 등을 사용할 때 문제가 발생하지 않도록, React Testing Library의 render를 한번 감싼 테스트용 헬퍼 함수를 준비.\
+`ThemeProvider`와 `RouterProvider`를 테스트의 `render`에 써주는 로직을 `Test Helper`로 빼주어 중복을 줄임.
 
 ```typescript
+// src/utils/test-helpers.tsx
+
 import { render as originalRender } from '@testing-library/react';
 
 import React from 'react';
@@ -131,6 +134,8 @@ export function render(element: React.ReactElement) {
 기본적인 타입을 준비한다. 특별한 경우가 아니라면 미리 정한 용어집과 REST API 스펙에 맞추게 된다.
 
 ```typescript
+// src/types.ts
+
 export type Category = {
   id: string;
   name: string;
@@ -201,6 +206,8 @@ export type Cart = {
 REST API 스펙에 맞춰서 MSW 핸들러를 준비한다.
 
 ```typescript
+// src/mocks/handlers.ts
+
 import { rest } from 'msw';
 
 import { ProductSummary } from '../types';

@@ -2,7 +2,8 @@
 
 ## 상품 목록
 
-상품 목록을 얻어서 표시하는 화면을 만들자. 말 그대로 다음과 같이 두 가지로 나눌 수 있다:
+상품 목록을 얻어서 표시하는 화면을 만들자.\
+말 그대로 다음과 같이 두 가지로 나눌 수 있다:
 
 1. 상품 목록 얻기
 2. 상품 목록 보여주기
@@ -130,7 +131,7 @@ export default function Product({ product }: ProductProps) {
 [Intl](../../appendix/intl.md)을 사용하여 국가별 숫자를 표기
 
 ```typescript
-// src/components/product-list/Products.tsx
+// src/utils/numberFormat.ts
 
 export default function numberFormat(value: number) {
   return new Intl.NumberFormat().format(value);
@@ -185,7 +186,8 @@ export default function useFetchProducts(): {
 
 ## 카테고리 목록
 
-헤더에 카테고리 목록을 보여주자.
+헤더에 카테고리 목록을 보여주자.\
+`NavLink`를 사용할 수도 있지만 링크가 동적으로 생성되거나 링크의 활성화 상태를 동적으로 변경해야 하는 경우 `Link`를 사용합니다.
 
 ```typescript
 // src/components/Header.tsx
@@ -256,7 +258,7 @@ export default function Header() {
 
 @singleton()
 @Store()
-export default class CategoriesStore {
+class CategoriesStore {
   categories: Category[] = [];
 
   async fetchCategories() {
@@ -272,6 +274,8 @@ export default class CategoriesStore {
     this.categories = categories;
   }
 }
+
+export default CategoriesStore;
 ```
 
 API 호출을 모아주는 ApiService를 만든다. API의 base URL을 지정하기 위해 환경변수를 활용한다.
@@ -331,6 +335,7 @@ ProductListPage컴포넌트에서 categoryId를 얻는다.
 export default function ProductListPage() {
   const [params] = useSearchParams();
 
+  // 쿼리 스트링이 없을 경우 undefined으로 하여 Props전달 안함(기본은 null)
   const categoryId = params.get('categoryId') ?? undefined;
 
   const { products } = useFetchProducts({ categoryId });
@@ -350,7 +355,7 @@ export default function ProductListPage() {
 // src/hooks/useFetchProducts.ts
 
 export default function useFetchProducts({ categoryId }: {
-  categoryId: string;
+  categoryId?: string;
 }): {
   products: ProductSummary[];
 } {
@@ -373,7 +378,7 @@ Store도 변경.
 
 @singleton()
 @Store()
-export default class ProductsStore {
+class ProductsStore {
   products: ProductSummary[] = [];
 
   async fetchProducts({ categoryId }: {categoryId?: string}) {
@@ -389,6 +394,8 @@ export default class ProductsStore {
     this.products = products;
   }
 }
+
+export default ProductsStore;
 ```
 
 API Service도 변경.
@@ -410,6 +417,7 @@ export default class ApiService {
 
   async fetchProducts({ categoryId }: {
       categoryId?: string
+      // fetchProducts()를 호출할 수 있도록 기본값 '{}' 사용
     } = {}): Promise<ProductSummary[]> {
     const { data } = await this.instance.get(
       '/products'
@@ -423,7 +431,3 @@ export default class ApiService {
 
 export const apiService = new ApiService();
 ```
-
-사실 강의를 준비할 때는 처음부터 이렇게 만들기는 했다.
-처음부터 고민해서 바로 만들어도 되고, 일단 만들고 이렇게 고쳐나가도 된다.
-테스트 코드가 있으면 이런 변경 작업을 할 때 더 자신감을 얻을 수 있다.
