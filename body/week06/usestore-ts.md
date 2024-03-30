@@ -367,6 +367,33 @@ export default function TodosApp() {
 가능하면 내장된 React `state`를 `useState` 및 `useReducer`와 함께 사용하는 것이 좋습니다.\
 `useSyncExternalStore` API는 기존 비 React 코드와 통합해야 할 때 주로 유용합니다.
 
+### Error: Cannot find store glue
+
+`parcel`이 컴파일하는 과정에서 `export default class` 로 내보낼 때 `decorator` 적용이 안 되는 문제가 발생할 수 있습니다.\
+
+#### 해결 방법
+
+1. `export default`에서와 `class`를 분리하여 작성하는 방법이 있습니다. (추천)
+  ![resolve-img](./img/usestore-error.png)
+
+2. TSC를 사용하는 방법이 있습니다.\
+  이 경우 속도가 느려진다는 단점이 있습니다.\
+  TSC를 사용하려면 `.parcelrc` 파일을 다음과 같이 변경하면 됩니다.
+
+    ```json
+    {
+      "extends": ["@parcel/config-default"],
+      "reporters": ["...", "parcel-reporter-static-files-copy"],
+      "transformers": {
+        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
+      }
+    }
+    ```
+
+3. parcel의 버전을 낮추는 방법이 있습니다.\
+  parcel 이 업데이트되면서 내부적으로 세팅 기본값이 바뀌어서 컴파일하는 과정에서 export default class 로 내보낼 때 데코레이터 적용이 안되는 것 일 수도 있다고 합니다.
+
+
 ## 참고
 
 - [usestore-ts](https://usestore-ts.com/)
