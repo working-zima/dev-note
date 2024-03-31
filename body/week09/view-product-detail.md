@@ -204,6 +204,8 @@ export default function Images({ images }: ImagesProps) {
 `Description`를 만든다. 임의로 key를 잡아주기 위해 꼼수를 사용했다.
 
 ```typescript
+// src/components/product-detail/Description.tsx
+
 function key(value: string, index: number) {
   return `${index}-${value}`;
 }
