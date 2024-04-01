@@ -5,6 +5,52 @@
 - usestore-ts
 - useSyncExternalStore
 
+## Example
+
+```tsx
+import { Store, Action, useStore } from 'usestore-ts';
+
+@Store()
+class CounterStore {
+  count = 0;
+
+  @Action()
+  increase() {
+    this.count += 1;
+  }
+
+  @Action()
+  reset() {
+    this.count = 0;
+  }
+}
+
+const counterStore = new CounterStore();
+
+export default function Counter() {
+  // [{프로퍼티}, 가져올 store의 인스턴스] = useStore(가져올 store)
+  const [{ count }, store] = useStore(counterStore);
+
+  return (
+    <div>
+      <p>
+        Count:
+        {' '}
+        {count}
+      </p>
+      <p>
+        <button type="button" onClick={() => store.increase()}>
+          Increase
+        </button>
+        <button type="button" onClick={() => store.reset()}>
+          Reset
+        </button>
+      </p>
+    </div>
+  )
+}
+```
+
 ## usestore 만들어 보기
 
 ### ObjectStore.ts
