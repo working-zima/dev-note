@@ -12,10 +12,6 @@
   단순히 파일만 합쳐주는 것이 아닌 변환까지 포함됩니다.\
   내부적으로 SWC를 사용해 기존 도구보다 빠릅니다(ES Module을 적극 활용하는 Vite도 엄청나게 빠름).
 
-- 참고:
-  - [Parcel - Blazing fast, zero configuration web application bundler](https://github.com/ahastudio/til/tree/main/parcel)
-  - [Vite](https://github.com/ahastudio/til/tree/main/vite)
-
 ## 실행 명령어
 
 ```bash
@@ -137,3 +133,9 @@ npm start
 #### dist
 
 `dist` 폴더는 "distribution"의 약자로, 주로 프로젝트를 빌드하거나 번들링한 결과물을 담는 디렉토리를 가리키며 최종 사용자 또는 호스팅 서버에 배포할 준비가 된 정적 파일들이 위치합니다.
+
+## 참고 자료
+
+- [Parcel - Blazing fast, zero configuration web application bundler](https://github.com/ahastudio/til/tree/main/parcel)
+- [Vite](https://github.com/ahastudio/til/tree/main/vite)
+- [swc와 웹 개발의 미래](https://youtu.be/4RJxyGJQe4o?feature=shared)
