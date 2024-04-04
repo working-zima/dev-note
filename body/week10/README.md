@@ -13,6 +13,9 @@
 ### 배운 점
 
 `npm`으로 패키지를 설치할 때 `npm ERR! could not detect node name from path or package`라는 오류가 발생했습니다.\
+
+![npm error](./img/npm-error.png)
+
 이상하게 main 브랜치는 정상인데 제 브랜치에만 위와 같은 오류가 발생했습니다.\
 이후 다음과 같은 방법을 시도해 봤습니다.
 
