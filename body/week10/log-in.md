@@ -340,6 +340,26 @@ async login({ email, password }: {
 
 ## 로그인 여부에 따라 다르게 보여주기
 
+`setupTest.ts`에 pollyfill 추가(`import 'whatwg-fetch'`)
+
+```typescript
+/* eslint-disable import/no-extraneous-dependencies */
+
+import '@testing-library/jest-dom';
+
+import 'whatwg-fetch';
+
+import 'reflect-metadata';
+
+import server from './mocks/server';
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+
+afterAll(() => server.close());
+
+afterEach(() => server.resetHandlers());
+```
+
 로그인 여부에 따라 GNB 구성이 바뀌도록 `Header`를 수정한다.
 
 ```tsx
