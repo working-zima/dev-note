@@ -57,6 +57,12 @@
 
 [온라인 쇼핑몰 REST API](https://docs.google.com/document/d/1bGYl3IDoX53cNBbZHNlsRhPLZQ3Qiu-Jm3gpqyu_xI0/view)
 
-지난 주와 다르게 인증/인가가 적용된 API Base URL
+[지난 주와 다르게 인증/인가가 적용된 API Base URL](https://shop-demo-api-02.fly.dev)
 
-https://shop-demo-api-02.fly.dev
+## setup-database
+
+```bash
+// 확인용 카트 없애기
+
+https://shop-demo-api-02.fly.dev/backdoor/setup-database
+```
