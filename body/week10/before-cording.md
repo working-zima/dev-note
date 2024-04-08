@@ -55,7 +55,7 @@
 
 ## REST API
 
-[온라인 쇼핑몰 REST API](https://docs.google.com/document/d/1bGYl3IDoX53cNBbZHNlsRhPLZQ3Qiu-Jm3gpqyu_xI0/view)
+[온라인 쇼핑몰 REST API](../../appendix/rest-api/rest-api.md)
 
 [지난 주와 다르게 인증/인가가 적용된 API Base URL](https://shop-demo-api-02.fly.dev)
 

@@ -54,7 +54,7 @@
 
 ## REST API
 
-- [REST API](./rest-api/rest-api.md)
+- [REST API](../../appendix/rest-api/rest-api.md)
 - [API Base URL](https://shop-demo-api-01.fly.dev/)
 
 ## 개발 환경 세팅
