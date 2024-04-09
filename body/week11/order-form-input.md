@@ -6,6 +6,8 @@
 `OrderPage`부터 간단히 만든다. 로직 자체는 장바구니와 매우 유사하다.
 
 ```tsx
+// src/pages/OrderPage.tsx
+
 export default function OrderPage() {
   const { cart } = useFetchCart();
 
@@ -22,6 +24,8 @@ export default function OrderPage() {
 `OrderForm` 컴포넌트도 장바구니와 유사하다.
 
 ```tsx
+// src/components/new-order/OrderForm.tsx
+
 const Container = styled.div`
   h2 {
     font-size: 4rem;
@@ -50,6 +54,8 @@ export default function OrderForm({ cart }: OrderFormProps) {
 `OrderCompletePage`도 `SignupCompletePage`와 마찬가지로 간단하게 구성한다.
 
 ```tsx
+// src/pages/OrderCompletePage.tsx
+
 export default function OrderCompletePage() {
   return (
     <div>
@@ -67,6 +73,8 @@ export default function OrderCompletePage() {
 `routes`에 페이지 두 개를 모두 추가한다.
 
 ```tsx
+// src/routes.tsx
+
 { path: '/order', element: <OrderPage /> },
 { path: '/order/complete', element: <OrderCompletePage /> },
 ```
@@ -74,6 +82,8 @@ export default function OrderCompletePage() {
 장바구니 페이지에서 주문 페이지로 갈 수 있도록 `CartView`에 버튼 추가.
 
 ```tsx
+// src/components/cart/CartView.tsx
+
 export default function CartView({ cart }: CartViewProps) {
   const navigate = useNavigate();
 
@@ -108,9 +118,11 @@ OrderFormStore를 만들어서 관련 정보를 다룰 수 있게 준비하자.
 주소는 크게 두 부분으로 나뉘고, 상세 주소가 아닌 상위 주소를 지정할 때 우편번호를 함께 지정하게 한다.
 
 ```tsx
+// src/stores/OrderFormStore.ts
+
 @singleton()
 @Store()
-export default class OrderFormStore {
+class OrderFormStore {
   name = '';
 
   address1 = '';
@@ -150,11 +162,15 @@ export default class OrderFormStore {
     this.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
   }
 }
+
+export default OrderFormStore;
 ```
 
 늘 하던 것처럼 Store를 쓸 수 있는 Hook을 만든다.
 
 ```tsx
+// src/hooks/useOrderFormStore.ts
+
 import { container } from 'tsyringe';
 
 import { useStore } from 'usestore-ts';
@@ -170,6 +186,8 @@ export default function useOrderFormStore() {
 `OrderForm`에서 쓸 수 있는 `ShippingForm`을 만들자.
 
 ```tsx
+// src/new-order/ShippingForm.tsx
+
 import styled from 'styled-components';
 
 import TextBox from '../ui/TextBox';
@@ -269,6 +287,8 @@ export default function ShippingForm() {
 `TextBox`에 readOnly 속성을 추가하고, onChange를 옵셔널하게 만든다.
 
 ```tsx
+// src/components/ui/TextBox.tsx
+
 type TextBoxProps = {
   label: string;
   placeholder?: string;
@@ -316,15 +336,19 @@ export default function TextBox({
 주소는 외우지만 우편번호는 못 외우고 있다.
 더 중요한 건! → 정확히 표준화된 주소를 얻을 수 있다.
 Daum 우편번호 서비스
-index.html 파일에 스크립트 태그를 추가한다.
+`index.html` 파일에 스크립트 태그를 추가한다.
 
 ```html
+<!-- index.html -->
+
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 ```
 
 전역으로 얻는 daum 객체의 타입을 알 수 있도록 `daum.postcode.d.ts` 파일을 만든다.
 
 ```tsx
+// src/components/new-order/daum.postcode.d.ts
+
 declare namespace daum {
   export type PostcodeResult = {
     address: string;
@@ -346,6 +370,8 @@ declare namespace daum {
 우편번호 검색 모달(modal)을 보여주는 `AddressSearch` 컴포넌트를 만든다. `useRef` 훅을 사용하면 DOM 객체에 직접 접근할 수 있다.
 
 ```tsx
+// src/components/new-order/AddressSearch.ts
+
 import { useRef } from 'react';
 
 import { useEffectOnce } from 'usehooks-ts';
@@ -405,9 +431,11 @@ export default function AddressSearch({
 }
 ```
 
-ShippingForm에서 AddressSearch를 활용하게 한다.
+`ShippingForm`에서 `AddressSearch`를 활용하게 한다.
 
 ```tsx
+// src/components/new-order/ShippingForm.tsx
+
 const {
   value: searching, setTrue: openSearch, setFalse: closeSearch,
 } = useBoolean();

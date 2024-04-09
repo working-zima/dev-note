@@ -2,12 +2,6 @@
 
 ## 포트원 통합 결제 솔루션
 
-- [포트원](https://portone.io/korea/ko)
-- [결제 연동하기](https://portone.gitbook.io/docs/console/guide/connect)
-- [API Keys](https://portone.gitbook.io/docs/console/guide/api-keys)
-- [인증결제 연동하기](https://portone.gitbook.io/docs/auth/guide)
-- [JavaScript SDK](https://portone.gitbook.io/docs/sdk/javascript-sdk)
-
 포트원은 여러 PG사를 하나의 깔끔한 API로 사용할 수 있게 해주는 통합 결제 솔루션으로, 예전에는 “아임포트”란 이름으로 서비스했다.\
 가볍게 무료로 시작할 수 있고, 복잡한 심사 과정을 거치지 않아도 바로 결제 기능을 테스트할 수 있다.\
 이미 많은 기업에서 사용 중이므로 이번 기회에 사용법을 익혀두면 좋다.
@@ -39,35 +33,45 @@ PG사를 “카카오페이”로 선택하면 부담 없이 테스트할 수 �
 
 포트원 V2 SDK가 베타로 출시됐지만, 여기서는 V1을 사용한다.
 
-index.html 파일에 스크립트 태그를 추가한다.
+`index.html` 파일에 스크립트 태그를 추가한다.
 
 ```html
+<!-- index.html -->
+
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 ```
 
 `main.tsx` 파일의 main 함수에서 아까 챙겨둔 가맹점 식별 코드를 세팅한다.
 
+타입이 있어야 하는데 SDK 특성상 type을 제공하지 않기 때문에 V1의 타입에 대한 정보가 없습니다.\
+그렇기 때문에 `Reflect`를 사용하여 window 객체에서 포트원(아임포트)에서 제공하는 JavaScript SDK의 전역 변수인 '`IMP`'를 가져옵니다.\
+`IMP`는 "iamport"의 약자로 포트원과 상호 작용할 수 있습니다.
+
 ```tsx
-Reflect.get(window, 'IMP').init('가맹점_식별코드');
+// src/main.tsx
+
+Reflect.get(window, 'IMP').init('복사한_내_가맹점_식별코드');
 ```
 
 이런 정보는 환경변수를 활용하면 훨씬 더 좋다.\
 `.env` 파일을 만들어서 개발할 때 사용할 환경변수를 관리해 보자.\
 하는 김에 (지금까지 사용하지 않았던) `API_BASE_URL`도 같이 잡아주자.
 
-```txt
+```plaintext
+// .env
+
 API_BASE_URL=https://shop-demo-api-03.fly.dev
 PORTONE_IMP=<가맹점 식별코드>
 PORTONE_PG_CODE=<PG사 코드>.<PG상점아이디>
 ```
 
-PG사 코드는 포트원 문서를 참고해서 써준다.
-
-[결제요청 파라미터](https://portone.gitbook.io/docs/sdk/javascript-sdk/payrq)
+PG사 코드는 포트원 문서 [결제요청 파라미터](https://portone.gitbook.io/docs/sdk/javascript-sdk/payrq)를 참고해서 써준다.
 
 이제 가맹점 식별 코드를 세팅할 때 환경변수를 사용할 수 있다.
 
 ```tsx
+// src/main.tsx
+
 Reflect.get(window, 'IMP').init(process.env.PORTONE_IMP);
 ```
 
@@ -75,7 +79,31 @@ Reflect.get(window, 'IMP').init(process.env.PORTONE_IMP);
 
 Axios와 마찬가지로 우리 코드에서 포트원을 그대로 사용하지 않도록, `PaymentService`를 만든다.
 
+`request_pay` 함수는 첫 번째 인수로 결제 요청에 대한 모든 옵션이 포함된 구성 객체를 갖습니다.\
+두 번째 인수로는 `response` 매개변수를 받는 함수를 갖습니다.\
+이 함수는 결제가 성공적으로 완료된 경우, 유저가 결제할 수 없는 경우, 또는 유저가 결제 창을 닫을 때 호출됩니다.
+
+```jsx
+class RequestPay extends React.Component {
+  requestPay = () => {
+    IMP.request_pay({ // param
+}, rsp => { // callback
+      if (rsp.success) {
+        ...,
+        // 결제 성공 시 로직,
+        ...
+      } else {
+        ...,
+        // 결제 실패 시 로직,
+        ...
+      }
+    });
+  }
+```
+
 ```tsx
+// src/services/PaymentService.ts
+
 const PG_CODE = process.env.PORTONE_PG_CODE || '';
 
 type Product = {
@@ -142,6 +170,8 @@ export const paymentService = new PaymentService();
 컴포넌트에서 쉽게 쓸 수 있도록 `usePayment` 훅을 만든다.
 
 ```tsx
+// src/hooks/usePayment.ts
+
 export default function usePayment(cart: Cart) {
   return {
     async requestPayment() {
@@ -168,6 +198,14 @@ export default function usePayment(cart: Cart) {
 `PaymentButton` 컴포넌트를 만들어 주면 준비가 끝난다.
 
 ```tsx
+// src/components/new-order/OrderForm.tsx
+
+<PaymentButton cart={cart} />
+```
+
+```tsx
+// src/components/new-order/PaymentButton.tsx
+
 const Container = styled.div`
   p {
     margin-block: 2rem;
@@ -218,3 +256,13 @@ export default function PaymentButton({ cart }: PaymentButtonProps) {
   );
 }
 ```
+
+## 참고 자료
+
+- [포트원](https://portone.io/korea/ko)
+- [결제 연동하기](https://portone.gitbook.io/docs/console/guide/connect)
+- [API Keys](https://portone.gitbook.io/docs/console/guide/api-keys)
+- [인증결제 연동하기](https://portone.gitbook.io/docs/auth/guide)
+- [JavaScript SDK](https://portone.gitbook.io/docs/sdk/javascript-sdk)
+- [결제연동 10분컷. 한방에 몽땅 설명해드림!](https://www.youtube.com/watch?v=JsiTJlLitMI&t=71s)
+- [기본적인 결제용어 참고하기!](https://faq.portone.io/aef597ad-5762-4e05-9972-16e45a0d1fcb)
