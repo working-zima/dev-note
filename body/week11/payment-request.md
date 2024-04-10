@@ -101,6 +101,9 @@ class RequestPay extends React.Component {
   }
 ```
 
+`request_pay`는 일반 callback 함수입니다.\
+하지만 `async`, `await`로 사용하기 위해 `Promise()` 생성자로 함수에 프로미스 기능을 추가하여 프로미스를 반환하도록 합니다.
+
 ```tsx
 // src/services/PaymentService.ts
 

@@ -5,6 +5,8 @@
 `ApiService`에 `createOrder` 메서드를 추가한다.
 
 ```tsx
+// src/services/ApiService.ts
+
 async createOrder({ receiver, payment }: {
   receiver: {
     name: string;
@@ -20,7 +22,12 @@ async createOrder({ receiver, payment }: {
 }): Promise<void> {
   await this.instance.post('/orders', { receiver, payment });
 }
-OrderFormStore에 order 메서드를 추가한다.
+```
+
+`OrderFormStore`에 `order` 메서드를 추가한다.
+
+```tsx
+// src/stores/OrderFormStore.ts
 
 async order({ merchantId, transactionId }: {
   merchantId: string;
@@ -37,4 +44,26 @@ async order({ merchantId, transactionId }: {
     payment: { merchantId, transactionId },
   });
 }
+```
+
+```tsx
+// src/components/new-order/PaymentButton.tsx
+
+const [{ valid }, store] = useOrderFormStore();
+
+const handleClick = async () => {
+  setError('');
+
+  try {
+    const { merchantId, transactionId } = await requestPayment();
+
+    await store.order({ merchantId, transactionId });
+
+    navigate('/order/complete');
+  } catch (e) {
+    if (e instanceof Error) {
+      setError(e.message);
+    }
+  }
+};
 ```
