@@ -244,7 +244,9 @@ export default GlobalStyle;
 
 ### styled.d.ts
 
-타입 문제를 해결하기 위해 styled.d.ts 파일을 작성합니다.
+타입 문제를 해결하기 위해 `styled.d.ts` 파일을 작성합니다.\
+`declare`는 JS 코드로는 컴파일 되지 않고, TypeScript 컴파일러에게 타입 정보를 알려줍니다.\
+interface의 이름이 `DefaultTheme`인 이유는 `@types/styled-components/index.d.ts`에 `export interface DefaultTheme {}`으로 정의되어 있기 때문입니다.
 
 ```tsx
 // src/styles/styled.d.ts
@@ -275,7 +277,33 @@ type Theme = typeof defaultTheme;
 export default Theme;
 ```
 
-`defaultTheme`의 타입을 가져와서 타입 파일을 변경합니다.
+`typeof defaultTheme`로 type `Theme`를 아래와 같게 만들어 줍니다.
+
+```tsx
+type Theme = {
+  colors: {
+      primary: string;
+      secondary: string;
+      tertiary: string;
+      background: string;
+      layoutBackground: string;
+      buttonHoverBackground: string;
+      buttonHoverBorder: string;
+      text: string;
+      textFieldBorder: string;
+      line: string;
+      boldLine: string;
+  };
+  sizes: {
+    layoutWidth: string;
+    contentPadding: string;
+    contentBorderRadius: string;
+  };
+}
+```
+
+`defaultTheme`의 타입을 가져와서 타입 파일을 변경합니다.\
+`Theme`에 정의된 타입 외에 더 추가할 타입이 없기 때문에 `Theme {}` 빈 객체를 상속합니다.
 
 ```tsx
 // src/styles/styled.d.ts
@@ -293,6 +321,8 @@ declare module 'styled-components' {
 항상 `defaultTheme`에 먼저 항목을 추가/삭제하고, 나머지를 여기에 맞추면 됩니다.
 
 ```tsx
+// src/styles/darkTheme.ts
+
 import Theme from './Theme';
 
 const darkTheme: Theme = {
@@ -312,6 +342,8 @@ export default darkTheme;
 의미를 명확히 드러냈다면, 다크 모드를 지원하는 것도 쉽습니다.
 
 ```tsx
+// src/App.tsx
+
 import { useDarkMode } from 'usehooks-ts';
 
 import { ThemeProvider } from 'styled-components';
@@ -343,6 +375,10 @@ export default function App() {
   );
 }
 ```
+
+앞서 정의 했던 `DefaultTheme`은 `ThemeProvider`에 사용됩니다.
+
+![theme provider](./img/theme-provider.png)
 
 ### window.matchMedia 문제
 
@@ -430,3 +466,5 @@ module.exports = {
 - [VSCode Theme Color](https://code.visualstudio.com/api/references/theme-color)
 - [Bootstrap Theme Color](https://getbootstrap.com/docs/5.3/customize/color/)
 - [Mocking methods which are not implemented in JSDOM](https://jestjs.io/docs/29.4/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom)
+- [[TypeScript] module, import, export, declare 개념 정리](https://it-eldorado.tistory.com/127)
+- [API Reference](https://styled-components.com/docs/api#typescript)
