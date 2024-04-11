@@ -348,8 +348,20 @@ export default function App() {
 
 Jest 테스트 쪽에서 “window.matchMedia” 문제 발생합니다.
 
-Mocking methods which are not implemented in JSDOM
-`src/setupTests.ts` 파일에 공식 문서에 나온 코드를 넣으면 해결된다.
+Jest와 JSDOM을 사용하여 테스트할 때 `window.matchMedia()` 메서드 같은 일부 브라우저 API는 JSDOM에서 아직 구현되지 않은 경우가 있습니다.
+
+`src/setupTests.ts` 파일에 [공식 문서](https://jestjs.io/docs/29.4/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom)에 나온 코드를 넣으면 해결됩니다.
+
+`Object.defineProperty()`를 사용하여 `window.matchMedia`를 목(mock)으로 설정합니다.\
+이 함수는 전달된 쿼리에 따라 적절한 객체를 반환하며, `matches` 속성은 항상 `false`로 설정됩니다.\
+
+미디어 쿼리에 따라 동적으로 동작하는 코드를 테스트할 때, 특히 특정 미디어 쿼리에 따라 다른 UI나 동작을 실행하는 경우에는 테스트가 어려울 수 있습니다.\
+예를 들어, 화면이 특정 너비 미만인 경우에는 다른 UI를 보여주고, 특정 너비 이상인 경우에는 다른 UI를 보여주는 등의 경우입니다.
+
+이런 상황에서 `matches` 속성을 항상 `false`로 설정하여 해당 미디어 쿼리에 대한 테스트 목적으로 동작하는 것은 미디어 쿼리의 영향을 받지 않고 코드를 테스트하는 데 더욱 용이하게 만들어줍니다.\
+미디어 쿼리에 따라 다른 동작을 테스트하기 위해 실제로 브라우저 창 크기를 조정하거나 다른 환경을 설정할 필요가 없으므로 테스트가 훨씬 간편해지며 테스트할 때 일관된 결과를 얻을 수 있습니다.
+
+이외에도 `window.matchMedia`와 `matches` 속성 대한 설명은 [window.matchMedia() 메서드](../../appendix/window-matchMedia.md)에 있습니다.
 
 ```tsx
 // src/setupTests.ts
@@ -368,6 +380,8 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 ```
+
+`jest.config`의 `setupFilesAfterEnv`에 윗 코드를 실행할 `setupTests`가 추가 되었는지 확인합니다.
 
 ```javascript
 // jest.config
@@ -415,3 +429,4 @@ module.exports = {
 - [Create a declarations file](https://styled-components.com/docs/api#create-a-declarations-file)
 - [VSCode Theme Color](https://code.visualstudio.com/api/references/theme-color)
 - [Bootstrap Theme Color](https://getbootstrap.com/docs/5.3/customize/color/)
+- [Mocking methods which are not implemented in JSDOM](https://jestjs.io/docs/29.4/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom)
