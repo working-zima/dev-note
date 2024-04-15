@@ -64,6 +64,12 @@
   - [2. 배송 정보 입력](body/week11/order-form-input.md)
   - [3. 포트원 결제 요청](body/week11/payment-request.md)
   - [4. 배송 및 결제 정보 전달](body/week11/shipping-payment-details.md)
+- [12주차 온라인 쇼핑몰 관리자 기능 개발](body/week12/README.md)
+  - [1. 관리자 웹 사이트 개발 시작](body/week12/before-cording.md)
+  - [2. 로그인, 사용자 목록](body/week12/user-list-page.md)
+  - [3. 카테고리 관리](body/week12/category-list-page.md)
+  - [4. 주문 관리](body/week12/order-list-page.md)
+  - [5. 상품 관리](body/week12/product-list-page.md)
 
 ## APPENDIX
 
