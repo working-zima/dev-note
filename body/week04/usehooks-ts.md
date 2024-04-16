@@ -243,17 +243,69 @@ function Counter() {
 
 ### [useEventListener](https://usehooks-ts.com/react-hook/use-event-listener)
 
-모든 종류의 이벤트를 확인할 수 있음. 특히 dispatchEvent로 전달되는 커스텀 이벤트에 반응하기 좋다. (강력 추천!)
+모든 종류의 이벤트를 확인할 수 있습니다.\
+특히 dispatchEvent로 전달되는 커스텀 이벤트에 반응하기 좋다. (강력 추천!)
 
 ### [useLocalStorage](https://usehooks-ts.com/react-hook/use-local-storage)
 
-localStorage와 JSON으로 객체 영속화.
+로컬 스토리지(Local Storage) API를 사용하여 페이지 리로드 간에 상태를 유지하는 커스텀 훅(custom hook)입니다.\
+localStorage와 JSON으로 객체 영속화이며 이벤트를 통해(dispatchEvent + useEventListener) 다른 컴포넌트와 동기화하는 게 매우 중요한 특징입니다.
 
-이벤트를 통해(dispatchEvent + useEventListener) 다른 컴포넌트와 동기화하는 게 매우 중요한 특징.
+```tsx
+[T, Dispatch<SetStateAction<T>>, () => void] = useLocalStorage<T>(key, initialValue, options?): [T, Dispatch<SetStateAction<T>>, () => void]
+```
+
+#### returns
+
+- T: 로컬 스토리지에 저장된 값의 현재 상태를 나타냅니다.
+- Dispatch: setValue(newValue) 또는 setValue(oldValue => newValue) 형태로 상태를 업데이트하는 함수입니다.
+- () => void: 이 함수를 호출하면 지정된 키와 연관된 값이 로컬 스토리지에서 삭제되며, 상태도 초기값으로 재설정됩니다.
+
+#### Parameters
+
+- key: 로컬 스토리지에 값이 저장될 키를 나타냅니다.
+- initialValue: 상태의 초기값을 나타냅니다.
+- options: 직렬화(데이터를 다른 형식(일반적으로 문자열)으로 변환하는 과정) 및 역직렬화(직렬화된 데이터를 원래 형식으로 다시 변환하는 과정) 동작을 사용자 정의하는 데 사용되는 옵션 객체입니다.
 
 ### [useDarkMode](https://usehooks-ts.com/react-hook/use-dark-mode)
 
+## swr(Stale-while-revalidate)
+
+웹 애플리케이션에서 데이터를 관리하기 위한 도구 중 하나입니다.\
+캐시에 저장된 데이터를 가져와서 사용합니다.\
+동시에, 백그라운드에서는 서버에 데이터를 유효성 다시 확인하기 위한 요청을 보냅니다.\
+서버로부터 새로운 데이터가 있을 경우, 이 데이터를 가져와서 캐시를 최신화합니다.
+
+### useSWR hook
+
+```tsx
+const { data, error, isLoading, isValidating, mutate } = useSWR(key, fetcher, options)
+```
+
+#### 파라미터
+
+- key: 요청을 위한 고유한 키 문자열(또는 함수 / 배열 / null)
+- fetcher: (옵션) 데이터를 가져오기 위한 함수를 반환하는 Promise, promise를 리턴하는 모든 함수 가능
+- options: (옵션) SWR hook을 위한 옵션 객체, 사용자가 페이지를 탐색 중 다른 탭을 보다가 다시 돌아왔을 때나 혹은 네트워크가 끊어졌다가 다시 연결되었을 때 refetch를 할 수 있도록 옵션으로 설정 가능
+
+fetcher 함수에 key 값이 첫 번째 파라미터로 전달됩니다.
+
+#### 반환 값
+
+- data: fetcher가 이행한 주어진 키에 대한 데이터(로드되지 않았다면 undefined)
+- error: fetcher가 던진 에러(또는 undefined)
+- isLoading: 진행 중인 요청이 있고 "로드된 데이터"가 없는 경우. 폴백 데이터와 이전 데이터는 "로드된 데이터"로 간주하지 않습니다.
+- isValidating: 요청이나 갱신 로딩의 여부
+- mutate(data?, options?): 캐시 된 데이터를 뮤테이트하기 위한 함수 （상세내용）
+
+## react-query (Tanstack-query)
+
+HTTP 요청을 전송하고 프론트엔드 사용자 인터페이스를 백엔드 데이터와 동기화된 상태로 유지하는 데 이용하는 라이브러리입니다.\
+useEffect와 fetch 함수로도 이러한 작업을 할 수 있지만 Tanstack 쿼리를 이용하면 코드가 매우 간결해지고 개발자로서 훨씬 수월하게 작업할 수 있습니다.\
+또한 가져온 데이터를 캐시 처리하고 메모리에 저장해서 필요할 때 다시 사용하는 구현하기 까다로운 기능들을 도와줍니다.
+
 ## 참고 자료
 
-[usehooks-ts](https://usehooks-ts.com/)
-[React에서의 타이머 part 1 : setInterval 말고 이것! - 코드종님 영상](https://youtu.be/2tUdyY5uBSw)
+- [usehooks-ts](https://usehooks-ts.com/)
+- [React에서의 타이머 part 1 : setInterval 말고 이것! - 코드종님 영상](https://youtu.be/2tUdyY5uBSw)
+- [React에서 서버 데이터를 최신으로 관리하기(React Query, SWR)](https://fe-developers.kakaoent.com/2022/220224-data-fetching-libs/)

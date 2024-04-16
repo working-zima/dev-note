@@ -21,7 +21,13 @@ React의 state는 “변경”을 다루기 위한 요소입니다.\
 “Re-rendering”이란 주제에서 다뤄집니다.\
 어떤 컴포넌트의 state가 바뀌면 해당 컴포넌트와 하위 컴포넌트를 다시 렌더링하게 됩니다.
 
-아무렇게나 만들어도 되지만, 일관성과 효율을 위해 DRY 원칙을 따르는 SSOT를 만듭니다.
+### 리액트 프로젝트에서 일반적으로 사용하는 상태(state)
+
+- Local State: 리액트 컴포넌트 안에서만 사용되는 state
+- Global State: Global Store에 정의되어 프로젝트 어디에서나 접근할 수 있는 state
+- Server State: 서버로부터 받아오는 state
+
+state는 아무렇게나 만들어도 되지만, 일관성과 효율을 위해 DRY 원칙을 따르는 SSOT를 만듭니다.
 
 ### DRY 원칙
 
@@ -308,3 +314,4 @@ function select<ItemType, ValueType>(
 - [일급 함수](https://developer.mozilla.org/ko/docs/Glossary/First-class_Function)
 - [1급 객체(first-class object)란?](<https://jcsoohwancho.github.io/2019-10-18-1%EA%B8%89-%EA%B0%9D%EC%B2%B4(first-class-object)%EC%9D%B4%EB%9E%80/>)
 - [[10분 테코톡] 무비의 React의 state](https://www.youtube.com/watch?v=NpTizz_qgtA)
+- [React에서 서버 데이터를 최신으로 관리하기(React Query, SWR)](https://fe-developers.kakaoent.com/2022/220224-data-fetching-libs/)
