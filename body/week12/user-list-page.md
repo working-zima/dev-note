@@ -7,6 +7,8 @@
 `routes.tsx`의 모습은 다음과 같다.
 
 ```tsx
+// src/routes.tsx
+
 const routes = [
   { path: '/login', element: <LoginPage /> },
   {
@@ -29,16 +31,18 @@ const routes = [
 ];
 ```
 
-`LoginPag`e는 레이아웃이 적용되지 않아 스스로 꾸며줘야 한다는 점을 제외하면 기존과 동일하다.
+`LoginPage`는 레이아웃이 적용되지 않아 스스로 꾸며줘야 한다는 점을 제외하면 기존과 동일하다.
 
 ```tsx
+// src/pages/LoginPage.tsx
+
 import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../components/login/LoginForm';
 
 import useLoginFormStore from '../hooks/useLoginFormStore';
 
@@ -74,6 +78,8 @@ export default function LoginPage() {
 `Layout`은 로그인이 올바르게 된 경우에만 렌더링하도록 확실히 제약한다.
 
 ```tsx
+// src/components/Layout.tsx
+
 import { Outlet } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -106,6 +112,8 @@ export default function Layout() {
 `useCheckAccessToken` 훅에서 로그인 페이지로 리다이렉션하거나 ready라고 안내한다.
 
 ```tsx
+// src/hooks/useCheckAccessToken.ts
+
 import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -149,6 +157,8 @@ export default function useCheckAccessToken(): boolean {
 관리자로 로그인했거나 아니거나 둘 중 하나일 수 밖에 없으니, 헤더도 단순하게 구성할 수 있다.
 
 ```tsx
+// src/components/Header.tsx
+
 export default function Header() {
   const navigate = useNavigate();
 
@@ -205,6 +215,8 @@ SWR를 써서 단순 작업을 얼마나 간단히 처리할 수 있는지 확�
 여기선 그냥 페이지 컴포넌트 하나에서 모두 처리하지만, 내용이 많아지면 컴포넌트로 분리하는 걸 잊지 말 것!
 
 ```tsx
+// src/pages/UserListPage.tsx
+
 import styled from 'styled-components';
 
 import useFetchUsers from '../hooks/useFetchUsers';
@@ -267,6 +279,8 @@ export default function UserListPage() {
 SWR을 바로 쓰지 않고 개별 자료형에 대응하기 위해 한번 감싸주는 형태로 구성한다.
 
 ```tsx
+// src/hooks/useFetchUsers.ts
+
 import useFetch from './useFetch';
 
 import { User } from '../types';
@@ -288,6 +302,8 @@ export default function useFetchUsers() {
 `mutate`는 바로 다음에 활용할 예정이니 여기선 이런 게 있다는 것만 확인하고 넘어가자.
 
 ```tsx
+// src/hooks/useFetch.ts
+
 import useSWR from 'swr';
 
 import { apiService } from '../services/ApiService';
@@ -316,6 +332,8 @@ SWR에서 Axios를 사용하는 법은 공식 문서 참고.
 [SWR - Axios](https://swr.vercel.app/ko/docs/data-fetching#axios)
 
 ```tsx
+// src/services/ApiService.ts
+
 fetcher() {
   return async (url: string) => {
     const { data } = await this.instance.get(url);
