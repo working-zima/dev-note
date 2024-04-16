@@ -42,7 +42,7 @@
 ## REST API
 
 - [REST API](https://docs.google.com/document/d/1iz9Ywwi2am1DVRTwo8oz-NutWJrOoBkIZgV9nwSn22o/view)
-- [API Base URL](https://shop-demo-api-04.fly.dev/)
+- [API Base URL](https://shop-demo-api-04.fly.dev/admin)
 
 ## 준비
 
