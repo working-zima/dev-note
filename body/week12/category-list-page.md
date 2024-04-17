@@ -9,6 +9,8 @@
 추가, 변경 등의 링크가 더 있을 뿐이다.
 
 ```tsx
+// src/pages/CategoryListPage.tsx
+
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -85,6 +87,8 @@ SWR 공식 문서의 Bound Mutate 항목을 참고하자.
 [SWR - Bounce Mutate](https://swr.vercel.app/ko/docs/mutation#bound-mutate)
 
 ```tsx
+// src/hooks/useFetchCategories.ts
+
 import useFetch from './useFetch';
 
 import { apiService } from '../services/ApiService';
@@ -119,6 +123,8 @@ React Hook Form의 `useForm` 훅과 `Controller` 컴포넌트만 잘 쓰면 된�
 `Controller` 쓰는 법이 약간 복잡하지만, 예전에 했던 것처럼 `TextBox`s 등으로 추출(extract)하면 깔끔하게 사용할 수 있다.
 
 ```tsx
+// src/pages/CategoryNewPage.tsx
+
 import { useNavigate } from 'react-router-dom';
 
 import { Controller, useForm } from 'react-hook-form';
