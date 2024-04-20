@@ -8,6 +8,8 @@
 여기선 아주 간단히 할 거라, 조금 양이 많은 사용자 또는 카테고리 목록에 불과하다.
 
 ```tsx
+// src/pages/OrderListPage.tsx
+
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -111,6 +113,8 @@ export default function OrderListPage() {
 `useFetchOrders` 훅을 만들자.
 
 ```tsx
+// src/hooks/useFetchOrders.ts
+
 import useFetch from './useFetch';
 
 import { OrderSummary } from '../types';
@@ -126,7 +130,12 @@ export default function useFetchOrders() {
     loading,
   };
 }
+```
+
 주문 상태를 어떻게 표시할지 상수만 모은 contants.ts 파일에서 정의하자.
+
+```tsx
+// constants.ts
 
 export const STATUS_MESSAGES: Record<string, string> = {
   paid: '결제 완료',
@@ -142,6 +151,8 @@ export const STATUS_MESSAGES: Record<string, string> = {
 주문 상세 정보도 확인해 보자.
 
 ```tsx
+// src/pages/OrderDetailPage.tsx
+
 import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -284,9 +295,9 @@ export default function OrderDetailPage() {
 기존과 비슷하게 `useFetchOrder` 훅을 만들자.
 
 ```tsx
-import useFetch from './useFetch';
+// src/hooks/useFetchOrder.ts
 
-import { apiService } from '../services/ApiService';
+import useFetch from './useFetch';
 
 import { OrderDetail } from '../types';
 
@@ -313,6 +324,8 @@ export default function useFetchOrder({ orderId }: {
 이런 건 모두 단순 CRUD를 넘어서 비즈니스에 대한 이해가 필요한 부분이다.
 
 ```tsx
+// src/pages.OrderEditPage.tsx
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -451,6 +464,8 @@ export default function OrderEditPage() {
 `useFetchOrder` 훅에 `updateOrder`를 추가한다.
 
 ```tsx
+// src/hooks/useFetchOrder
+
 import useFetch from './useFetch';
 
 import { apiService } from '../services/ApiService';

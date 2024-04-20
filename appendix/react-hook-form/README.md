@@ -5,3 +5,6 @@
 ## API
 
 - [useForm](./use-form.md)
+  - [register](./register.md)
+  - [control](./control.md)
+- [useController](./use-controller.md)

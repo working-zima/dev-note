@@ -199,6 +199,8 @@ export default function CategoryNewPage() {
 여기서는 카테고리 표시 여부를 수정할 때만 조작 가능하게 했다.
 
 ```tsx
+// src/pages/CategoryEditPage.tsx
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -306,6 +308,8 @@ export default function CategoryEditPage() {
 새로운 훅 `useFetchCategory`를 만들어 보자. 크게 다른 건 없다.
 
 ```tsx
+// src/hooks/useFetchCategory.ts
+
 import useFetch from './useFetch';
 
 import { apiService } from '../services/ApiService';

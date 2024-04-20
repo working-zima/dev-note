@@ -7,6 +7,8 @@
 `ProductListPage`를 만든다.
 
 ```tsx
+// src/pages/ProductListPage.tsx
+
 import useFetchProducts from '../hooks/useFetchProducts';
 
 import numberFormat from '../utils/numberFormat';
@@ -116,6 +118,8 @@ export default function ProductListPage() {
 `useFetchProducts` 훅을 만든다.
 
 ```tsx
+// src/hooks/useFetchProducts.ts
+
 export default function useFetchProducts() {
   const {
     data, error, loading, mutate,
@@ -139,6 +143,8 @@ export default function useFetchProducts() {
 `ProductDetailPage`를 만든다.
 
 ```tsx
+// src/pages/ProductDetailPage.tsx
+
 import Description from '../components/Description';
 
 import useFetchProduct from '../hooks/useFetchProduct';
@@ -252,6 +258,8 @@ export default function ProductDetailPage() {
 `Description` 컴포넌트는 고객 사이트 만들 때 쓴 걸 거의 그대로 재활용한다.
 
 ```tsx
+// src/utils/Description.tsx
+
 import { key } from '../utils';
 
 const Container = styled.div`
@@ -286,9 +294,19 @@ export default function Description({ value }: DescriptionProps) {
 }
 ```
 
+```tsx
+// src/utils/index.ts
+
+export function key(value: string, index: number) {
+  return `${index}-${value}`;
+}
+```
+
 `useFetchProduct` 훅을 만든다.
 
 ```tsx
+// src/hooks/useFetchProduct.ts
+
 export default function useFetchProduct({ productId }: {
   productId: string;
 }) {
@@ -307,7 +325,8 @@ export default function useFetchProduct({ productId }: {
 }
 ```
 
-여기까지는 특별한 게 없다. 상품 추가/수정 기능에서 데이터 구조를 동적으로 조정하기 위한 Store를 준비하고, 그 다음에 화면을 꾸며보자.
+여기까지는 특별한 게 없다.\
+상품 추가/수정 기능에서 데이터 구조를 동적으로 조정하기 위한 Store를 준비하고, 그 다음에 화면을 꾸며보자.
 
 ## ProductFormStore
 
@@ -316,6 +335,8 @@ export default function useFetchProduct({ productId }: {
 일단, 우리가 원하는 상황을 테스트 코드로 묘사해 보자.
 
 ```tsx
+// src/stores.ProductFormStore.test.ts
+
 import ProductFormStore from './ProductFormStore';
 
 import fixtures from '../../fixtures';
@@ -468,6 +489,8 @@ describe('ProductFormStore', () => {
 테스트가 통과하도록 구현해 보자.
 
 ```tsx
+// src/stores/ProductFormStore.ts
+
 import { singleton } from 'tsyringe';
 
 import { Store, Action } from 'usestore-ts';
@@ -684,10 +707,12 @@ class ProductFormStore {
 export default ProductFormStore;
 ```
 
-`Product`가 `Option`을 갖고, `Option`은 `OptionItem`을 갖는 구조라, 깊이 들어간 배열에 값을 추가하거나 삭제하는 게 쉽지 않다.
+`Product`가 `Option`을 갖고, `Option`은 `OptionItem`을 갖는 구조라, 깊이 들어간 배열에 값을 추가하거나 삭제하는 게 쉽지 않다.\
 유틸리티 함수 append, remove, update를 `src/utils/index.ts` 파일에 추가하자.
 
 ```tsx
+// src/utils/index.ts
+
 export function append<T>(items: T[], item: T) {
   return [...items, item];
 }
@@ -702,7 +727,12 @@ export function remove<T>(items: T[], index: number) {
 export function update<T>(items: T[], index: number, f: (value: T) => T) {
   return items.map((item, i) => (i === index ? f(item) : item));
 }
+```
+
 ProductFormStore를 쉽게 쓰기 위한 훅을 만든다.
+
+```tsx
+// src/useProductFormStore.ts
 
 import { container } from 'tsyringe';
 
@@ -722,6 +752,8 @@ export default function useProductFormStore() {
 SWR을 쓰기 때문에 API 호출이 성공하면 캐시를 초기화해야 한다는 걸 잊지 말자.
 
 ```tsx
+// src/pages/ProductNewPage.tsx
+
 import { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -770,6 +802,8 @@ export default function ProductNewPage() {
 `ProductNewForm` 컴포넌트를 만든다.
 
 ```tsx
+// src/components/product/ProductNewForm.tsx
+
 import ComboBox from '../ui/ComboBox';
 import TextBox from '../ui/TextBox';
 import Button from '../ui/Button';
@@ -857,6 +891,8 @@ export default function ProductNewForm({
 `Images` 컴포넌트를 만든다.
 
 ```tsx
+// src/components/product/Images.tsx
+
 import TextBox from '../ui/TextBox';
 import Button from '../ui/Button';
 
@@ -896,9 +932,40 @@ export default function Images({ images, store }: ImagesProps) {
 }
 ```
 
+```tsx
+// src/components/ui/Button.ts
+
+import styled from 'styled-components';
+
+type ButtonProps = {
+  type?: 'button' | 'submit' | 'reset';
+  leftPad?: boolean;
+}
+
+const Button = styled.button.attrs<ButtonProps>((props) => ({
+  type: props.type ?? 'button',
+}))<ButtonProps>`
+  margin-bottom: .5rem;
+  margin-left: ${(props) => (props.leftPad ? props.theme.sizes.labelWidth : 0)};
+  border: .1rem solid ${(props) => props.theme.colors.primary};
+  background: transparent;
+  color: ${(props) => props.theme.colors.primary};
+  cursor: pointer;
+
+  :disabled {
+    filter: grayscale(80%);
+    cursor: not-allowed;
+  }
+`;
+
+export default Button;
+```
+
 깊이가 더 깊은 옵션도 다뤄야 하니, 일단 `Options` 컴포넌트를 만든다.
 
 ```tsx
+// src/components/product/Options.tsx
+
 import TextBox from '../ui/TextBox';
 import Button from '../ui/Button';
 
@@ -948,6 +1015,8 @@ export default function Options({ options, store }: OptionsProps) {
 `OptionItems` 컴포넌트를 만든다.
 
 ```tsx
+// src/components/product/OptionItems.tsx
+
 import TextBox from '../ui/TextBox';
 import Button from '../ui/Button';
 
@@ -1004,12 +1073,33 @@ export default function OptionItems({
 }
 ```
 
+```tsx
+// src/styles/defaultTheme.tsx
+
+const defaultTheme = {
+  colors: {
+    background: '#FFF',
+    text: '#000',
+    primary: '#42F',
+    secondary: '#888',
+  },
+  sizes: {
+    labelWidth: '10rem',
+  },
+};
+
+export default defaultTheme;
+
+```
+
 ## 상품 수정
 
 `ProductEditPage`를 만든다.\
 `ProductNewPage`와 거의 비슷하다.
 
 ```tsx
+// src/pages.ProductEditPage.tsx
+
 import { useEffect } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
@@ -1061,6 +1151,8 @@ export default function ProductEditPage() {
 마찬가지로 `ProductNewForm` 컴포넌트와 비슷하다.
 
 ```tsx
+// src/components/product/ProductEditForm.tsx
+
 import ComboBox from '../ui/ComboBox';
 import TextBox from '../ui/TextBox';
 import CheckBox from '../ui/CheckBox';
@@ -1152,11 +1244,92 @@ export default function ProductEditForm({
 }
 ```
 
+```tsx
+// src/components/ui/TextBox.tsx
+
+import React, { useRef } from 'react';
+
+import styled from 'styled-components';
+
+const Container = styled.div`
+  margin-block: .5rem;
+
+  label,
+  input,
+  textarea {
+    vertical-align: middle;
+  }
+
+  label {
+    display: inline-block;
+    width: ${(props) => props.theme.sizes.labelWidth};
+    padding-right: .5rem;
+    text-align: right;
+  }
+
+  input {
+    width: 20rem;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+
+  textarea {
+    width: 40rem;
+    height: 10rem;
+  }
+`;
+
+type TextBoxProps = {
+  label: string;
+  placeholder?: string;
+  type?: 'text' | 'number' | 'password' | 'tel'; // ...and more types...
+  value: string;
+  onChange?: (value: string) => void;
+  readOnly?: boolean;
+  multiline?: boolean;
+}
+
+export default function TextBox({
+  label, placeholder = undefined, type = 'text', value,
+  onChange = undefined, readOnly = false, multiline = false,
+}: TextBoxProps) {
+  const id = useRef(`textbox-${Math.random().toString().slice(2)}`);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) {
+      return;
+    }
+    onChange(event.target.value);
+  };
+
+  return (
+    <Container>
+      <label htmlFor={id.current}>
+        {label}
+      </label>
+      {React.createElement(multiline ? 'textarea' : 'input', {
+        id: id.current,
+        type,
+        placeholder,
+        value,
+        onChange: handleChange,
+        readOnly,
+      })}
+    </Container>
+  );
+}
+```
+
 `Images`, `Options` 등은 전부 그대로 재사용한다.
 
 `CheckBox` 컴포넌트는 이번에 처음 등장했으니 간단히 살펴보자.
 
 ```tsx
+// src/components/ui/CheckBox.tsx
+
 import React, { useRef } from 'react';
 
 import styled from 'styled-components';
