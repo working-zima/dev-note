@@ -324,6 +324,32 @@ export default function useCounterStore() {
 }
 ```
 
+#### useStore-ts 주의사항
+
+객체인 상태를 변경할 때 주의
+
+```tsx
+@singleton()
+@Store()
+class CounterStore {
+  state = {
+    x: 1,
+  }
+
+  // 잘못된 예
+  @Action()
+  increase() {
+    this.state.x += 1;
+  }
+
+  // 옳은 예
+  @Action()
+  increase() {
+    this.state = { ...this.state, x: this.state.x + 1 };
+  }
+}
+```
+
 비동기 함수에 `@Action`을 붙이면 다르게 작동할 수 있다는 점에 주의\
 별도의 액션을 만들면 신경 쓸 부분이 줄어듭니다.
 
@@ -438,7 +464,6 @@ export default function TodosApp() {
 
 3. parcel의 버전을 낮추는 방법이 있습니다.\
   parcel 이 업데이트되면서 내부적으로 세팅 기본값이 바뀌어서 컴파일하는 과정에서 export default class 로 내보낼 때 데코레이터 적용이 안되는 것 일 수도 있다고 합니다.
-
 
 ## 참고
 
