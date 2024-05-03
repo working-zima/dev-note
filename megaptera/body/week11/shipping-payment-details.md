@@ -46,6 +46,8 @@ async order({ merchantId, transactionId }: {
 }
 ```
 
+B/E로 주문 및 결제 정보 전달
+
 ```tsx
 // src/components/new-order/PaymentButton.tsx
 
