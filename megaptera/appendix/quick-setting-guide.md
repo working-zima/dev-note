@@ -788,6 +788,12 @@ npm i axios
 },
 ```
 
+## dotenv
+
+```bash
+npm i dotenv
+```
+
 ## 선택
 
 ### usehooks-ts 설치
@@ -850,25 +856,31 @@ touch .vscode/settings.json
 }
 ```
 
+### 폴더 생성
+
+```bash
+mkdir fixtures src{components,hooks,mocks,pages,services,stores,utils}
+```
+
 ## 부가적인 세팅
 
 2023년 5월 기준 CodeceptJS 문제로 에러가 발생할 수 있음. 그래서 부가적인 세팅이 필요
 
-1. 의존성 설치 npm i -D eslint-plugin-codeceptjs playwright @codeceptjs/configure
+1. 의존성 설치 `npm i -D eslint-plugin-codeceptjs playwright @codeceptjs/configure`
 
-2. codecept.conf.ts 에서 config의 타입 제거 및 수정.
+2. `codecept.conf.ts` 에서 `config`의 타입 제거 및 수정.
 
-3. tests/steps.d.ts 파일 생성
+3. `tests/steps.d.ts` 파일 생성
 
-4. steps_files.js 파일 tests 폴더로 이동
+4. `steps_files.js` 파일 `tests` 폴더로 이동
 
-5. CodeceptJS가 내부적으로 ts-node를 쓰기 때문에 tsconfig.json 파일에 ts-node 설정을 추가
+5. CodeceptJS가 내부적으로 ts-node를 쓰기 때문에 `tsconfig.json` 파일에 ts-node 설정을 추가
 
-6. /tests/.eslintrc.js 파일 생성
+6. `/tests/.eslintrc.js` 파일 생성
 
-7. .gitignore 에 output/ 추가
+7. `.gitignore` 에 `output/` 추가
 
-### 프로젝트에 알 수 없는 오류가 있을 때
+## 프로젝트에 알 수 없는 오류가 있을 때
 
 ```bash
 rm -rf .parcel-cache
