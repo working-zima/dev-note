@@ -358,6 +358,8 @@ npm i -D @types/react @types/react-dom
 ### React 기본 파일 생성
 
 ```bash
+mkdir src
+
 touch index.html src/main.tsx src/App.tsx
 ```
 
@@ -413,6 +415,7 @@ npm i -D parcel-reporter-static-files-copy
 
 ```bash
 mkdir -p static
+```
 
 ### .parcelrc 파일 작성
 
@@ -489,7 +492,7 @@ npm i -D msw@0.36.4
 ```bash
 mkdir -p src/mocks
 
-touch src/setupTests.ts, src/mocks/server.ts, src/mocks/handler.ts
+touch src/setupTests.ts src/mocks/server.ts src/mocks/handler.ts
 ```
 
 ### Jest 설정 변경
@@ -859,7 +862,7 @@ touch .vscode/settings.json
 ### 폴더 생성
 
 ```bash
-mkdir fixtures src{components,hooks,mocks,pages,services,stores,utils}
+mkdir fixtures src/{components,hooks,mocks,pages,services,stores,utils}
 ```
 
 ## 부가적인 세팅

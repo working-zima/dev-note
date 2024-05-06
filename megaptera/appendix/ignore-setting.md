@@ -1,3 +1,6 @@
+# gitignore
+
+```plaintext
 # Logs
 logs
 *.log
@@ -134,3 +137,4 @@ output
 
 # IDEA
 .idea
+```
