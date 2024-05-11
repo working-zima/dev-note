@@ -805,6 +805,8 @@ npm i dotenv
 npm i usehooks-ts
 ```
 
+### usestore-ts 설치
+
 #### 의존성 설치
 
 ```bash
