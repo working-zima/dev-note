@@ -149,6 +149,81 @@ MongoDB 클라이언트는 반드시 `_id`를 유니크한 `ObjectId`를 가지�
 
 - `_id`필드로 저장을 하면 대략적으로 생성시간 순서로 정렬되어 저장이 됩니다.
 
+### Method
+
+- `ObjectId.getTimestamp()`: 객체의 타임스탬프 부분을 날짜로 반환합니다.
+
+- `ObjectId.toString()`: 객체 ID를 16진수 문자열로 반환합니다.
+
+- `ObjectId.valueOf()`: `ObjectId.self`을(를) 반환합니다.
+
+### 새 객체 ID 생성
+
+```javascript
+// ObjectId(<value>)
+
+newObjectId = ObjectId()
+```
+
+#### 날짜 지정
+
+사용자 지정 날짜 를 사용하여 ObjectId를 지정할 수 있습니다
+
+1. 지정된 날짜에 대한 변수 설정\
+내부적으로 Date 객체는 64 Unix epoch 이후의 밀리초 수를 나타내는 부호 있는 비트 정수로 저장됩니다.
+
+    ```javascript
+    myDate = new Date( "2024-01-01" )
+    ```
+
+2. Date 객체를 초로 변환
+
+    ```javascript
+    timestamp = Math.floor( myDate / 1000 )
+    ```
+
+3. timestamp 을(를) 인수로 사용하여 새 `ObjectId`를 설정\
+`ObjectId.getTimestamp()` 를 사용하여 날짜를 확인할 수 있습니다.
+
+    ```javascript
+    newObjectId = ObjectId(timestamp)
+
+    //ObjectId("6592008029c8c3e4dc76256c")
+    ```
+
+#### 정수 문자열 지정
+
+객체 ID 타임스탬프를 조정하려면 정수를 사용하여 새 객체 ID를 생성하세요.
+
+```javascript
+newObjectId = ObjectId(32)
+```
+
+객체 ID 값은 다음과 유사합니다.
+
+```javascript
+ObjectId("00000020f51bb4362eee2a4d")
+```
+
+예시 객체 ID는 다음과 같이 구성됩니다.
+
+- 4바이트 타임스탬프, `00000020`
+
+- 5바이트 랜덤 요소, `f51bb4362e`
+
+- 3바이트 카운터, `ee2a4d`
+
+`ObjectId`의 처음 4바이트는 Unix epoch 이후 경과된 시간(초)입니다.\
+이 예제에서 `ObjectId` 타임스탬프는 이며, 16진수로는 `00000020` `32` 입니다.
+
+#### 16진수 문자열 지정하기
+
+16진수 문자열을 사용하여 `ObjectId`를 지정할 수 있습니다.
+
+```javascript
+newObjectId = ObjectId("507f191e810c19729de860ea")
+```
+
 ## MongoDB CRUD Operations
 
 ### Create Operations
@@ -348,7 +423,7 @@ SELECT * FROM inventory WHERE status = "A" AND qty
 
 #### Specify OR Conditions
 
-$or 연산자를 사용하면, 각각의 조건을 조합하는 특정 쿼리를 작성해서 여러 조건중에 하나의 조건에라도 일치하는 document를 선택합니다.
+`$or` 연산자를 사용하면, 각각의 조건을 조합하는 특정 쿼리를 작성해서 여러 조건중에 하나의 조건에라도 일치하는 document를 선택합니다.
 
 ```javascript
 db.inventory.find(
@@ -409,7 +484,7 @@ SELECT * FROM inventory WHERE status = "A" AND ( qty
 
 #### 단일 문서 업데이트
 
-다음 예제에서는 `Collection.updateOne()` 메서드를 사용하여 `inventory` collection에서 item이 "paper"인 document를 업데이트합니다.
+다음 예제에서는 `Collection.updateOne()` 메서드를 사용하여 `inventory` collection에서 `item`이 `"paper"`인 document를 업데이트합니다.
 
 ```javascript
 await db.collection('inventory').updateOne(
