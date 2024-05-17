@@ -120,7 +120,7 @@ export default function useFetchCategories() {
 
 카테고리를 추가하는 `CategoryNewPage`부터 보자.\
 React Hook Form의 `useForm` 훅과 `Controller` 컴포넌트만 잘 쓰면 된다.\
-`Controller` 쓰는 법이 약간 복잡하지만, 예전에 했던 것처럼 `TextBox`s 등으로 추출(extract)하면 깔끔하게 사용할 수 있다.
+`Controller` 쓰는 법이 약간 복잡하지만, 예전에 했던 것처럼 `TextBox` 등으로 추출(extract)하면 깔끔하게 사용할 수 있다.
 
 ```tsx
 // src/pages/CategoryNewPage.tsx

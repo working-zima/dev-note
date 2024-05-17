@@ -8,7 +8,7 @@ Controller 컴포넌트는 외부 제어 컴포넌트와의 작업을 간편하�
 
 ### Props
 
-아래의 table은 contains  Controller의 인수 정보를 포함하고 있습니다.
+아래의 table은 Controller의 인수 정보를 포함하고 있습니다.
 
 이름 | Type | Required | Description
 :-: | :-: | :-: | :-:

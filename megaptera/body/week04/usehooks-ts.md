@@ -284,7 +284,8 @@ const { data, error, isLoading, isValidating, mutate } = useSWR(key, fetcher, op
 
 #### 파라미터
 
-- key: 요청을 위한 고유한 키 문자열(또는 함수 / 배열 / null)
+- key: 요청을 위한 고유한 키 문자열(일반적으로 API URL/ 또는 함수 / 배열 / null)\
+  fetcher로 전달됨
 - fetcher: (옵션) 데이터를 가져오기 위한 함수를 반환하는 Promise, promise를 리턴하는 모든 함수 가능
 - options: (옵션) SWR hook을 위한 옵션 객체, 사용자가 페이지를 탐색 중 다른 탭을 보다가 다시 돌아왔을 때나 혹은 네트워크가 끊어졌다가 다시 연결되었을 때 refetch를 할 수 있도록 옵션으로 설정 가능
 
@@ -297,6 +298,20 @@ fetcher 함수에 key 값이 첫 번째 파라미터로 전달됩니다.
 - isLoading: 진행 중인 요청이 있고 "로드된 데이터"가 없는 경우. 폴백 데이터와 이전 데이터는 "로드된 데이터"로 간주하지 않습니다.
 - isValidating: 요청이나 갱신 로딩의 여부
 - mutate(data?, options?): 캐시 된 데이터를 뮤테이트하기 위한 함수 （상세내용）
+
+#### 예시
+
+```tsx
+import useSWR from 'swr'
+
+function Profile() {
+  const { data, error, isLoading } = useSWR('/api/user', fetcher)
+
+  if (error) return <div>failed to load</div>
+  if (isLoading) return <div>loading...</div>
+  return <div>hello {data.name}!</div>
+}
+```
 
 ## react-query (Tanstack-query)
 
