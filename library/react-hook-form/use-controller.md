@@ -12,7 +12,7 @@ Controller 컴포넌트는 외부 제어 컴포넌트와의 작업을 간편하�
 
 이름 | Type | Required | Description
 :-: | :-: | :-: | :-:
-name | FieldPath | ✓ | 입력의 고유한 이름입니다.
+`name` | FieldPath | ✓ | 입력의 고유한 이름입니다.
 `control` | Control | X | `useForm`을 호출하여 얻은 `control` 객체입니다. <br> `FormProvider`를 사용할 때는 선택 사항입니다.
 `render` | Function | X | 렌더 함수입니다. <br> 리액트 엘리먼트를 반환하고 컴포넌트에 이벤트와 값을 첨부하는 능력을 제공하는 함수입니다. <br> 이를 통해 비표준 속성 이름을 가진 외부 제어 컴포넌트와 통합하는 것이 간소화됩니다. <br> 자식 컴포넌트에 `onChange`, `onBlur`, `name`, `ref`, `value`를 제공하며, 특정 입력 상태를 포함하는 `fieldState` 객체도 제공합니다.
 `defaultValue` | unknown | X | 중요: `useForm`에서 `defaultValue` 또는 `defaultValues`에 undefined를 적용할 수 없습니다. <br> 필드 레벨에서 `defaultValue`를 설정하거나 `useForm`의 `defaultValues`를 사용해야 합니다. <br> undefined는 유효한 값이 아닙니다. 폼이 기본 값으로 `reset`을 호출하는 경우 `useForm`에 `defaultValues`를 제공해야 합니다. <br> `onChange`를 undefined와 함께 호출하는 것은 유효하지 않습니다. <br> 대신 기본/지워진 값으로 null 또는 빈 문자열을 사용해야 합니다.

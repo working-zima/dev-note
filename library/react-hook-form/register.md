@@ -9,6 +9,9 @@
 
 ```tsx
 const { register } = useForm();
+
+console.log(register("test"))
+// {name: 'test', onChange: f, onBlur: f, ref: f}
 ```
 
 register 함수를 호출하고 입력의 이름을 제공하면 다음 메서드를 받게 됩니다:
@@ -20,9 +23,9 @@ const { onChange, onBlur, name, ref } = register('firstName');
 // 제공한 이름과 필드 경로에 대한 타입 검사를 포함합니다.
 
 <input
+  name={name} // name 속성 할당 (현재 name은 'firstName')
   onChange={onChange} // onChange 이벤트 할당
   onBlur={onBlur} // onBlur 이벤트 할당
-  name={name} // name 속성 할당 (현재 name은 'firstName')
   ref={ref} // ref 속성 할당
 />
 
@@ -30,9 +33,9 @@ const { onChange, onBlur, name, ref } = register('firstName');
 <input {...register('firstName')} />
 ```
 
+- `name`: 입력 요소의 이름입니다.
 - `onChange`: 입력 값이 변경될 때 호출되는 함수입니다.
 - `onBlur`: 입력 요소가 포커스를 잃을 때 호출되는 함수입니다.
-- `name`: 입력 요소의 이름입니다.
 - `ref`: 입력 요소의 참조입니다.
 
 ## RegisterOptions

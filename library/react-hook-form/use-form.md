@@ -21,6 +21,22 @@ useForm({props})
 - `shouldUseNativeValidation`: 브라우저 내장 폼 제약 API 사용.
 - `shouldUnregister`: 마운트 해제 후 입력 언레지스터를 활성화하거나 비활성화.
 
+### 예시
+
+```tsx
+const { register } = useForm<FormInputs>({
+  mode: 'onSubmit',
+  reValidateMode: 'onChange',
+  defaultValues: {},
+  resolver: undefined,
+  context: undefined,
+  criteriaMode: "firstError",
+  shouldFocusError: true,
+  shouldUnregister: false,
+  delayError: undefined
+})
+```
+
 ## Schema validation props
 
 - `resolver`: 선호하는 스키마 유효성 검사 라이브러리와 통합.
@@ -300,6 +316,12 @@ options | `{\"criteriaMode": "string", "fields": "object", "names": "string[]"}`
 
 - [register](./register.md)
 - [control](./control.md)
+- [handleSubmit]()
+- ...
+
+```tsx
+const { register, handleSubmit, control, ... } = useForm();
+```
 
 ## 참고 자료
 

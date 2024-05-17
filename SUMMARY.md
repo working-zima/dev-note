@@ -106,6 +106,8 @@
   - [React Hook Form](library/react-hook-form/README.md)
     - [useForm](library/react-hook-form/use-form.md)
       - [register](library/react-hook-form/register.md)
+      - [formState](library/react-hook-form/formState.md)
+      - [handleSubmit](library/react-hook-form/handleSubmit.md)
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
 
