@@ -104,10 +104,10 @@
 - [라이브러리](library/README.md)
   - [Axios](library/axios.md)
   - [React Hook Form](library/react-hook-form/README.md)
-    - [useForm](./use-form.md)
-      - [register](./register.md)
-      - [control](./control.md)
-    - [useController](./use-controller.md)
+    - [useForm](library/react-hook-form/use-form.md)
+      - [register](library/react-hook-form/register.md)
+      - [control](library/react-hook-form/control.md)
+    - [useController](library/react-hook-form/use-controller.md)
 
 ### BACKEND
 
