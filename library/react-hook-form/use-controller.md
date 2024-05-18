@@ -50,6 +50,52 @@ function App() {
 }
 ```
 
+### TIP
+
+MUI, AntD, Chakra UI와 같은 외부 제어 컴포넌트를 사용할 때는 각 prop의 역할을 이해하는 것이 중요합니다. `Controller`는 값을 보고하고 설정함으로써 입력을 "감시"하는 역할을 합니다.
+
+- `onChange`: 데이터를 훅 폼으로 다시 전송
+- `onBlur`: 입력이 상호작용되었음을 보고 (포커스 및 블러)
+- `value`: 초기 값 및 업데이트된 값을 설정
+- `ref`: 오류가 있는 입력에 포커스를 맞출 수 있게 함
+- `name`: 입력에 고유한 이름 부여
+
+아래의 codesandbox는 사용 예시를 보여줍니다:
+
+- MUI 및 기타 컴포넌트
+- Chakra UI 컴포넌트
+
+입력을 다시 등록하지 마세요. 이 컴포넌트는 등록 과정을 처리하도록 만들어졌습니다.
+
+```tsx
+코드 복사
+<Controller
+  name="test"
+  render={({ field }) => {
+    // return <input {...field} {...register('test')} />; ❌ 이중 등록
+    return <input {...field} /> // ✅
+  }}
+/>
+```
+
+`onChange` 동안 값을 변환하여 훅 폼으로 전송되는 값을 커스터마이즈합니다.
+
+```tsx
+코드 복사
+<Controller
+  name="test"
+  render={({ field }) => {
+    // 문자열 대신 정수를 전송합니다.
+    return (
+      <input
+        {...field}
+        onChange={(e) => field.onChange(parseInt(e.target.value))}
+      />
+    )
+  }}
+/>
+```
+
 ## 참고 자료
 
 - [React Hook Form](https://www.nextree.io/react-hook-form/)
