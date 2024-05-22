@@ -49,6 +49,27 @@ export default function useFetchProducts() {
 }
 ```
 
+`JSON.stringify`로 `products` 내용을 확인할 수 있습니다.
+
+```tsx
+type ProductsProps = {
+  products: ProductSummary[];
+}
+
+export default function Products({ products }: ProductsProps) {
+
+  return (
+    <div>
+      {products.map((product) => (
+        <p key={JSON.stringify(product)}>
+            {JSON.stringify(product)}
+        </p>
+      ))}
+    </div>
+  );
+}
+```
+
 `Products` 컴포넌트를 만든다.
 
 ```typescript
