@@ -117,3 +117,4 @@
   - [MongoDB](backend/mongo-db.md)
   - [Mongoose](backend/mongoose.md)
   - [SQL vs. NoSQL](backend/sql-nosql.md)
+  - [Entity & Value Object](backend/entity-value-object.md)
