@@ -54,10 +54,6 @@ type ButtonProps = {
   active: boolean;
 }
 
-function background(props: ButtonProps) {
-  return props.active ? '#00F' : '#FFF';
-}
-
 const Button = styled.button<ButtonProps>`
   background: ${(props) => (props.active ? '#00F' : '#FFF';)};
   color: #000;
@@ -81,8 +77,52 @@ export default function Switch() {
 
 ### css 함수
 
-prop에 따라 바꾸고 싶은 CSS 속성이 위와 같이 하나가 아니라 여러 개일 경우가 있습니다.\
-Styled Components에서 제공하는 css 함수를 사용하면 여러 개의 CSS 속성을 묶어서 정의할 수 있습니다.
+`prop`에 따라 바꾸고 싶은 CSS 속성이 위와 같이 하나가 아니라 여러 개일 경우가 있습니다.\
+Styled Components에서 제공하는 `css` 함수를 사용하면 여러 개의 CSS 속성을 묶어서 정의할 수 있습니다.
+
+#### css 함수를 사용하지 않은 경우
+
+```tsx
+import { useBoolean } from 'usehooks-ts';
+
+import styled, { css } from 'styled-components';
+
+type ParagraphProps = {
+  active?: boolean;
+}
+
+// props.active가 있다면 css로 정의된 스타일 적용 (font-weight: bold)
+const Paragraph = styled.p<ParagraphProps>`
+  color: ${(props) => (props.active ? '#F00' : '#888')};
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')}; // 조건부 스타일링
+  border: ${(props) => (props.active ? '1px solid #888' : 'none')}; // 조건부 스타일링
+`;
+
+export default function Greeting() {
+  const { value: active, toggle } = useBoolean(false);
+
+  // active props 전달
+  return (
+    <div>
+      <Paragraph>
+        Inactive
+      </Paragraph>
+      <Paragraph active>
+        Active
+      </Paragraph>
+      <Paragraph active={active}>
+        Hello, world
+        {' '}
+        <button type="button" onClick={toggle}>
+          Toggle
+        </button>
+      </Paragraph>
+    </div>
+  );
+}
+```
+
+#### css 함수를 사용한 경우
 
 ```tsx
 import { useBoolean } from 'usehooks-ts';
@@ -99,6 +139,7 @@ const Paragraph = styled.p<ParagraphProps>`
 
   ${(props) => props.active && css`
     font-weight: bold;
+    border: 1px solid #888;
   `}
 `;
 
@@ -126,9 +167,9 @@ export default function Greeting() {
 }
 ```
 
-## 속성 추가
+## 속성 추가 (attrs)
 
-`attrs` 메서드로 기본 속성을 추가할 수 있습니다.\
+스타일 속성뿐만 아니라 `attrs` 메서드로 기본 속성도 추가할 수 있습니다.\
 불필요하게 반복되는 속성을 처리할 때 유용한데, 버튼(`type="button"`) 등을 만들 때 적극 활용합니다.
 
 ```tsx
@@ -200,7 +241,7 @@ Warning: Received "true" for a non-boolean attribute
 
 해결 방법으로 두 가지가 있습니다.
 
-#### 문제의 코드 예시
+#### 문제 예시
 
 `red`속성에 대한 경고가 발생합니다.
 
@@ -218,13 +259,14 @@ const StyledComp = styled(Link)`
 <StyledComp text="Click" href="https://www.styled-components.com/" red />
 ```
 
-위의 코드는 아래와 같은 HTML 요소를 렌더링합니다.
+위의 코드는 아래와 같은 HTML 요소를 렌더링합니다.\
+React는 `<a>`요소에 대해 유효한 HTML 속성이 아닌 `red` 같은 비표준 속성이 첨부되는 경우 경고를 합니다.
 
 ```html
 <a text="Click" href="https://www.styled-components.com/" red="true" class="[generated class]">Click</a>
 ```
 
-#### transient props(일시적인 props)를 사용
+#### 해결 방법1 - transient props(일시적인 props)를 사용
 
 문제가 되는 속성에 prefix `$`를 붙여 사용합니다.
 
@@ -244,7 +286,7 @@ const StyledComp = styled(Link)`
 <StyledComp text="Click" href="https://www.styled-components.com/" $red />
 ```
 
-#### destructure props(props 구조분해)를 사용
+#### 해결 방법2 - destructure props(props 구조분해)를 사용
 
 구조분해 할당을 사용하여 속성을 직접 추출하여 사용합니다.
 
