@@ -93,7 +93,7 @@ type ParagraphProps = {
 
 // props.active가 있다면 css로 정의된 스타일 적용 (font-weight: bold)
 const Paragraph = styled.p<ParagraphProps>`
-  color: ${(props) => (props.active ? '#F00' : '#888')};
+  color: '#888';
   font-weight: ${(props) => (props.active ? 'bold' : 'normal')}; // 조건부 스타일링
   border: ${(props) => (props.active ? '1px solid #888' : 'none')}; // 조건부 스타일링
 `;
@@ -135,7 +135,7 @@ type ParagraphProps = {
 
 // props.active가 있다면 css로 정의된 스타일 적용 (font-weight: bold)
 const Paragraph = styled.p<ParagraphProps>`
-  color: ${(props) => (props.active ? '#F00' : '#888')};
+  color: '#888';
 
   ${(props) => props.active && css`
     font-weight: bold;
