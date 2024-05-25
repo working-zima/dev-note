@@ -111,10 +111,16 @@
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
 
-### BACKEND
+### CLIENT
 
-- [Backend](backend/README.md)
-  - [MongoDB](backend/mongo-db.md)
-  - [Mongoose](backend/mongoose.md)
-  - [SQL vs. NoSQL](backend/sql-nosql.md)
-  - [Entity & Value Object](backend/entity-value-object.md)
+- [Client](client/README.md)
+  - [React](client/react/README.md)
+    - [useRef](client/react/useref.md)
+
+### SERVER
+
+- [Server](server/README.md)
+  - [MongoDB](server/mongo-db.md)
+  - [Mongoose](server/mongoose.md)
+  - [SQL vs. NoSQL](server/sql-nosql.md)
+  - [Entity & Value Object](server/entity-value-object.md)
