@@ -124,3 +124,4 @@
   - [Mongoose](server/mongoose.md)
   - [SQL vs. NoSQL](server/sql-nosql.md)
   - [Entity & Value Object](server/entity-value-object.md)
+  - [몽고DB 스키마 설계](server/mongo-db-schema.md)
