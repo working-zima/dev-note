@@ -116,6 +116,8 @@
 - [Client](client/README.md)
   - [React](client/react/README.md)
     - [useRef](client/react/useref.md)
+  - [Javascript](client/javascript/README.md)
+    - [Element size and scrolling](client/javascript/element-size-and-scrolling.md)
 
 ### SERVER
 
