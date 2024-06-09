@@ -753,6 +753,44 @@ type T1 = NonNullable<string[] | null | undefined>;
 // type T1 = string[]
 ```
 
+### `ReturnType<Type>`
+
+함수 Type의 반환(Return) 타입으로 구성된 타입을 생성합니다.
+
+```tsx
+function fn(str: string) {
+  return str
+}
+
+const a: ReturnType<typeof fn> = 'Only string'
+const b: ReturnType<typeof fn> = 1234 // TS2322: Type '123' is not assignable to type 'string'.
+```
+
+### `Parameters<Type>`
+
+함수 타입 Type의 매개변수에 사용된 타입에서 튜플 타입을 생성합니다.
+
+```tsx
+type Zip = { x: number; y: string; z: boolean };
+function zip(x: number, y: string, z: boolean): Zip {
+   return { x, y, z };
+}
+
+type Params = Parameters<typeof zip>
+// type Params = [x: number, y: string, z: boolean]
+// zip의 매개변수인 x: number, y: string, z: boolean을 타입으로
+```
+
+```tsx
+function fn(a: string | number, b: boolean) {
+   return `[${a}, ${b}]`;
+}
+
+type Parameters_Key = Parameters<typeof fn>; // 함수의 매개변수를 타입으로 변환
+// type Parameters_Key = [string | number, boolean]
+// fn의 매개변수인 a: string | number, b: boolean가 타입으로
+```
+
 ## Tips
 
 [더 좋은 타입스크립트 프로그래머로 만드는 11가지 팁](https://velog.io/@lky5697/11-tips-that-help-you-become-a-better-typescript-programmer)
@@ -776,3 +814,5 @@ type T1 = NonNullable<string[] | null | undefined>;
 - [제네릭](https://www.typescriptlang.org/ko/docs/handbook/2/generics.html)
 - [유틸리티](https://www.typescriptlang.org/ko/docs/handbook/utility-types.html)
 - [TypeScript #8 유틸리티 타입 Utility Types](https://www.youtube.com/watch?v=IeXZo-JXJjc)
+- [한눈에 보는 타입스크립트](https://www.heropy.dev/p/WhqSC8)
+- [Inpa Dev 👨‍💻:티스토리](https://inpa.tistory.com/entry/TS-📘-타입스크립트-유틸리티-타입-💯-총정리)
