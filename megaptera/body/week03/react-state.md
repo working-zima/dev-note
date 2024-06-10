@@ -80,29 +80,29 @@ setState를 연속적으로 호출하면 실시간으로 처리하지 않고 set
 
 #### 내부적인 아이디어
 
-`useState` 함수가 React 내부에서 어떻게 동작하는지에 대한 간소화 버전입니다.\
+`useState` 함수가 React 내부에서 어떻게 동작하는지에 대한 간소화 버전입니다.
 
-1. useState 사용한 첫 렌더링\
+1. useState 사용한 첫 렌더링
 
-   - `useState`가 호출됩다.\
-   - `componentHooks`배열의 0번째에 는 값이 없기 때문에 조건문을 스킵합니다.\
-   - `useState`를 사용하면 첫 렌더링에 `initialState`와 - `setState`를 `pair` 초기화 합니다.\
-   - `currentHookIndex`가 0이기 때문에 초기화된 `pair`를 - `componentHooks` 배열의 0번에 추가합니다.\
-   - 프로젝트에서 다수의 `useState` 사용을 위해 `currentHookIndex`의 숫자를 바꿔줍니다(0에서 1로).\
+   - `useState`가 호출됩니다.
+   - `componentHooks`배열의 0번째에 는 값이 없기 때문에 조건문을 스킵합니다.
+   - `useState`를 사용하면 첫 렌더링에 `initialState`와 - `setState`를 `pair` 초기화 합니다.
+   - `currentHookIndex`가 0이기 때문에 초기화된 `pair`를 - `componentHooks` 배열의 0번에 추가합니다.
+   - 프로젝트에서 다수의 `useState` 사용을 위해 `currentHookIndex`의 숫자를 바꿔줍니다(0에서 1로).
    - 0번 `pair`를 반환합니다.
 
-2. setState 사용\
+2. setState 사용
 
-   - `setState`로 변경될 값이 `pair`의 값 자리에 초기화 됩니다.\
-   - `updateDOM`함수가 호출됩니다.\
-   - `useState`가 호출됩니다.\
+   - `setState`로 변경될 값이 `pair`의 값 자리에 초기화 됩니다.
+   - `updateDOM`함수가 호출됩니다.
+   - `useState`가 호출됩니다.
    - `pair`가 있기 때문에 조건문이 실행되며 변경된 `pair`를 반환합니다.
 
-3. 만약 다수의 useState가 있을 경우\
+3. 만약 다수의 useState가 있을 경우
 
-   - 첫 렌더링에서 이전 `useState`가 `currentHookIndex`를 1로 증가된 상태입니다(0에서 1로).\
-   - `componentHooks`배열의 1번 인덱스에는 값이 없기 때문에 `pair`에 `initialState`와 `setState`를 초기화 합니다.\
-     (예시: componentHooks = [[stateA, setA], [stateB, setB], ..])\
+   - 첫 렌더링에서 이전 `useState`가 `currentHookIndex`를 1로 증가된 상태입니다(0에서 1로).
+   - `componentHooks`배열의 1번 인덱스에는 값이 없기 때문에 `pair`에 `initialState`와 `setState`를 초기화 합니다.
+     (예시: componentHooks = [[stateA, setA], [stateB, setB], ..])
 
 ```jsx
 let componentHooks = [];
