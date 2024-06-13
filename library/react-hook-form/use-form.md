@@ -1,5 +1,9 @@
 # useForm
 
+```bash
+npm i react-hook-form
+```
+
 useForm은 폼 관리를 쉽게 도와주는 커스텀 훅(custom hook)입니다.\
 이 훅은 선택적 인수로 객체 하나를 받습니다.
 
