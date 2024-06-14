@@ -142,5 +142,4 @@ node 외의 다른 명령어도 마찬가지입니다.\
 ## 참고 자료
 
 [NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno)](https://www.udemy.com/course/nodejs-the-complete-guide/?couponCode=ST21MT61124)
-[[EXPRESS] 📚 미들웨어 이론 & 실용 💯 정리
-출처: https://inpa.tistory.com/entry/EXPRESS-📚-미들웨어-💯-이해-정리 [Inpa Dev 👨‍💻:티스토리]](https://inpa.tistory.com/entry/EXPRESS-%F0%9F%93%9A-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-%F0%9F%92%AF-%EC%9D%B4%ED%95%B4-%EC%A0%95%EB%A6%AC)
+[[EXPRESS] 📚 미들웨어 이론 & 실용 💯 정리](https://inpa.tistory.com/entry/EXPRESS-%F0%9F%93%9A-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-%F0%9F%92%AF-%EC%9D%B4%ED%95%B4-%EC%A0%95%EB%A6%AC)

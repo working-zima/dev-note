@@ -245,10 +245,10 @@ app.use(bodyParser.text());
 #### 요청 데이터 종류
 
 JSON JSON 형식의 데이터 전달 방식이고, URL-encoded는 주소 형식으로 데이터를 보내는 방식입니다.\
-JSON 형식으로 `{ name: 'zerocho', book: 'nodejs' }`를 본문으로 보낸다면 `req.body`에 그대로 들어갑니다.
+JSON 형식으로 `{ name: 'zimablue', book: 'nodejs' }`를 본문으로 보낸다면 `req.body`에 그대로 들어갑니다.
 
 폼 전송은 URL-encoded 방식을 주로 사용합니다.\
-URL-encoded 형식으로 `name=zerocho&book=nodejs`를 본문으로 보낸다면 req.body에 `{ name: 'zerocho', book: 'nodejs' }`가 들어갑니다.
+URL-encoded 형식으로 `name=zimablue&book=nodejs`를 본문으로 보낸다면 req.body에 `{ name: 'zimablue', book: 'nodejs' }`가 들어갑니다.
 
 `{ extended: false }`일 경우 `false`이면 노드의 내장 모듈인 `querystring` 모듈을 사용해 쿼리스트링을 해석합니다.\
 `{ extended: true }`이면 querystring 모듈의 기능을 좀 더 확장한 npm 패키지 `qs` 모듈을 사용해 쿼리스트링을 해석합니다.
@@ -257,17 +257,66 @@ URL-encoded 형식으로 `name=zerocho&book=nodejs`를 본문으로 보낸다면
 
 요청에 동봉된 쿠키를 해석해 req.cookies 객체로 만듭니다.\
 해석된 쿠키들은 `req.cookies` 객체에 들어갑니다.\
-예를 들어 `name=zerocho` 쿠키를 보냈다면 `req.cookies`는 `{ name: 'zerocho' }`가 됩니다.
+예를 들어 `name=zimablue` 쿠키를 보냈다면 `req.cookies`는 `{ name: 'zimablue' }`가 됩니다.
 
 첫 번째 인수로 비밀 키를 넣어줄 수 있습니다.\
 서명된 쿠키가 있는 경우, 제공한 비밀 키를 통해 해당 쿠키가 내 서버가 만든 쿠키임을 검증할 수 있습니다.
 
-서명이 붙으면 쿠키가 `name=zerocho.sign`과 같은 모양이 됩니다.\
+서명이 붙으면 쿠키가 `name=zimablue.sign`과 같은 모양이 됩니다.\
 서명된 쿠키는 `req.cookies` 대신 `req.signedCookies` 객체에 들어 있습니다.
 
 ```tsx
 app.use(cookieParser(비밀 키));
 ```
+
+#### Express.js에서 쿠키 생성/제거
+
+```tsx
+res.cookie(key, value, { options })
+```
+
+쿠키를 생성/제거하려면 `res.cookie`, `res.clearCookie` 메서드를 사용해야 합니다.\
+`res.cookie(키, 값, 옵션)` 형식으로 사용합니다.\
+쿠키 옵션은 `domain`, `expires`, `httpOnly`, `maxAge`, `path`, `secure` 등이 있습니다.
+
+쿠키를 제거하려면, `expires`나 `maxAge` 옵션을 제외한 키와 값 외에 옵션도 정확히 일치해야 쿠키가 지워집니다.
+
+```tsx
+res.cookie('name', 'zimablue', {
+  expires: new Date(Date.now() + 900000),
+  httpOnly: true,
+  secure: true,
+});
+res.clearCookie('name', 'zimablue', { httpOnly: true, secure: true });
+```
+
+`signed`라는 옵션은 true일 때 설정하면 쿠키 뒤에 서명이 붙습니다.\
+내 서버가 쿠키를 만들었다는 것을 검증할 수 있으므로 대부분의 경우 서명 옵션을 켜두는 것이 좋습니다.
+
+- `Expires=날짜`\
+: 만료 기한입니다.\
+이 기한이 지나면 쿠키가 제거됩니다.\
+기본값은 클라이언트가 종료될 때까지입니다.
+
+- `Max-age=초`\
+: `Expires`와 비슷하지만 날짜 대신 초를 입력할 수 있습니다.\
+해당 초가 지나면 쿠기가 제거됩니다.\
+`Expires`보다 우선합니다.
+
+- `Domain=도메인명`\
+: 쿠키가 전송될 도메인을 특정할 수 있습니다.\
+기본값은 현재 도메인입니다.
+
+- `Path=URL`\
+: 쿠키가 전송될 URL을 특정할 수 있습니다.\
+기본값은 ‘/’이고, 이 경우 모든 URL에서 쿠키를 전송할 수 있습니다.
+
+- `Secure`\
+: HTTPS일 경우에만 쿠키가 전송됩니다.
+
+- `HttpOnly`\
+: 설정 시 자바스크립트에서 쿠키에 접근할 수 없습니다.\
+쿠키 조작을 방지하기 위해 설정하는 것이 좋습니다.
 
 ### express-session 미들웨어
 
