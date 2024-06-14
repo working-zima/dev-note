@@ -143,6 +143,93 @@ notEmpty(): ValidationChain
 이 메서드는 값이 비어 있지 않은 문자열인지 확인하는 검증기를 추가합니다.\
 이는 `.not().isEmpty()`와 유사합니다.
 
+#### Standard validators
+
+Validator | Description
+:-: | :-:
+`contains(str, seed [, options])` | 문자열이 seed를 포함하는지 확인합니다. <br/><br/>options는 기본값이 { ignoreCase: false, minOccurrences: 1 }인 객체입니다.<br />옵션: <br/> ignoreCase: 비교 시 대소문자를 무시합니다. 기본값은 false입니다.<br/>minOccurences: 문자열에서 seed의 최소 발생 횟수입니다. 기본값은 1입니다.
+`equals(str, comparison)` | 문자열이 comparison과 일치하는지 확인합니다.
+`isAbaRouting(str)` | 문자열이 미국 은행 계좌/수표의 ABA 라우팅 번호인지 확인합니다.
+`isAfter(str [, options])` | 문자열이 지정된 날짜 이후의 날짜인지 확인합니다.<br/><br/>options는 기본값이 { comparisonDate: Date().toString() }인 객체입니다.<br/>옵션:<br/>comparisonDate: 비교할 날짜입니다. 기본값은 Date().toString() (현재 시간)입니다.
+`isAlpha(str [, locale, options])` | 문자열에 문자 (a-zA-Z)만 포함되어 있는지 확인합니다.<br/><br/>locale은 ['ar', 'ar-AE', 'ar-BH', 'ar-DZ', 'ar-EG', 'ar-IQ', 'ar-JO', 'ar-KW', 'ar-LB', 'ar-LY', 'ar-MA', 'ar-QA', 'ar-QM', 'ar-SA', 'ar-SD', 'ar-SY', 'ar-TN', 'ar-YE', 'bg-BG', 'bn', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-HK', 'en-IN', 'en-NZ', 'en-US', 'en-ZA', 'en-ZM', 'eo', 'es-ES', 'fa-IR', 'fi-FI', 'fr-CA', 'fr-FR', 'he', 'hi-IN', 'hu-HU', 'it-IT', 'kk-KZ', 'ko-KR', 'ja-JP', 'ku-IQ', 'nb-NO', 'nl-NL', 'nn-NO', 'pl-PL', 'pt-BR', 'pt-PT', 'ru-RU', 'si-LK', 'sl-SI', 'sk-SK', 'sr-RS', 'sr-RS@latin', 'sv-SE', 'th-TH', 'tr-TR', 'uk-UA'] 중 하나이며 기본값은 en-US입니다. locale 목록은 validator.isAlphaLocales입니다. options는 선택적 객체로, ignore 키가 있을 수 있습니다. ignore는 문자열 또는 무시할 문자의 정규 표현식일 수 있습니다. 예: " -"는 공백과 -를 무시합니다.
+`isAlphanumeric(str [, locale, options])` | 문자열에 문자와 숫자 (a-zA-Z0-9)만 포함되어 있는지 확인합니다.<br/><br/>locale은 ['ar', 'ar-AE', 'ar-BH', 'ar-DZ', 'ar-EG', 'ar-IQ', 'ar-JO', 'ar-KW', 'ar-LB', 'ar-LY', 'ar-MA', 'ar-QA', 'ar-QM', 'ar-SA', 'ar-SD', 'ar-SY', 'ar-TN', 'ar-YE', 'bn', 'bg-BG', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU', 'en-GB', 'en-HK', 'en-IN', 'en-NZ', 'en-US', 'en-ZA', 'en-ZM', 'eo', 'es-ES', 'fa-IR', 'fi-FI', 'fr-CA', 'fr-FR', 'he', 'hi-IN', 'hu-HU', 'it-IT', 'kk-KZ', 'ko-KR', 'ja-JP','ku-IQ', 'nb-NO', 'nl-NL', 'nn-NO', 'pl-PL', 'pt-BR', 'pt-PT', 'ru-RU', 'si-LK', 'sl-SI', 'sk-SK', 'sr-RS', 'sr-RS@latin', 'sv-SE', 'th-TH', 'tr-TR', 'uk-UA'] 중 하나이며 기본값은 en-US입니다. locale 목록은 validator.isAlphanumericLocales입니다. options는 선택적 객체로, ignore 키가 있을 수 있습니다. ignore는 문자열 또는 무시할 문자의 정규 표현식일 수 있습니다. 예: " -"는 공백과 -를 무시합니다.
+`isAscii(str)` | 문자열에 ASCII 문자만 포함되어 있는지 확인합니다.
+`isBase32(str [, options])` | 문자열이 base32로 인코딩되었는지 확인합니다. options는 선택적이며 기본값은 { crockford: false }입니다.<br/>crockford가 true일 경우, [Crockford의 base32 대안][Crockford Base32]을 사용하여 주어진 base32 인코딩 문자열을 검사합니다.
+`isBase58(str)` | 문자열이 base58로 인코딩되었는지 확인합니다.
+`isBase64(str [, options])` | 문자열이 base64로 인코딩되었는지 확인합니다. options는 선택적이며 기본값은 { urlSafe: false }입니다.<br/>urlSafe가 true일 경우, 문자열이 [URL 안전][Base64 URL Safe] base64로 인코딩되었는지 확인합니다.
+`isBefore(str [, date])` | 문자열이 지정된 날짜 이전의 날짜인지 확인합니다.
+`isBIC(str)` | 문자열이 BIC (은행 식별 코드) 또는 SWIFT 코드인지 확인합니다.
+`isBoolean(str [, options])` | 문자열이 boolean인지 확인합니다.<br/>options는 기본값이 { loose: false }인 객체입니다. loose가 false로 설정된 경우, 벨리데이터는 ['true', 'false', '0', '1']과 엄격히 일치합니다. loose가 true로 설정된 경우, 벨리데이터는 'yes', 'no'를 포함한 유효한 boolean 문자열과 대소문자를 구분하지 않는 문자열과도 일치합니다. (예: ['true', 'True', 'TRUE']).
+`isBtcAddress(str)` | 문자열이 유효한 BTC 주소인지 확인합니다.
+`isByteLength(str [, options])` | 문자열의 길이(UTF-8 바이트 단위)가 범위 내에 있는지 확인합니다.<br/><br/>options는 기본값이 { min: 0, max: undefined }인 객체입니다.
+`isCreditCard(str [, options])` | 문자열이 신용카드 번호인지 확인합니다.<br/><br/> options는 선택적 객체로, provider 키를 가질 수 있습니다. provider의 값은 문자열이어야 하며, 신용카드를 발급하는 회사를 정의합니다. 유효한 값으로는 ['amex', 'dinersclub', 'discover', 'jcb', 'mastercard', 'unionpay', 'visa']가 있으며, 공백일 경우 모든 발급사를 검사합니다.
+`isCurrency(str [, options])` | 문자열이 유효한 통화 금액인지 확인합니다.<br/><br/>options는 기본값이 { symbol: '$', require_symbol: false, allow_space_after_symbol: false, symbol_after_digits: false, allow_negatives: true, parens_for_negatives: false, negative_sign_before_digits: false, negative_sign_after_digits: false, allow_negative_sign_placeholder: false, thousands_separator: ',', decimal_separator: '.', allow_decimal: true, require_decimal: false, digits_after_decimal: [2], allow_space_after_digits: false }인 객체입니다.<br/>참고: 배열 digits_after_decimal은 허용되는 정확한 자릿수로 채워지며 범위가 아니라 예를 들어 1~3 범위는 [1, 2, 3]으로 표시됩니다.
+`isDataURI(str)` | 문자열이 [데이터 URI 형식][Data URI Format]인지 확인합니다.
+`isDate(str [, options])` | 문자열이 유효한 날짜인지 확인합니다. 예: [2002-07-15, new Date()].<br/><br/> options는 객체로, format, strictMode, delimiters 키를 포함할 수 있습니다.<br/><br/>format은 문자열로 기본값은 YYYY/MM/DD입니다.<br/><br/>strictMode는 boolean으로 기본값은 false입니다. strictMode가 true로 설정되면 format과 다른 문자열은 거부됩니다.<br/>
+`isDecimal(str [, options])` | 문자열이 10진수 숫자인지 확인합니다.<br/><br/>options는 {force_decimal: false, decimal_digits: '1,', locale: 'en-US'}인 객체입니다.
+`isDivisibleBy(str, number)` | 문자열이 number로 나누어 떨어지는지 확인합니다.
+`isEAN(str)` | 문자열이 EAN(국제 상품 코드)인지 확인합니다.
+`isEmail(str [, options])` | 문자열이 이메일 형식인지 확인합니다.<br/><br/>options는 {allow_display_name: false, require_display_name: false, allow_utf8_local_part: true, require_tld: true, allow_ip_domain: false, domain_specific_validation: false, blacklisted_chars: '', host_blacklist: [], allow_literal: false}인 객체입니다.
+`isEmpty(str [, options])` | 문자열이 비어 있는지 확인합니다.<br/><br/>options는 {ignore_whitespace: false}인 객체입니다.
+`isEthereumAddress(str)` | 문자열이 이더리움 주소인지 확인합니다.
+`isFQDN(str [, options])` | 문자열이 완전한 도메인 이름인지 확인합니다.<br/><br/>options는 {require_tld: true, allow_underscores: false, allow_trailing_dot: false, allow_numeric_tld: false}인 객체입니다.
+`isFloat(str [, options])` | 문자열이 부동 소수점 숫자인지 확인합니다.<br/><br/>options는 {min: -Infinity, max: Infinity, gt: -Infinity, lt: Infinity, locale: 'en-US'}인 객체입니다.
+`isFullWidth(str)` | 문자열이 풀 와이드(한글과 같이 너비가 큰 문자)인지 확인합니다.
+`isHalfWidth(str)` | 문자열이 하프 와이드(알파벳과 같이 너비가 작은 문자)인지 확인합니다.
+`isHash(str, algorithm)` | 문자열이 특정 해시 알고리즘의 해시인지 확인합니다.<br/><br/>algorithm은 'md4', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'ripemd128', 'ripemd160', 'tiger128', 'tiger160', 'tiger192', 'crc32', 'crc32b' 중 하나입니다.
+`isHexColor(str)` | 문자열이 유효한 16진수 색상인지 확인합니다.
+`isHexadecimal(str)` | 문자열이 16진수인지 확인합니다.
+`isHSL(str)` | 문자열이 HSL 색상 형식인지 확인합니다.
+`isIBAN(str)` | 문자열이 IBAN(국제 은행 계좌 번호)인지 확인합니다.
+`isIdentityCard(str [, locale])` | 문자열이 유효한 신분증 번호인지 확인합니다.<br/><br/>locale은 'any' 또는 'ES', 'IN', 'IT', 'NO', 'IR', 'MZ', 'TH', 'zh-CN', 'zh-TW' 중 하나입니다.
+`isIMEI(str [, options])` | 문자열이 유효한 IMEI(국제 모바일 장비 식별번호)인지 확인합니다.<br/><br/>options는 {allow_hyphens: false}인 객체입니다.
+`isIP(str [, version])` | 문자열이 유효한 IP 주소인지 확인합니다.<br/><br/>version은 '4' 또는 '6' 중 하나이며 기본값은 '4'입니다.
+`isIPRange(str [, version])` | 문자열이 IP 주소 범위인지 확인합니다.<br/><br/>version은 '4' 또는 '6' 중 하나이며 기본값은 '4'입니다.
+`isISBN(str [, version])` | 문자열이 유효한 ISBN인지 확인합니다.<br/><br/>version은 '10' 또는 '13' 중 하나이며 기본값은 '10'입니다.
+`isISSN(str [, options])` | 문자열이 유효한 ISSN인지 확인합니다.<br/><br/>options는 {case_sensitive: false, require_hyphen: false}인 객체입니다.
+`isISIN(str)` | 문자열이 유효한 ISIN(국제 증권 식별 번호)인지 확인합니다.
+`isISO8601(str [, options])` | 문자열이 ISO 8601 날짜 형식인지 확인합니다.<br/><br/>options는 {strict: false, strictSeparator: false}인 객체입니다.
+`isISO31661Alpha2(str)` | 문자열이 ISO 3166-1 Alpha-2 국가 코드인지 확인합니다.
+`isISO31661Alpha3(str)` | 문자열이 ISO 3166-1 Alpha-3 국가 코드인지 확인합니다.
+`isISO4217(str)` | 문자열이 ISO 4217 통화 코드인지 확인합니다.
+`isISRC(str)` | 문자열이 유효한 ISRC(국제 표준 녹음 코드)인지 확인합니다.
+`isISSN(str [, options])` | 문자열이 유효한 ISSN인지 확인합니다.<br/><br/>options는 {case_sensitive: false, require_hyphen: false}인 객체입니다.
+`isJSON(str [, options])` | 문자열이 유효한 JSON인지 확인합니다.
+`isJWT(str)` | 문자열이 유효한 JWT(JSON Web Token)인지 확인합니다.
+`isLatLong(str [, options])` | 문자열이 유효한 위도 및 경도 좌표인지 확인합니다.
+`isLength(str [, options])` | 문자열의 길이가 주어진 범위 내에 있는지 확인합니다.<br/><br/>options는 {min: 0, max: undefined}인 객체입니다.
+`isLicensePlate(str [, locale])` | 문자열이 유효한 차량 번호판인지 확인합니다.<br/><br/>locale은 'cs-CZ', 'de-DE', 'de-LI', 'en-GB', 'en-HK', 'en-IE', 'en-IN', 'en-US', 'fi-FI', 'fr-FR', 'pt-BR' 중 하나입니다.
+`isLocale(str)` | 문자열이 유효한 로케일인지 확인합니다.
+`isLowercase(str)` | 문자열이 모두 소문자인지 확인합니다.
+`isLuhnNumber(str)` | 문자열이 Luhn 알고리즘에 따라 유효한 숫자인지 확인합니다.
+`isMACAddress(str [, options])` | 문자열이 유효한 MAC 주소인지 확인합니다.<br/><br/>options는 {eui: false}인 객체입니다.
+`isMagnetURI(str)` | 문자열이 유효한 Magnet URI인지 확인합니다.
+`isMD5(str)` | 문자열이 유효한 MD5 해시인지 확인합니다.
+`isMimeType(str)` | 문자열이 유효한 MIME 타입인지 확인합니다.
+`isMobilePhone(str [, locale, options])` | 문자열이 유효한 모바일 전화번호인지 확인합니다.<br/><br/>locale은 'any' 또는 특정 지역 코드를 의미합니다. 지역 코드는 다양한 국가 코드 문자열 중 하나일 수 있습니다. options는 {strictMode: false, format: 'default', locale: 'en-US'}인 객체입니다.
+`isMongoId(str)` | 문자열이 유효한 MongoDB ObjectId인지 확인합니다.
+`isMultibyte(str)` | 문자열이 여러 바이트로 구성된 문자(예: 한글, 일본어 등)를 포함하는지 확인합니다.
+`isNumeric(str [, options])` | 문자열이 숫자로만 구성되어 있는지 확인합니다.<br/><br/>options는 {no_symbols: false, locale: 'en-US'}인 객체입니다.
+`isOctal(str)` | 문자열이 8진수로 구성되어 있는지 확인합니다.
+`isPassportNumber(str [, countryCode])` | 문자열이 유효한 여권 번호인지 확인합니다.<br/><br/>countryCode는 특정 국가 코드를 의미합니다.
+`isPort(str)` | 문자열이 유효한 포트 번호인지 확인합니다.
+`isPostalCode(str [, locale])` | 문자열이 유효한 우편번호인지 확인합니다.<br/><br/>locale은 'any' 또는 특정 지역 코드를 의미합니다.
+`isRFC3339(str)` | 문자열이 유효한 RFC 3339 날짜 형식인지 확인합니다.
+`isRgbColor(str [, options])` | 문자열이 유효한 RGB 색상 형식인지 확인합니다.<br/><br/>options는 {includePercentValues: false}인 객체입니다.
+`isSemVer(str)` | 문자열이 유효한 SemVer(버전 번호)인지 확인합니다.
+`isSlug(str)` | 문자열이 유효한 슬러그(slug)인지 확인합니다.
+`isStrongPassword(str [, options])` | 문자열이 강력한 비밀번호인지 확인합니다.<br/><br/>options는 {minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, returnScore: false, pointsPerUnique: 1, pointsPerRepeat: 0.5, pointsForContainingLower: 10, pointsForContainingUpper: 10, pointsForContainingNumber: 10, pointsForContainingSymbol: 10}인 객체입니다.
+`isSurrogatePair(str)` | 문자열이 서로게이트 페어(surrogate pair)를 포함하는지 확인합니다.
+`isTaxID(str [, locale])` | 문자열이 유효한 세금 식별 번호(Tax Identification Number)인지 확인합니다.<br/><br/>locale은 'any' 또는 특정 국가 코드를 의미합니다.
+`isTime(str [, options])` | 문자열이 유효한 시간 형식인지 확인합니다.<br/><br/>options는 {format: 'HH:mm:ss', loose: false}인 객체입니다.
+`isURL(str [, options])` | 문자열이 유효한 URL인지 확인합니다.<br/><br/>options는 {protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: false, require_host: true, require_port: false, require_valid_protocol: true, allow_underscores: false, allow_trailing_dot: false, allow_protocol_relative_urls: false, allow_fragments: true, allow_query_components: true, disallow_auth: false, host_whitelist: [], host_blacklist: [], include_hosts: []}인 객체입니다.
+`isUUID(str [, version])` | 문자열이 유효한 UUID인지 확인합니다.<br/><br/>version은 '3', '4', '5' 중 하나입니다.
+`isUppercase(str)` | 문자열이 모두 대문자인지 확인합니다.
+`isVariableWidth(str)` | 문자열이 서로 다른 너비의 문자를 포함하는지 확인합니다.
+`isVAT(str [, countryCode])` | 문자열이 유효한 VAT(부가가치세) 번호인지 확인합니다.<br/><br/>countryCode는 특정 국가 코드를 의미합니다.
+`isWhitelisted(str, chars)` | 문자열이 지정된 문자 집합에 포함되는지 확인합니다.
+`matches(str, pattern [, modifiers])` | 문자열이 지정된 정규 표현식 패턴과 일치하는지 확인합니다.<br/><br/>pattern은 정규 표현식 또는 문자열입니다. modifiers는 선택적인 정규 표현식 플래그입니다.
+
 ### Built-in sanitizers
 
 올바른 유효성검사(validation)가 가능하도록 입력값 정제를 합니다.
@@ -230,6 +317,24 @@ toUpperCase(): ValidationChain
 
 값을 대문자로 변환합니다.\
 값이 문자열이 아닌 경우 아무 작업도 하지 않습니다.
+
+#### Standard sanitizers
+
+Sanitizer | Description
+:-: | :-:
+`blacklist(input, chars`) | 입력 문자열에서 지정된 문자를 제거합니다.
+`escape(input)` | 입력 문자열에서 HTML 엔티티를 이스케이프합니다.
+`ltrim(input [, chars])` | 입력 문자열의 왼쪽 끝에서 지정된 문자를 제거합니다.<br/><br/>chars는 제거할 문자의 집합입니다. 기본값은 공백입니다.
+`normalizeEmail(email [, options])` | 이메일 주소를 정규화합니다.<br/><br/>options는 {all_lowercase: true, gmail_lowercase: true, gmail_remove_dots: true, gmail_remove_subaddress: true, gmail_convert_googlemaildotcom: true, outlookdotcom_lowercase: true, outlookdotcom_remove_subaddress: true, yahoo_lowercase: true, yahoo_remove_subaddress: true, icloud_lowercase: true, icloud_remove_subaddress: true}인 객체입니다.
+`rtrim(input [, chars])` | 입력 문자열의 오른쪽 끝에서 지정된 문자를 제거합니다.<br/><br/>chars는 제거할 문자의 집합입니다. 기본값은 공백입니다.
+`stripLow(input [, keep_new_lines])` | 입력 문자열에서 ASCII 제어 문자를 제거합니다.<br/><br/>keep_new_lines가 true이면 새 줄 문자를 유지합니다.
+`toBoolean(input [, strict])` | 입력 값을 부울 값으로 변환합니다.<br/><br/>strict가 true이면 엄격한 변환을 수행합니다(예: "1" 및 "0"이 아닌 경우 false).
+`toDate(input)` | 입력 값을 날짜 객체로 변환합니다.
+`toFloat(input)` | 입력 값을 부동 소수점 숫자로 변환합니다.
+`toInt(input [, radix])` | 입력 값을 정수로 변환합니다.<br/><br/>radix는 진수를 의미하며 기본값은 10진수입니다.
+`trim(input [, chars])` | 입력 문자열의 양쪽 끝에서 지정된 문자를 제거합니다.<br/><br/>chars는 제거할 문자의 집합입니다. 기본값은 공백입니다.
+`unescape(input)` | 입력 문자열에서 HTML 엔티티를 디코딩합니다.
+`whitelist(input, chars)` | 입력 문자열에서 지정된 문자만 남기고 나머지 문자를 제거합니다.
 
 ### Modifiers
 
