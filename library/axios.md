@@ -199,15 +199,68 @@ axios({
 
 ## Axios 인스턴스
 
+Axios 라이브러리의 `axios.create` 메서드를 사용하여 생성하는 사용자 정의 설정이 적용된 Axios 객체를 말합니다.
+
 ```tsx
 axios.create([config])
 ```
 
+### 인스턴스 사용 이유
+
+1. 인스턴스를 사용하면 기본 URL, 헤더, 타임아웃 설정 등 여러 가지 기본 설정을 한 곳에서 관리할 수 있습니다.
+
+    ```tsx
+    const instance = axios.create({
+      baseURL: 'https://some-domain.com/api/',
+      timeout: 1000,
+      headers: {'X-Custom-Header': 'foobar'}
+    });
+    ```
+
+2. 인증 토큰과 같은 공통적인 설정을 쉽게 적용할 수 있습니다.
+
+    ```tsx
+    setAccessToken(accessToken: string) {
+      const authorization = accessToken ? `Bearer ${accessToken}` : undefined;
+
+      this.instance = axios.create({
+        baseURL: MOCK_BASE_URL,
+        headers: { Authorization: authorization },
+      });
+    }
+    ```
+
+3. 요청 또는 응답 전에 특정 작업을 수행할 수 있는 인터셉터를 설정할 수 있습니다.
+
+    ```tsx
+    instance.interceptors.request.use(function (config) {
+      // 요청이 전달되기 전에 작업 수행
+      return config;
+    }, function (error) {
+      // 요청 오류가 있는 작업 수행
+      return Promise.reject(error);
+    });
+
+    instance.interceptors.response.use(function (response) {
+      // 2xx 범위에 있는 상태 코드는 이 함수를 트리거합니다.
+      // 응답 데이터와 함께 작업 수행
+      return response;
+    }, function (error) {
+      // 2xx 범위를 벗어난 상태 코드는 이 함수를 트리거합니다.
+      // 응답 오류가 있는 작업 수행
+      return Promise.reject(error);
+    });
+    ```
+
+4. 다양한 API 클라이언트를 구성할 수 있습니다.
+
 ```tsx
-const instance = axios.create({
-  baseURL: 'https://some-domain.com/api/',
-  timeout: 1000,
-  headers: {'X-Custom-Header': 'foobar'}
+const userApi = axios.create({
+  baseURL: 'https://api.example.com/users',
+});
+
+const productApi = axios.create({
+  baseURL: 'https://api.example.com/products',
 });
 ```
 
@@ -416,8 +469,116 @@ const instance = axios.create({
 }
 ```
 
+then을 사용하면, 아래와 같은 응답을 받습니다:
+
+```tsx
+axios.get('/user/12345')
+  .then(function (response) {
+    console.log(response.data);
+    console.log(response.status);
+    console.log(response.statusText);
+    console.log(response.headers);
+    console.log(response.config);
+  });
+```
+
+catch를 사용하거나, 거부 콜백 함수를 then의 두번째 인자로 넘길 시, 에러 핸들링에서 설명된 error 객체를 사용할 수 있습니다.
+
+## 인터셉터
+
+axios의 return이 Promise 타입인 점을 이용하여 http request, response가 `then` 또는 `catch`로 처리되기 전에 요청과 응답을 가로챌수 있는 axios library입니다.
+
+### Request Interceptors
+
+http request가 server에 전달되기 전에 호출됩니다.
+
+```tsx
+// 요청 인터셉터 추가하기
+axios.interceptors.request.use(function (config) {
+    // 요청이 전달되기 전에 작업 수행
+    return config;
+  }, function (error) {
+    // 요청 오류가 있는 작업 수행
+    return Promise.reject(error);
+  });
+```
+
+### Response Interceptors
+
+server로 부터 http response를 받은 후에 호출됩니다.
+
+```tsx
+// 응답 인터셉터 추가하기
+axios.interceptors.response.use(function (response) {
+    // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
+    // 응답 데이터가 있는 작업 수행
+    return response;
+  }, function (error) {
+    // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
+    // 응답 오류가 있는 작업 수행
+    return Promise.reject(error);
+  });
+```
+
+나중에 필요할때 인터셉터를 제거할 수 있습니다.
+
+```tsx
+const myInterceptor = axios.interceptors.request.use(function () {/*...*/});
+axios.interceptors.request.eject(myInterceptor);
+```
+
+커스텀 인스턴스에서도 인터셉터를 추가할 수 있습니다.
+
+```tsx
+const instance = axios.create();
+instance.interceptors.request.use(function () {/*...*/});
+```
+
+## 에러 핸들링
+
+```tsx
+axios.get('/user/12345')
+  .catch(function (error) {
+    if (error.response) {
+      // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // 요청이 전송되었지만, 응답이 수신되지 않았습니다.
+      // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+      // node.js에서는 http.ClientRequest 인스턴스입니다.
+      console.log(error.request);
+    } else {
+      // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+```
+
+`validateStatus` config 옵션을 사용하면, 오류를 발생시키는 HTTP 코드를 정의할 수 있습니다.
+
+```tsx
+axios.get('/user/12345', {
+  validateStatus: function (status) {
+    return status < 500; // 상태 코드가 500 미만인 경우에만 해결
+  }
+})
+```
+
+`toJSON`을 사용하면, HTTP 에러에 대한 더 많은 정보를 객체 형식으로 가저옵니다.
+
+```tsx
+axios.get('/user/12345')
+  .catch(function (error) {
+    console.log(error.toJSON());
+  });
+```
+
 ## 참고
 
 - [Axios Docs](https://axios-http.com/kr/)
 - [[번역] 입문자를 위한 Axios vs Fetch](https://velog.io/@eunbinn/Axios-vs-Fetch)
 - [AXIOS 설치 & 특징 & 문법 💯 정리](https://inpa.tistory.com/entry/AXIOS-%F0%9F%93%9A-%EC%84%A4%EC%B9%98-%EC%82%AC%EC%9A%A9)
+- [Axios 인터셉터 Typescript로 관리하기](https://brunch.co.kr/@14e1a0684a6c4d5/6)
