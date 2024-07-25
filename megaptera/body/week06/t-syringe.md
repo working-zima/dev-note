@@ -16,6 +16,7 @@ React 컴포넌트 입장에서는 “전역”처럼 여겨집니다.\
 
 ### 의존성 주입(Dependency Injection)
 
+밖에서 인스턴스를 만들어 주입해주는 것입니다.\
 의존성 주입이란 외부에서 의존 객체를 생성하여 넘겨주는 것을 의미합니다.\
 의존성을 외부에서 주입 받아 의존성을 없애고 객체간 결합도를 낮춥니다.
 
@@ -114,9 +115,14 @@ class ExampleClass {
 
 ### container
 
+모든 인스턴스를 가지고 관리하는 객체입니다.\
 IoC 컨테이너는 프로그램에서 필요한 부품들을 관리해주는데 도움이 되는 도구입니다.\
 IoC 컨테이너는 토큰이라는 것을 주고, 그에 따른 인스턴스나 값이나 객체를 돌려줍니다.
 즉, 부품들 간의 의존성을 쉽게 해결할 수 있도록 도와주는 도구입니다.
+
+>`Container`라는 것이 있고 이 친구가 모든 인스턴스를 다 가지고 있고 다 관리를 한다고 생각해봅시다.\
+`Container`에 앞으로 내가 사용할 모든 인스턴스를 다 만들어서 등록해두고 => `register` 라는 용어를 씁니다.\
+필요한 시점에 `Container`에게 특정타입의 인스턴스를 달라고 요청하면 `Container`가 꺼내주는 => `resolve` 라는 용어를 씁니다.
 
 #### container.resolve()
 
@@ -582,3 +588,5 @@ export default CounterStore;
 - [reflect-metadata](https://github.com/rbuckton/reflect-metadata)
 - [The problem with passing props](https://beta.reactjs.org/learn/passing-data-deeply-with-context#the-problem-with-passing-props)
 - [Decorators](https://www.typescriptlang.org/ko/docs/handbook/decorators.html)
+- [DI Container, IOC Container 개념과 예제](https://eunjin3786.tistory.com/233)
+- [의존성 주입(DI)과 IOC (with node.js)](https://www.essential2189.dev/node-di)

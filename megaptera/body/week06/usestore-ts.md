@@ -278,6 +278,15 @@ export default function Counter() {
 }
 ```
 
+#### @Action 데코레이터
+
+클래스의 메서드를 액션으로 변환하는 역할을 합니다.\
+액션은 상태를 변경하거나 업데이트하는 작업을 정의합니다.
+
+또한 publish 기능을 제공합니다.\
+publish는 상태의 변화가 있을 때 이를 구독자들에게 알리는 기능입니다.\
+예를 들어, UI는 상태가 변경되면 다시 렌더링되거나 업데이트됩니다.
+
 ### Store 작성
 
 ```tsx
@@ -305,6 +314,55 @@ class CounterStore {
 
 // export default에서 decorator 적용이 안 되는 문제가 있기 때문에 분리해서 작성
 export default CounterStore;
+```
+
+```tsx
+@singleton()
+@Store()
+export default class LoginFormStore {
+  email = '';
+
+  password = '';
+
+    accessToken = '';
+
+  // getter는 상태를 읽기만 하며 변경하지 않기 때문에 @Action과 publish는 적절하지 않음
+  get valid() {
+    console.log(this) // [[Prototype]]: Object
+    return this.email.includes('@') && !!this.password;
+  }
+
+  @Action()
+  changeEmail(email: string) {
+     // `this`는 `SignupFormStore` 인스턴스를 참조
+     console.log(this) // [[Prototype]]: SignupFormStore
+    this.email = email;
+  }
+
+  @Action()
+  changePassword(password: string) {
+    this.password = password;
+  }
+
+  @Action()
+  private setAccessToken(accessToken: string) {
+    this.accessToken = accessToken;
+  }
+
+
+  async login() {
+    try {
+      const accessToken = await apiService.login({
+        email: this.email,
+        password: this.password,
+      });
+
+      this.setAccessToken(accessToken);
+    } catch (e) {
+      this.setError();
+    }
+  }
+}
 ```
 
 ### 커스텀 Hook 작성
