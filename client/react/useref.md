@@ -310,6 +310,10 @@ export default function TimerChallenge({title, targetTime}) {
 
 ### forwardRef
 
+```jsx
+const SomeComponent = forwardRef((props, ref) => {})
+```
+
 `ref` (참조)는 `prop` (속성)이 아니기 때문에 다른 컴포넌트 또는 다른 컴포넌트의 요소에도 전달할 수 없습니다.\
 하지만 `forwardRef`를 사용하면 참조를 컴포넌트에서 컴포넌트로 전달하여 다른 컴포넌트에서 사용될 수 있도록 합니다.
 

@@ -37,7 +37,6 @@ return createPortal(
 
 ```html
 <body>
-  <div id="modal"></div>
   <div id="content">
     <header>
       <h1>The <em>Almost</em> Final Countdown</h1>
@@ -45,6 +44,7 @@ return createPortal(
     </header>
     <div id="root"></div>
   </div>
+    <div id="modal"></div> <!-- dialog의 부모요소가 될 html 요소 -->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 ```
