@@ -435,6 +435,43 @@ const localRef = useRef<number>(0); //MutableRefObject<number>
 localRef.current += 1;
 ```
 
+#### `MutableRefObject`
+
+```tsx
+import { useRef, MutableRefObject, useEffect } from 'react';
+
+// MutableRefObject를 Props로 받는 자식 컴포넌트
+type ChildProps = {
+  countRef: MutableRefObject<number>;
+};
+
+const ChildComponent = ({ countRef }: ChildProps) => {
+  useEffect(() => {
+    console.log("Count from parent:", countRef.current);
+  }, [countRef]);
+
+  return <div>Check the console for count updates.</div>;
+};
+
+// 부모 컴포넌트
+const ParentComponent = () => {
+  const countRef = useRef(0);
+
+  const handleClick = () => {
+    countRef.current += 1;
+  };
+
+  return (
+    <div>
+      <ChildComponent countRef={countRef} />
+      <button onClick={handleClick}>Increment Count</button>
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
 <br/>
 
 ### `useRef(initialValue: T | null): RefObject`
@@ -446,7 +483,7 @@ interface RefObject<T> {
 ```
 
 `initialValue`가 `null`인 경우입니다.\
-리턴 타입은 `RefObject<T>` 로 ref 객체의 `.current` 프로퍼티 값을 직접 변경할 수 없습니다.
+반환 타입은 `RefObject<T>` 로 ref 객체의 `.current` 프로퍼티 값을 직접 변경할 수 없습니다.
 
 ```tsx
 const inputRef = useRef<HTMLInputElement>(null); //RefObject<HTMLInputElement>
@@ -467,12 +504,78 @@ if (inputRef.current) {
 <input ref={inputRef} />
 ```
 
+#### RefObject
+
+반환 타입이 `RefObject<T>`이기 때문에 매개변수로 사용하는 경우 타입은 `RefObject<T>`으로 해야 합니다.
+
+```tsx
+import { useRef, RefObject } from 'react';
+
+// inputRef를 매개변수로 사용하는 함수
+const focusInput = (inputRef: RefObject<HTMLInputElement>) => {
+  if (inputRef.current) {
+    inputRef.current.focus();
+  }
+};
+
+const App = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    focusInput(inputRef);
+  };
+
+  return (
+    <div>
+      <input ref={inputRef} type="text" placeholder="Click the button to focus me" />
+      <button onClick={handleClick}>Focus the input</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
 <br/>
 
 ### `useRef<T = undefined>(): MutableRefObject<T | undefined>`
 
 제네릭 타입이 undefined 즉, 타입을 지정하지 않은 경우입니다.\
 리턴 타입은 `MutableRefObject<T | undefined>` 가 됩니다.
+
+#### `MutableRefObject<T | undefined>`
+
+```tsx
+import { useRef, useEffect } from 'react';
+
+// MutableRefObject를 매개변수로 사용하는 함수
+const usePrevious = <T,>(value: T): MutableRefObject<T | undefined> => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref;
+};
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const prevCountRef = usePrevious(count);
+
+  const handleIncrement = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <p>Current count: {count}</p>
+      <p>Previous count: {prevCountRef.current}</p>
+      <button onClick={handleIncrement}>Increment</button>
+    </div>
+  );
+};
+
+export default App;
+```
 
 <br/>
 
