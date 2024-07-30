@@ -310,6 +310,9 @@ export default function TimerChallenge({title, targetTime}) {
 
 ### forwardRef
 
+부모 컴포넌트가 자식 컴포넌트의 노드에 접근하고자 할 때 사용합니다.\
+부모에서 `ref`를 생성하고, 자식의 노드에 연결할 때 쓰는 것입니다.
+
 ```jsx
 const SomeComponent = forwardRef((props, ref) => {})
 ```
@@ -337,6 +340,12 @@ const FancyButton = forwardRef((props, ref) => (
   </button>
 ));
 ```
+
+#### 주의
+
+부모 컴포넌트의 노드를 자식 컴포넌트에 전달할 때는 그냥 `props`로 전달하면 됩니다.\
+부모에서 `ref` 를 생성하고, 부모의 노드에 연결한 다음, 연결된 결과를 자식에게 전달하는 것입니다.\
+이 경우 `ref` 는 부모 컴포넌트에서 생성 및 연결까지 완료되었으므로 `forward` 해줄 이유가 없습니다.
 
 ### useImperativeHandle(ref, createHandle, dependencies?)
 
