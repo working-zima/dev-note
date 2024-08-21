@@ -149,17 +149,48 @@ IntersectionObserver.unobserve(target);
 값은 `0`에서 `1` 사이의 숫자로 표현되며, `0`이면 요소가 전혀 보이지 않는 상태이고, `1`이면 요소가 완전히 화면에 보이는 상태를 의미합니다.\
 예를 들어, intersectionRatio가 0.5라면 요소의 절반이 화면에 보이고 있다는 뜻입니다.
 
+```js
+function intersectionCallback(entries) {
+  entries.forEach((entry) => {
+    entry.target.style.opacity = entry.intersectionRatio;
+  });
+}
+```
+
 ### intersectionRect
 
 감시 중인 요소의 실제로 화면에 보이는 부분의 위치와 크기를 나타냅니다.\
 `boundingClientRect`와 비슷하지만, 이 값은 요소 중에서 화면에 실제로 보이는 부분만을 나타냅니다.\
-top, right, bottom, left, width, height 정보를 포함합니다.
+`top, right, bottom, left, width, height` 정보를 포함합니다.
+
+```js
+function intersectionCallback(entries) {
+  entries.forEach((entry) => {
+    refreshZones.push({
+      element: entry.target,
+      rect: entry.intersectionRect,
+    });
+  });
+}
+```
 
 ### isIntersecting
 
 요소가 화면에 보이는지 여부를 `true` 또는 `false`로 알려줍니다.\
 `true`라면 요소의 일부 또는 전부가 화면에 나타난 상태이고, `false`라면 화면에 보이지 않는 상태입니다.\
 이 값은 매우 간단하게 요소가 화면에 있는지 없는지 확인하는 데 사용됩니다.
+
+```js
+function intersectionCallback(entries) {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      intersectingCount += 1;
+    } else {
+      intersectingCount -= 1;
+    }
+  });
+}
+```
 
 ### rootBounds
 
@@ -171,6 +202,14 @@ top, right, bottom, left, width, height 정보를 포함합니다.
 
 감시되고 있는 특정 요소를 가리킵니다.\
 `IntersectionObserver`가 관찰 중인 요소 자체를 의미하며, 콜백 함수에서 어떤 요소가 화면에 나타나거나 사라졌는지 바로 확인할 수 있게 해줍니다.
+
+```js
+function intersectionCallback(entries) {
+  entries.forEach((entry) => {
+    entry.target.style.opacity = entry.intersectionRatio;
+  });
+}
+```
 
 ### time
 
