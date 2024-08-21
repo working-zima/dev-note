@@ -118,7 +118,9 @@
     - [useRef](client/react/useref.md)
     - [portals](client/react/portals.md)
   - [Javascript](client/javascript/README.md)
-    - [Element size and scrolling](client/javascript/element-size-and-scrolling.md)
+  - [webapi](client/webapi/README.md)
+    - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
+    - [Intersection Observer](client/webapi/intersection-observer.md)
 
 ### SERVER
 
