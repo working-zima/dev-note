@@ -137,4 +137,4 @@
     - [Express Validator](server/nodejs/express-validator.md)
     - [Cookie와 Session](server/nodejs/cookie-session.md)
   - [Linux](server/linux/README.md)
-    - [명령어](server/linux/linux.md)
+    - [리눅스](server/linux/linux.md)
