@@ -6,6 +6,46 @@
 
 ## LIST
 
+### LIBRARY
+
+- [라이브러리](library/README.md)
+  - [Axios](library/axios.md)
+  - [React Hook Form](library/react-hook-form/README.md)
+    - [useForm](library/react-hook-form/use-form.md)
+      - [register](library/react-hook-form/register.md)
+      - [formState](library/react-hook-form/formState.md)
+      - [handleSubmit](library/react-hook-form/handleSubmit.md)
+      - [control](library/react-hook-form/control.md)
+    - [useController](library/react-hook-form/use-controller.md)
+
+### CLIENT
+
+- [Client](client/README.md)
+  - [React](client/react/README.md)
+    - [useRef](client/react/useref.md)
+    - [portals](client/react/portals.md)
+  - [Javascript](client/javascript/README.md)
+  - [webapi](client/webapi/README.md)
+    - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
+    - [Intersection Observer](client/webapi/intersection-observer.md)
+
+### SERVER
+
+- [Server](server/README.md)
+  - [Database](server/database/README.md)
+    - [MongoDB](server/database/mongo-db.md)
+    - [Mongoose](server/database/mongoose.md)
+    - [SQL vs. NoSQL](server/database/sql-nosql.md)
+    - [Entity & Value Object](server/database/entity-value-object.md)
+    - [몽고DB 스키마 설계](server/database/mongo-db-schema.md)
+  - [NodeJS](server/nodejs/README.md)
+    - [오류 처리](server/nodejs/error-handling.md)
+    - [Express.js](server/nodejs/express.md)
+    - [Express Validator](server/nodejs/express-validator.md)
+    - [Cookie와 Session](server/nodejs/cookie-session.md)
+  - [Linux](server/linux/README.md)
+    - [리눅스](server/linux/linux.md)
+
 ### MEGAPTERA
 
 - [프론트 생존코스 10기](megaptera/README.md)
@@ -98,43 +138,3 @@
       - [MenuItem](megaptera/appendix/test-code-study/menuItem.md)
       - [extractCategories](megaptera/appendix/test-code-study/extractCategories.md)
       - [filterRestaurants](megaptera/appendix/test-code-study/filterRestaurants.md)
-
-### LIBRARY
-
-- [라이브러리](library/README.md)
-  - [Axios](library/axios.md)
-  - [React Hook Form](library/react-hook-form/README.md)
-    - [useForm](library/react-hook-form/use-form.md)
-      - [register](library/react-hook-form/register.md)
-      - [formState](library/react-hook-form/formState.md)
-      - [handleSubmit](library/react-hook-form/handleSubmit.md)
-      - [control](library/react-hook-form/control.md)
-    - [useController](library/react-hook-form/use-controller.md)
-
-### CLIENT
-
-- [Client](client/README.md)
-  - [React](client/react/README.md)
-    - [useRef](client/react/useref.md)
-    - [portals](client/react/portals.md)
-  - [Javascript](client/javascript/README.md)
-  - [webapi](client/webapi/README.md)
-    - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
-    - [Intersection Observer](client/webapi/intersection-observer.md)
-
-### SERVER
-
-- [Server](server/README.md)
-  - [Database](server/database/README.md)
-    - [MongoDB](server/database/mongo-db.md)
-    - [Mongoose](server/database/mongoose.md)
-    - [SQL vs. NoSQL](server/database/sql-nosql.md)
-    - [Entity & Value Object](server/database/entity-value-object.md)
-    - [몽고DB 스키마 설계](server/database/mongo-db-schema.md)
-  - [NodeJS](server/nodejs/README.md)
-    - [오류 처리](server/nodejs/error-handling.md)
-    - [Express.js](server/nodejs/express.md)
-    - [Express Validator](server/nodejs/express-validator.md)
-    - [Cookie와 Session](server/nodejs/cookie-session.md)
-  - [Linux](server/linux/README.md)
-    - [리눅스](server/linux/linux.md)

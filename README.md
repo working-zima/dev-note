@@ -1,5 +1,5 @@
 ---
-description: 프로그래밍에 관해 이것저것 공부해가며 잊기 쉬운 정보들을 저장하는 공간입니다.
+description: [brainmark velog](https://velog.io/@zimablue14/posts)에 노트한 지식을 정리하는 공간입니다.
 ---
 
 # zimablue's brainmark
