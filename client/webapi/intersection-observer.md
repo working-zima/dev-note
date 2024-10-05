@@ -8,6 +8,22 @@ new IntersectionObserver(callback[, options]);
 
 ## callback
 
+```js
+let callback = (entries, observer) => {
+  entries.forEach((entry) => {
+    // 각 엔트리는 관찰된 하나의 교차 변화을 설명합니다.
+    // 대상 요소:
+    //   entry.boundingClientRect
+    //   entry.intersectionRatio
+    //   entry.intersectionRect
+    //   entry.isIntersecting
+    //   entry.rootBounds
+    //   entry.target
+    //   entry.time
+  });
+};
+```
+
 ### entries (IntersectionObserverEntry 객체들의 배열)
 
 화면에 나타나거나 사라진 요소들에 대한 정보가 들어 있는 리스트입니다.\
@@ -16,7 +32,7 @@ new IntersectionObserver(callback[, options]);
 ```js
 const $div = document.createElement('div')
 
-let observer = new IntersectionObserver((e) => console.log(e))
+let observer = new IntersectionObserver((entries) => console.log(entries))
 observer.observe($div)
 
 /*
@@ -40,7 +56,7 @@ observer.observe($div)
 const $div = document.createElement('div')
 const $li = document.createElement('li')
 
-let observer = new IntersectionObserver((e) => console.log(e))
+let observer = new IntersectionObserver((entries) => console.log(entries))
 observer.observe($div)
 observer.observe($li)
 
@@ -60,7 +76,7 @@ length: 2
 예를 들어, 이미지가 완전히 화면에 나타났을 때만 작업을 수행하도록 할 수 있습니다.
 
 ```js
-new IntersectionObserver((e) => console.log(e))
+new IntersectionObserver((observer) => console.log(observer))
 
 /*
 IntersectionObserver {root: null, rootMargin: '0px 0px 0px 0px', thresholds: Array(1), delay: 0, trackVisibility: false, …}
