@@ -4,7 +4,8 @@
 new IntersectionObserver(callback[, options]);
 ```
 
-`Intersection Observer API`는 웹 페이지에서 어떤 요소가 화면에 나타나거나 사라질 때, 또는 화면에 보이는 크기가 변할 때 그걸 감지해서 미리 정해둔 함수를 실행하게 해주는 도구입니다.
+`Intersection Observer API`는 웹 페이지에서 어떤 요소가 화면에 나타나거나 사라질 때, 또는 화면에 보이는 크기가 변할 때 그걸 감지해서 미리 정해둔 함수를 실행하게 해주는 도구입니다.\
+즉, 루트 영역(뷰포트)와 대상 객체의 겹침을 감시하는 인터페이스입니다.
 
 ## callback
 
