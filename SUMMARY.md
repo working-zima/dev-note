@@ -21,11 +21,15 @@
 ### CLIENT
 
 - [Client](client/README.md)
+  - [Javascript](client/javascript/README.md)
+  - [Next.js](client/nextjs/README.md)
+    - [Routing](client/nextjs/routing.md)
+    - [Image](client/nextjs/image.md)
+    - [Rending](client/nextjs/rendering.md)
   - [React](client/react/README.md)
     - [useRef](client/react/useref.md)
     - [portals](client/react/portals.md)
-  - [Javascript](client/javascript/README.md)
-  - [webapi](client/webapi/README.md)
+  - [Web api](client/webapi/README.md)
     - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
     - [Intersection Observer](client/webapi/intersection-observer.md)
     - [Mutation Observer](client/webapi/mutation-observer.md)
