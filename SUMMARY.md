@@ -22,7 +22,7 @@
 
 - [Client](client/README.md)
   - [Javascript](client/javascript/README.md)
-    - [ArrayBuffer](client/javascript/array-buffer.md)
+    - [ArrayBuffer, binary arrays](client/javascript/array-buffer.md)
     - [Blob](client/javascript/blob.md)
     - [FileReader](client/javascript/file-reader.md)
   - [Next.js](client/nextjs/README.md)
