@@ -18,7 +18,7 @@
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
 
-<!-- ### CLIENT
+### CLIENT
 
 - [Client](client/README.md)
   - [Javascript](client/javascript/README.md)
@@ -35,7 +35,7 @@
   - [Web API](client/webapi/README.md)
     - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
     - [Intersection Observer](client/webapi/intersection-observer.md)
-    - [Mutation Observer](client/webapi/mutation-observer.md) -->
+    - [Mutation Observer](client/webapi/mutation-observer.md)
 
 ### SERVER
 
