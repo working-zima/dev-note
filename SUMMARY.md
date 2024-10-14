@@ -22,6 +22,9 @@
 
 - [Client](client/README.md)
   - [Javascript](client/javascript/README.md)
+    - [ArrayBuffer](client/javascript/array-buffer.md)
+    - [Blob](client/javascript/blob.md)
+    - [FileReader](client/javascript/file-reader.md)
   - [Next.js](client/nextjs/README.md)
     - [Routing](client/nextjs/routing.md)
     - [Image](client/nextjs/image.md)
