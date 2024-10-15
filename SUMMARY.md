@@ -17,6 +17,8 @@
       - [handleSubmit](library/react-hook-form/handleSubmit.md)
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
+  - [Slugify](library/slugify.md)
+  - [XSS](library/xss.md)
 
 ### CLIENT
 

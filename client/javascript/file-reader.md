@@ -65,8 +65,15 @@ let reader = new FileReader(); // 인수 없이 생성
 ### 주요 메서드
 
 - `readAsArrayBuffer(blob)` – 데이터를 이진 형식인 `ArrayBuffer`로 읽습니다.
+
 - `readAsText(blob, [encoding])` – 데이터를 텍스트 문자열로 읽으며, 인코딩을 선택할 수 있습니다(기본값은 utf-8).
+
 - `readAsDataURL(blob)` – 데이터를 base64로 인코딩된 데이터 URL로 읽습니다.
+
+    ```js
+    instanceOfFileReader.readAsDataURL(blob);
+    ```
+
 - `abort()` – 읽기 작업을 취소합니다.
 
 읽기 방식은 사용할 데이터의 형식에 따라 선택합니다:
@@ -106,6 +113,7 @@ function readFile(input) {
 
   reader.readAsText(file); // 텍스트로 파일 읽기
 
+  // onload는 읽기 동작이 성공적으로 완료되었을 때마다 발생하는 이벤트 핸들러
   reader.onload = function() {
     console.log(reader.result); // 파일 내용 출력
   };
@@ -124,7 +132,7 @@ function readFile(input) {
 
 - `readAsArrayBuffer(blob)` – `ArrayBuffer`로 변환.
 - `readAsText(blob, [encoding])` – 문자열로 변환(`TextDecoder`의 대안).
-- `readAsDataURL(blob)` – base64 데이터 URL로 변환.
+- `readAsDataURL(blob)` – base64 데이터 URL로 변환(읽기).
 
 ### Web Workers에서의 FileReaderSync
 
