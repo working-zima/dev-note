@@ -116,12 +116,18 @@ input.addEventListener("change", (event) => {
 ### arrayBuffer()
 
 `Blob` 객체의 데이터를 [ArrayBuffer](./array-buffer.md) 형태로 읽는 비동기 메서드입니다.\
-`ArrayBuffer`는 고정 크기의 원시 이진 데이터 버퍼로, 이를 통해 바이트 단위로 데이터를 다룰 수 있습니다.
+`ArrayBuffer`는 고정 크기의 원시 이진 데이터 버퍼로, 이를 통해 바이트 단위로 데이터를 다룰 수 있습니다.\
 
 ```js
 blob.arrayBuffer().then((buffer) => {
   console.log(buffer); // ArrayBuffer 객체 출력
 });
+```
+
+데이터를 바이너리 형식으로 변환하여, 이를 파일로 저장할 수 있게 해줍니다.
+
+```js
+const bufferedImage = await meal.image.arrayBuffer();
 ```
 
 ### slice()
