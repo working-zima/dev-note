@@ -1,9 +1,9 @@
 # Routing
 
-## 페이지간 이동
+## 페이지간 이동 (Link)
 
-Next.js에서는 a태그 대신 Link 컴포넌트를 사용합니다.\
-a태그를 사용할 경우 경로 간 새로고침이 발생합니다.
+Next.js에서는 `a`태그 대신 `Link` 컴포넌트를 사용합니다.\
+`a`태그를 사용할 경우 경로 간 새로고침이 발생합니다.
 
 ```tsx
 import Link from 'next/link'
