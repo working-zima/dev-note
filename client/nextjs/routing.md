@@ -23,7 +23,8 @@ export default function Page() {
 ### layout
 
 모든 Next 프로젝트에는 최소 하나의 Root `layout.js` 파일이 필요합니다.\
-또한 중첩된 `layout.js` 파일도 있을 수 있습니다.
+또한 중첩된 `layout.js` 파일도 있을 수 있습니다.\
+`layout.js`는 서로 상쇄되지 않고 중첩된다는 것이 중요합니다.
 
 ```tsx
 // app/layout.js
@@ -44,7 +45,26 @@ export default function RootLayout({ children }) {
 
 #### metadata
 
-`head`에 들어가는 모든 내용은 `metadata`에 의해 설정되거나 NextJS로 인해 이면에서 자동으로 설정됩니다.
+`<head>`에 들어가는 모든 내용은 `metadata`에 의해 설정되거나 NextJS로 인해 이면에서 자동으로 설정됩니다.\
+page 또는 layout에서만 사용 가능합니다.
+
+`metadata`는 동적으로도 생성 가능합니다.
+
+```tsx
+export async function generateMetadata({ params }) {
+  const meal = getMeal(params.mealSlug)
+
+  if (!meal) {
+    // 이 컴포넌트가 실행되는것을 멈추고 제일 가까운 not-found나 오류화면을 보여줌
+    notFound();
+  }
+
+  return {
+    title: meal.title,
+    description: meal.summary
+  };
+}
+```
 
 #### children
 
