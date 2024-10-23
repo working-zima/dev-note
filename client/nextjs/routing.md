@@ -13,381 +13,11 @@ export default function Page() {
 }
 ```
 
-## 페이지 및 레이아웃
-
-`page.js` 파일이 페이지의 내용을 정의한다면, `layout.js` 파일은 하나 또는 그 이상의 페이지를 감싸는 껍데기를 정의합니다.\
-레이아웃이 wrapper이고 페이지가 실제 내용이라고 생각하면 쉽습니다.
-
-![page example](./img/page-example.png)
-
-### layout
-
-모든 Next 프로젝트에는 최소 하나의 Root `layout.js` 파일이 필요합니다.\
-또한 중첩된 `layout.js` 파일도 있을 수 있습니다.\
-`layout.js`는 서로 상쇄되지 않고 중첩된다는 것이 중요합니다.
-
-```tsx
-// app/layout.js
-
-export const metadata = {
-  title: 'NextJS Course App',
-  description: 'Your first NextJS app!',
-};
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
-}
-```
-
-#### metadata
-
-`<head>`에 들어가는 모든 내용은 `metadata`에 의해 설정되거나 NextJS로 인해 이면에서 자동으로 설정됩니다.\
-page 또는 layout에서만 사용 가능합니다.
-
-`metadata`는 동적으로도 생성 가능합니다.
-
-```tsx
-export async function generateMetadata({ params }) {
-  const meal = getMeal(params.mealSlug)
-
-  if (!meal) {
-    // 이 컴포넌트가 실행되는것을 멈추고 제일 가까운 not-found나 오류화면을 보여줌
-    notFound();
-  }
-
-  return {
-    title: meal.title,
-    description: meal.summary
-  };
-}
-```
-
-#### children
-
-현재 활성화된 페이지의 내용입니다.\
-`children`을 통해 중첩 레이아웃 또는 페이지에 접근할 수 있습니다.
-
-## 보호된 파일명
-
-`app` 폴더에는 `page.js`, `icon.png` 또는 `layout.js` 와 같은 보호 파일명이 있어서 다양한 기능을 사용할 수 있게합니다.
-
-### page.js
-
-신규 페이지 생성합니다. (예: `app/about/page.js`은 `<your-domain>/about page`을 생성)
-
-```tsx
-// app/blog/[slug]/page.tsx
-
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  return <h1>My Page</h1>
-}
-```
-
-### layout.js
-
-형제 및 중첩 페이지를 감싸는 신규 레이아웃 생성합니다.
-
-```tsx
-// app/layout.tsx
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  )
-}
-```
-
-```tsx
-// app/dashboard/layout.tsx
-
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return <section>{children}</section>
-}
-```
-
-### not-found.js
-
-‘Not Found’ 오류에 대한 폴백 페이지(형제 또는 중첩 페이지 또는 레이아웃에서 전달된)
-
-```tsx
-// app/not-found.tsx
-
-import Link from 'next/link'
-
-export default function NotFound() {
-  return (
-    <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
-    </div>
-  )
-}
-```
-
-### error.js
-
-기타 오류에 대한 폴백 페이지입니다. (형제 또는 중첩 페이지 또는 레이아웃에서 전달된)
-
-```tsx
-'use client' // Error components must be Client Components
-
-import { useEffect } from 'react'
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error)
-  }, [error])
-
-  return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </div>
-  )
-}
-```
-
-### loading.js
-
-형제 또는 중첩 페이지(또는 레이아웃)가 데이터를 가져오는 동안 표시되는 폴백 페이지
-
-```tsx
-export default function Loading() {
-  // 커스텀 로딩 스켈레톤 컴포넌트를 사용할 수도 있음
-  return <p>Loading...</p>
-}
-```
-
-### route.js
-
-API 경로 생성(즉, JSX 코드가 아닌 데이터를 반환하는 페이지, 예: JSON 형식)
-
-```tsx
-// route.ts
-
-export async function GET(request: Request) {}
-
-export async function HEAD(request: Request) {}
-
-export async function POST(request: Request) {}
-
-export async function PUT(request: Request) {}
-
-export async function DELETE(request: Request) {}
-
-export async function PATCH(request: Request) {}
-
-// 만약 OPTIONS 메서드가 정의되지 않은 경우, Next.js는 이를 자동으로 구현하고, 라우트 핸들러에 정의된 다른 메서드들(GET, POST 등)을 기반으로 적절한 Allow 응답 헤더를 설정합니다. OPTIONS 메서드는 클라이언트가 서버에서 지원하는 HTTP 메서드를 확인하는 데 사용됩니다. 직접 정의하려면 다음과 같이 작성할 수 있습니다:
-export async function OPTIONS(request: Request) {}
-```
-
-```tsx
-// app/dashboard/[team]/route.ts
-
-type Params = {
-  team: string
-}
-
-export async function GET(request: Request, context: { params: Params }) {
-  const team = context.params.team // '1'
-}
-
-// Params라는 타입을 정의하여 라우트의 URL 파라미터 타입을 지정합니다.
-```
-
-### default.js
-
-Next.js가 전체 페이지 새로고침 후에도 슬롯의 활성 상태(현재 페이지)를 복구할 수 없을 때, 대체 화면을 보여주기 위해 사용됩니다.\
-만약 일치하는 하위 페이지가 없으면 `default.js`가 렌더링되며, 이 파일이 없으면 404 페이지가 대신 나타납니다. 특히 자식 경로에 대해서도 `default.js`가 필요할 수 있습니다.
-
-### instrumentation.js
-
-애플리케이션에 모니터링 및 로깅 도구를 통합하는 데 사용됩니다.\
-이를 통해 애플리케이션의 성능과 동작을 추적하고, 프로덕션 환경에서 발생하는 문제를 디버깅할 수 있습니다.
-
-이 파일을 사용하려면, 애플리케이션의 루트에 배치하거나 src 폴더를 사용하는 경우 그 안에 넣으면 됩니다.
-
-#### Config Option
-
-```tsx
-module.exports = {
-  experimental: {
-    instrumentationHook: true,
-  },
-}
-```
-
-#### Export
-
-```tsx
-import { registerOTel } from '@vercel/otel'
-
-export function register() {
-  registerOTel('next-app')
-}
-```
-
-### middleware.js
-
-요청이 완료되기 전에 서버에서 코드를 실행하는 미들웨어를 작성하는 데 사용됩니다.\
-들어오는 요청에 따라 응답을 재작성, 리디렉션, 요청이나 응답 헤더 수정, 또는 직접 응답하는 방식으로 응답을 수정할 수 있습니다.
-
-미들웨어는 경로가 렌더링되기 전에 실행되며, 인증, 로깅, 리디렉션 처리 같은 서버 측 로직을 구현할 때 유용합니다.
-
-middleware.ts(또는 .js) 파일을 프로젝트 루트에 배치하여 미들웨어를 정의할 수 있습니다.
-예를 들어, app 또는 pages와 같은 수준에 두거나, src 폴더 안에 넣을 수 있습니다.
-
-```tsx
-// middleware.ts
-
-import { NextResponse, NextRequest } from 'next/server'
-
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL('/home', request.url))
-}
-
-export const config = {
-  matcher: '/about/:path*',
-}
-```
-
-### template.js
-
-레이아웃과 유사하지만, 각 자식 레이아웃이나 페이지를 감싸는 역할을 합니다.\
-레이아웃과는 달리, 레이아웃은 경로를 가로질러 지속되며 상태를 유지하는 반면, 템플릿은 내비게이션 시 각 자식에 대해 새로운 인스턴스를 생성합니다.
-
-즉, 템플릿은 페이지 간 이동할 때마다 자식 컴포넌트의 새 인스턴스를 생성하므로 상태가 초기화됩니다.
-
-```tsx
-// app/template.tsx
-
-export default function Template({
-  children
-}: {
-  children: React.ReactNode
-}) {
-  return <div>{children}</div>
-}
-```
-
-### globals.css
-
-`layout.js` 파일에 `import` 되어 로딩된 모든 페이지에서 사용됩니다.
-
-### icon.png
-
-favicon으로 사용하게 됩니다.
-
-## 커스텀 컴포넌트
-
-`header` 같은 경우 특별할 파일명이 아니기 때문에 레이아웃 또는 페이지로 렌더링 되지 않습니다.
-
-```tsx
-// app/header.jsx
-
-export default function header() {
-  return (
-    <>
-      <img src="/logo.png" alt="A server surrounded by magic sparkles." />
-      <h1>Welcome to this NextJS Course!</h1>
-    </>
-  )
-}
-```
-
-그렇기 때문에 `app` 폴더 외부에서 위치해도 상관없습니다.
-
-```tsx
-// components/page.js
-
-import Link from "next/link";
-
-import Header from './components/header'
-
-export default function Home() {
-  console.log(`Executing...`)
-  return (
-    <main>
-      <Header />
-      <p>🔥 Let&apos;s get started! 🔥</p>
-      <p><Link href="/about">About Us</Link></p>
-    </main>
-  );
-}
-```
-
-`jsconfig` 파일에서 `import` 경로에 앳 사인(`@`)를 사용해 `root` 프로젝트를 조회할 수 있습니다.
-
-```tsx
-// components/page.js
-
-import Link from "next/link";
-
-import Header from '@/components/header'
-
-export default function Home() {
-  console.log(`Executing...`)
-  return (
-    <main>
-      <Header />
-      <p>🔥 Let&apos;s get started! 🔥</p>
-      <p><Link href="/about">About Us</Link></p>
-    </main>
-  );
-}
-```
-
-```json
-// jsconfig.js
-
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./*"]
-    }
-  }
-}
-```
-
 ## 동적 라우트
 
-NextJS에서 dynamic route (동적 라우트)는 대괄호를 사용한 중첩 폴더를 추가해 만들 수 있습니다.\
+![dynamic-routes](./img/dynamic-routes.png)
+
+NextJS에서 dynamic route (동적 라우트)는 대괄호(`[]`)를 사용한 중첩 폴더를 추가해 만들 수 있습니다.\
 NextJS에서 지원되는 특수한 문법으로 대괄호 사이에 임의로 식별자를 넣을 수 있습니다.
 
 ```tsx
@@ -409,18 +39,88 @@ export default function BlogPage() {
 ```tsx
 // app/blog/[slug]/page.js
 
-export default function BlogPostPage() {
+export default function BlogPostPage({
+  params
+}: {
+  params: { slug: string }
+}) {
+// post-1 또는 post-2
   return (
     <main>
-      <h1>Blog Post</h1>
+      <h1>My Post: {params.slug}</h1>
     </main>
   )
 }
 ```
 
-`<p><Link href="/blog/post-1">Post 1</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-1` 이 되고, `<p><Link href="/blog/post-2">Post 2</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-2` 이 됩니다.
+`<p><Link href="/blog/post-1">Post 1</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-1` 이 됩니다.\
+`<p><Link href="/blog/post-2">Post 2</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-2` 이 됩니다.
 
-## 경로 매개 변수
+Route | Example URL | params
+:-: | :-: | :-:
+`app/blog/[slug]/page.js` | `/blog/a` | `{ slug: 'a' }`
+`app/blog/[slug]/page.js` | `/blog/b` | `{ slug: 'b' }`
+`app/blog/[slug]/page.js` | `/blog/c` | `{ slug: 'c' }`
+
+### Catch-all Segments
+
+![catch-all](./img/catch-all.png)
+
+Catch-all 세그먼트는 여러 세그먼트(경로의 일부)를 한 번에 처리하는 기능입니다.\
+파일 이름에 대괄호(`[]`)와 줄임표(`...`)를 사용하여 해당 경로의 모든 하위 세그먼트를 캡처합니다.
+
+예를 들어, app/shop/[...slug]/page.js라는 파일이 있으면 /shop 뒤에 오는 경로들이 무엇이든 다 처리할 수 있습니다.
+
+다음과 같은 경로들이 모두 일치합니다.
+
+- `/shop/clothes`
+
+- `/shop/clothes/tops`
+
+- `/shop/clothes/tops/t-shirts`
+
+params는 경로 뒤에 오는 세그먼트들을 배열로 저장합니다. 예시를 보면:
+
+- `/shop/a` → `{ slug: ['a'] }`
+
+- `/shop/a/b` → `{ slug: ['a', 'b'] }`
+
+- `/shop/a/b/c` → `{ slug: ['a', 'b', 'c'] }`
+
+즉, 뒤에 몇 개의 세그먼트가 오든 그 경로를 모두 캡처할 수 있는 기능입니다.
+
+### Optional Catch-all Segments
+
+![optional-catch-all](./img/optional-catch-all.png)
+
+Optional Catch-all 세그먼트는 catch-all과 거의 같지만, 추가로 경로에 세그먼트가 아예 없는 경우도 처리할 수 있습니다.\
+이중 대괄호(`[[...]]`)를 사용하여 만듭니다.
+
+예를 들어, `app/shop/[[...slug]]/page.js`라는 파일이 있으면 다음과 같은 경로들에 모두 일치합니다:
+
+- `/shop`
+
+- `/shop/clothes`
+
+- `/shop/clothes/tops`
+
+- `/shop/clothes/tops/t-shirts`
+
+여기서 /shop 경로에도 일치한다는 점이 catch-all 세그먼트와의 차이입니다.\
+매개변수가 없어도 경로가 일치한다는 것이 핵심입니다.\
+params는 경로에 세그먼트가 없으면 빈 객체로 반환됩니다.
+
+- `/shop` → `{}`
+
+- `/shop/a` → `{ slug: ['a'] }`
+
+- `/shop/a/b` → `{ slug: ['a', 'b'] }`
+
+- `/shop/a/b/c` → `{ slug: ['a', 'b', 'c'] }`
+
+Catch-all은 경로 뒤에 반드시 세그먼트가 필요하지만, optional catch-all은 세그먼트가 없어도 일치할 수 있는 점이 차이입니다.
+
+### 경로 매개 변수
 
 NextJS는 `props` 객체를 모든 페이지 컴포넌트에 넘기며 `params`를 `prop`에서 구조 분해 할당을 통해 뽑아 낼 수 있습니다.
 
@@ -439,3 +139,214 @@ export default function BlogPostPage({ params }) {
     </main>
   )
 }
+```
+
+## Parallel Routes
+
+![parallel-routes](./img/parallel-routes.png);
+
+하나의 화면 안에 여러 개의 페이지를 병렬로 함께 렌더링 시켜주는 패턴.
+
+Parallel Routes는 Next.js에서 동적인 앱을 구축할 때, 동일한 레이아웃 내에서 여러 페이지를 동시에 또는 조건에 따라 렌더링할 수 있게 해줍니다.\
+소셜 미디어 대시보드 같은 곳에서 유용하며, 페이지 내 여러 섹션을 분리하여 동시에 처리할 수 있게 합니다.
+
+예를 들어, 대시보드에 `team`과 `analytics`라는 두 페이지가 있다면, 이 두 페이지를 Parallel Routes를 통해 하나의 레이아웃에서 동시에 렌더링할 수 있습니다.
+
+### Slots
+
+![parallel-routes-file-system](./img/parallel-routes-file-system.png);
+
+Parallel Routes는 slots라는 개념을 사용합니다. Slots는 `@folder` 규칙을 따라 파일 구조 내에서 정의됩니다.\
+
+예를 들어:
+
+```graphql
+app/
+  ├── layout.js
+  ├── @analytics/
+  │   └── page.js
+  └── @team/
+      └── page.js
+```
+
+위의 파일 구조에서는 `@team`과 `@analytics`라는 두 개의 slot이 정의됩니다.\
+이 slots들은 `layout.js` 파일에서 props로 전달되어 병렬로 렌더링될 수 있습니다.
+
+### 레이아웃에서 Slots 사용 예시
+
+```tsx
+export default function Layout({
+  children,
+  team,
+  analytics,
+}: {
+  children: React.ReactNode
+  analytics: React.ReactNode
+  team: React.ReactNode
+}) {
+  return (
+    <>
+      {children}   {/*메인 콘텐츠 */}
+      {team}       {/* 팀 관련 콘텐츠 */}
+      {analytics}  {/* 분석 관련 콘텐츠*/}
+    </>
+  )
+}
+```
+
+이 구조는 대시보드에서 메인 콘텐츠(`children`)와 두 개의 부가 페이지(team과 analytics)를 동시에 렌더링할 수 있게 해줍니다.
+
+### Slots와 URL
+
+Slots는 URL에 영향을 미치지 않습니다.\
+예를 들어, `@analytics` slot의 URL은 `/@analytics/views`가 아닌 `/views`가 됩니다.\
+Slots는 내부적으로 분리된 레이아웃이지만, 라우트 세그먼트처럼 URL을 생성하지 않는다는 특징이 있습니다.
+
+#### 알아두면 좋은 점
+
+`children` prop은 기본적으로 모든 레이아웃에 포함된 slot으로, 특별히 정의하지 않아도 됩니다.\
+Parallel Routes는 복잡한 앱에서 UI를 효율적으로 관리할 수 있게 도와줍니다.
+
+### Active state and navigation
+
+Parallel Routes에서의 Active State와 Navigation은 사용자가 여러 페이지를 탐색할 때 각 slot에 어떤 콘텐츠가 표시될지를 결정하는 중요한 요소입니다.
+
+#### Soft Navigation vs Hard Navigation
+
+- Soft Navigation: 클라이언트 측 탐색에서 페이지 일부만 업데이트되며, 다른 slot의 활성 상태는 유지됩니다.\
+예를 들어, 대시보드의 한 부분만 변경하고 나머지는 그대로 남겨둡니다.
+
+- Hard Navigation: 전체 페이지를 새로고침할 때, Next.js는 현재 URL과 일치하지 않는 slot의 활성 상태를 기억하지 않습니다.\
+이 경우, `default.js` 파일을 사용하여 기본 상태를 렌더링하거나 해당하는 파일이 없으면 `404` 에러 페이지가 표시됩니다.
+
+#### default.js
+
+![parallel-routes-unmatched-routes](./img/parallel-routes-unmatched-routes.png)
+
+`default.js`는 일치하지 않는 slot에 기본으로 표시될 내용을 정의하는 파일입니다.\
+예를 들어, /settings 페이지에서 `@team`은 관련된 콘텐츠를 보여주지만, `@analytics`에 해당하는 내용이 없으면 `default.js`에서 기본 페이지를 렌더링할 수 있습니다.
+
+#### useSelectedLayoutSegment(s) Hook
+
+이 Hook을 사용하면 특정 slot 내에서 현재 활성화된 페이지 세그먼트를 읽어올 수 있습니다.\
+예를 들어, 사용자가 `/login` 페이지에 있을 때, `useSelectedLayoutSegment('auth')`는 `"login"`을 반환합니다.\
+이를 통해 현재 어떤 하위 페이지가 활성 상태인지 알 수 있습니다.
+
+```tsx
+'use client'
+
+import { useSelectedLayoutSegment } from 'next/navigation'
+
+export default function Layout({
+  auth
+}: {
+    auth: React.ReactNode
+}) {
+  const loginSegment = useSelectedLayoutSegment('auth')
+  // ...
+}
+```
+
+#### 정리
+
+Parallel Routes는 대시보드나 복잡한 UI에서 여러 페이지를 동시 또는 조건에 따라 렌더링할 수 있게 도와줍니다.\
+Soft Navigation과 Hard Navigation의 차이점과 함께 `default.js`와 `useSelectedLayoutSegment`는 페이지 상태를 관리하는 데 유용한 도구입니다.
+
+### Conditional Routes
+
+Parallel Routes를 사용하여 사용자 역할과 같은 특정 조건에 따라 라우트를 조건부로 렌더링할 수 있습니다.\
+예를 들어, `/admin` 또는 `/user` 역할에 대해 다른 대시보드 페이지를 렌더링하려면:
+
+![conditional-routes-ui](./img/conditional-routes-ui.png)
+
+```tsx
+app/dashboard/layout.tsx
+import { checkUserRole } from '@/lib/auth'
+
+export default function Layout({
+  user,
+  admin,
+}: {
+  user: React.ReactNode
+  admin: React.ReactNode
+}) {
+  const role = checkUserRole()
+  return <>{role === 'admin' ? admin : user}</>
+}
+```
+
+### Tab Groups
+
+사용자가 slot을 독립적으로 탐색할 수 있도록 slots 내에 `layout`을 추가할 수 있습니다.\
+이는 탭을 만드는 데 유용합니다.
+
+예를 들어, `@analytics` slot에는 두 개의 하위 페이지 `/page-views`와 `/visitors`가 있습니다.
+
+![parallel-routes-tab-groups](./img/parallel-routes-tab-groups.png)
+
+`@analytics` 내에 `layout` 파일을 생성하여 두 페이지 간에 탭을 공유하게 합니다:
+
+```tsx
+// filename="app/@analytics/layout.tsx" switcher
+import Link from 'next/link'
+
+export default function Layout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <>
+      <nav>
+        <Link href="/page-views">Page Views</Link>
+        <Link href="/visitors">Visitors</Link>
+      </nav>
+      <div>{children}</div>
+    </>
+  )
+}
+```
+
+### Loading and Error UI
+
+Parallel Routes는 독립적으로 스트리밍될 수 있으므로 각 라우트에 대해 독립적인 오류 및 로딩 상태를 정의할 수 있습니다:
+
+![parallel-routes-cinematic-universe](./img/parallel-routes-cinematic-universe.png)
+
+## Intercepting Routes
+
+![one-bite-intercepting](./img/one-bite-intercepting.png)
+
+웹사이트에서 새로운 페이지로 완전히 이동하지 않고, 현재 페이지 위에 다른 페이지의 내용을 겹쳐서 보여줄 수 있는 기능입니다.\
+예를 들어, 사진 목록에서 사진을 클릭했을 때, 새 창이 아닌, 현재 페이지 위에 사진을 모달(팝업 창)로 띄워서 보여주는 것입니다.\
+이때 URL은 바뀌지만, 페이지는 그대로 유지됩니다.
+
+### Soft Navigation과 Hard Navigation
+
+- Soft Navigation: 페이지 전체가 새로 로드되지 않고, 모달처럼 부드럽게 새로운 내용을 덧붙여 보여줍니다. URL이 바뀌긴 하지만 페이지 전환 없이 자연스럽게 동작합니다.
+
+- Hard Navigation: URL을 직접 입력하거나 페이지를 새로 고침할 때 발생합니다. 이 경우, 모달이 아닌, 해당 페이지로 완전히 이동하게 됩니다.
+
+### 경로 규칙
+
+Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지정합니다. 이 규칙은 부모 디렉토리로 가는 것과 비슷합니다.
+
+- `(.)`: 현재 위치와 같은 경로입니다.
+
+- `( .. )`: 한 단계 위의 경로입니다.
+
+- `( .. )( .. )`: 두 단계 위의 경로입니다.
+
+- `(...)`: 애플리케이션의 최상단, 즉 처음 시작하는 경로를 뜻합니다.
+
+예를 들어, 사진 목록에서 특정 사진을 모달로 띄우고 싶다면, `(..)photo`라는 경로를 사용해서 사진을 모달로 가로챌 수 있습니다.
+
+![intercepted-routes-files](./img/intercepted-routes-files.png)
+
+### 모달 예시
+
+이 기능을 사용하면 페이지 이동 없이 모달을 만들 수 있습니다.\
+
+예를 들어 사용자가 사진을 클릭하면 모달이 열리고, URL은 사진 페이지로 바뀝니다.\
+사용자가 페이지를 새로고침해도 모달이 계속 열려 있거나, 이전 페이지로 돌아갔을 때 모달이 닫히는 기능을 쉽게 만들 수 있습니다.\
+즉, Intercepting Routes는 사용자가 페이지를 완전히 벗어나지 않고도 새로운 내용을 볼 수 있도록 해주는 기능으로, 특히 모달 창을 띄울 때 유용합니다.
