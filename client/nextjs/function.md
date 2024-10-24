@@ -238,3 +238,118 @@ export async function GET(request) {
   })
 }
 ```
+
+## useRouter
+
+Next.js에서 클라이언트 컴포넌트 내에서 프로그래밍 방식으로 라우트를 변경할 수 있도록 도와줍니다.\
+하지만 대부분의 네비게이션 상황에서는 `<Link>` 컴포넌트를 사용하는 것이 권장됩니다.\ `useRouter`는 특별한 요구 사항이 있을 때 유용합니다.
+
+### 기본 예시
+
+```tsx
+'use client'
+
+import { useRouter } from 'next/navigation'
+
+export default function Page() {
+  const router = useRouter()
+
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      대시보드로 이동
+    </button>
+  )
+}
+```
+
+### useRouter의 주요 메서드
+
+- `router.push(href: string, { scroll: boolean })`:\
+새로운 라우트로 이동하며 브라우저의 히스토리 스택에 새 항목을 추가합니다.\
+`scroll` 옵션을 `false`로 설정하면 페이지 상단으로 스크롤되는 것을 방지할 수 있습니다.
+
+- `router.replace(href: string, { scroll: boolean })`:\
+`push()`와 유사하지만, 히스토리 항목을 새로 추가하지 않고 현재 항목을 대체합니다.
+
+- `router.refresh()`:\
+현재 페이지를 새로고침하여 서버에서 최신 데이터를 다시 요청합니다.\
+서버 컴포넌트를 업데이트하면서 클라이언트 측 상태(useState)나 브라우저 상태(예: 스크롤 위치)는 유지됩니다.
+
+- `router.prefetch(href: string)`:\
+빠른 클라이언트 전환을 위해 특정 경로를 미리 로드합니다.\
+이는 페이지 전환 성능을 향상시키기 위해 사용됩니다.
+
+- `router.back()`:\
+브라우저의 히스토리 스택에서 이전 페이지로 이동합니다.
+
+- `router.forward()`:\
+히스토리 스택에서 다음 페이지로 이동합니다.
+
+#### useRouter 주의 사항
+
+`<Link>` 컴포넌트는 자동으로 경로를 뷰포트에 보이게 될 때 미리 로드합니다.\
+캐싱된 요청이 있을 경우 refresh()는 동일한 결과를 다시 가져올 수 있습니다.\
+또한 동적 API(예: 쿠키, 헤더)로 인해 응답이 달라질 수 있습니다.\
+`next/router`에서 `next/navigation`으로의 마이그레이션 `App Router`를 사용하는 경우, `next/router` 대신 `next/navigation`을 사용해야 합니다.\
+마이그레이션 시 알아야 할 주요 변경 사항은 다음과 같습니다:
+
+1. `useRouter`는 `next/router`가 아닌 `next/navigation`에서 가져와야 합니다.
+
+2. `pathname` 문자열은 더 이상 사용되지 않으며, 대신 `usePathname()`을 사용해야 합니다.
+
+3. `query` 객체는 사라졌고, `useSearchParams()`로 대체되었습니다.
+
+4. `router.events`는 다른 방식으로 대체되었습니다.
+
+### 라우트 변경 감지
+
+클라이언트 컴포넌트 내에서 URL 변경을 감지하려면 `usePathname()`과 `useSearchParams()` 훅을 사용하여 라우트 변경을 처리할 수 있습니다.
+
+```jsx
+'use client'
+
+import { useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+
+export function NavigationEvents() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const url = `${pathname}?${searchParams}`
+    console.log(url)
+    // 현재 URL을 처리할 수 있습니다
+  }, [pathname, searchParams])
+
+  return '...'
+}
+```
+
+### 스크롤 상단으로 이동 방지
+
+Next.js는 기본적으로 새로운 경로로 이동할 때 페이지 상단으로 자동 스크롤합니다.\
+이 동작을 비활성화하려면 `router.push()`나 `router.replace()`에 `scroll: false` 옵션을 전달하면 됩니다.
+
+```tsx
+'use client'
+
+import { useRouter } from 'next/navigation'
+
+export default function Page() {
+  const router = useRouter()
+
+  return (
+    <button
+      type="button"
+      onClick={() => router.push('/dashboard', { scroll: false })}
+    >
+      대시보드
+    </button>
+  )
+}
+```
+
+#### useRouter 참고 사항
+
+- `Suspense`: `useSearchParams()`를 사용할 때는 클라이언트 렌더링 중 가장 가까운 `Suspense` 경계까지 감싸줘야 합니다.\
+이는 정적 렌더링 시 클라이언트 사이드 렌더링이 발생하기 때문입니다.
