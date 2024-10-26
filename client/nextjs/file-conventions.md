@@ -297,25 +297,117 @@ export function register() {
 요청이 완료되기 전에 서버에서 코드를 실행하는 미들웨어를 작성하는 데 사용됩니다.\
 들어오는 요청에 따라 응답을 재작성, 리디렉션, 요청이나 응답 헤더 수정, 또는 직접 응답하는 방식으로 응답을 수정할 수 있습니다.
 
-미들웨어는 경로가 렌더링되기 전에 실행되며, 인증, 로깅, 리디렉션 처리 같은 서버 측 로직을 구현할 때 유용합니다.
+미들웨어는 경로가 렌더링되기 전에 실행되며, 인증, 권한 부여, 로깅, 리디렉션 처리 같은 서버 측 로직을 구현할 때 유용합니다.
 
-middleware.ts(또는 .js) 파일을 프로젝트 루트에 배치하여 미들웨어를 정의할 수 있습니다.
-예를 들어, app 또는 pages와 같은 수준에 두거나, src 폴더 안에 넣을 수 있습니다.
+즉, 어떤 url로 접근을 했을 때 그 url에 맵핑되는 라우터가 매칭되기 전에 middleware가 먼저 실행됩니다.
+
+`middleware.ts`(또는 .js) 파일을 프로젝트 루트에 배치하여 미들웨어를 정의할 수 있습니다.
+예를 들어, app 또는 pages와 같은 레벨에 두거나, src 폴더 안에 넣을 수 있습니다.
 
 ```tsx
 // middleware.ts
 
 import { NextResponse, NextRequest } from 'next/server'
 
-// This function can be marked `async` if using `await` inside
+// 이 함수 내부에서 await을 사용하는 경우, async로 표시할 수 있습니다.
 export function middleware(request: NextRequest) {
+  // 요청을 /home으로 리디렉션
   return NextResponse.redirect(new URL('/home', request.url))
 }
 
 export const config = {
+  // about 경로에 미들웨어를 적용
   matcher: '/about/:path*',
 }
 ```
+
+#### Middleware function
+
+파일은 기본 내보내기 또는 `middleware`라는 이름의 단일 함수를 내보내야 합니다. 동일한 파일에서 여러 미들웨어를 지원하지 않습니다.
+
+```js filename="middleware.js"
+// 기본 내보내기 예제
+export default function middleware(request) {
+  // 미들웨어 로직
+}
+```
+
+#### Config object (optional)
+
+선택적으로, 미들웨어 함수와 함께 config 객체를 내보낼 수 있습니다.\
+이 객체에는 미들웨어가 적용될 경로를 지정하는 `matcher`가 포함됩니다.
+
+##### Matcher
+
+`matcher` 옵션을 사용하여 미들웨어가 실행될 특정 경로를 지정할 수 있습니다.\
+여러 가지 방법으로 이러한 경로를 지정할 수 있습니다.
+
+- 단일 경로의 경우: 문자열을 직접 사용하여 경로를 정의합니다. 예: `'/about'`.
+
+- 여러 경로의 경우: 배열을 사용하여 여러 경로를 나열합니다.\
+예시: `matcher: ['/about', '/contact']`는 `/about` 및 `/contact` 경로의 요청에 미들웨어를 적용합니다.\
+
+즉, 이 경로들이 아닌 다른 경로의 요청은 미들웨어를 거치지 않고 그대로 진행되며, 미들웨어가 실행되는 범위를 선택적으로 제한할 수 있는 기능입니다.
+
+또한, `matcher`는 정규 표현식을 통해 복잡한 경로 지정도 지원하여 포함하거나 제외할 경로를 정확하게 제어할 수 있습니다.\
+예시: `matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)']`.
+
+`matcher` 옵션은 다음 키를 가진 객체 배열도 허용합니다:
+
+- `source`: 요청 경로를 매칭하는 데 사용되는 경로 또는 패턴입니다. 직접 경로 매칭을 위한 문자열이거나, 더 복잡한 매칭을 위한 패턴일 수 있습니다.
+
+- `regexp` (선택 사항): 소스를 기반으로 매칭을 세밀하게 조정하는 정규 표현식 문자열입니다. 포함하거나 제외할 경로를 추가로 제어합니다.
+
+- `locale` (선택 사항): `false`로 설정하면 경로 매칭에서 로케일 기반 라우팅을 무시합니다.
+
+- `has` (선택 사항): 헤더, 쿼리 매개변수 또는 쿠키와 같은 특정 요청 요소의 존재 여부에 따른 조건을 지정합니다.
+
+- `missing` (선택 사항): 누락된 헤더 또는 쿠키와 같은 특정 요청 요소가 없는 경우에 대한 조건을 지정합니다.
+
+```js filename="middleware.js"
+export const config = {
+  matcher: [
+    {
+      source: '/api/*',
+      regexp: '^/api/(.*)',
+      locale: false,
+      has: [
+        { type: 'header', key: 'Authorization', value: 'Bearer Token' },
+        { type: 'query', key: 'userId', value: '123' },
+      ],
+      missing: [{ type: 'cookie', key: 'session', value: 'active' }],
+    },
+  ],
+}
+```
+
+#### `request`
+
+미들웨어를 정의할 때, 기본 내보내기 함수는 `request`라는 단일 매개변수를 받습니다. 이 매개변수는 들어오는 HTTP 요청을 나타내는 `NextRequest`의 인스턴스입니다.
+
+```tsx filename="middleware.ts" switcher
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  // 미들웨어 로직은 여기에 작성됩니다.
+}
+```
+
+#### NextResponse
+
+미들웨어는 Web Response API를 확장하는 `NextResponse` 객체를 사용할 수 있습니다.\
+`NextResponse` 객체를 반환하여 쿠키를 직접 조작하고, 헤더를 설정하고, 리디렉션을 구현하며, 경로를 재작성할 수 있습니다.
+
+#### 알아두면 좋은 점
+
+`NextRequest`는 Next.js 미들웨어에서 들어오는 HTTP 요청을 나타내는 타입이며, `NextResponse`는 HTTP 응답을 조작하고 다시 보내는 데 사용되는 클래스입니다.
+
+리디렉션의 경우, `NextResponse.redirect` 대신 `Response.redirect`를 사용할 수도 있습니다.
+
+#### Runtime
+
+미들웨어는 Edge runtime만 지원합니다.\
+Node.js 런타임은 사용할 수 없습니다.
 
 ### template.js
 

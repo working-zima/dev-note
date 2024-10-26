@@ -350,3 +350,507 @@ Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지�
 예를 들어 사용자가 사진을 클릭하면 모달이 열리고, URL은 사진 페이지로 바뀝니다.\
 사용자가 페이지를 새로고침해도 모달이 계속 열려 있거나, 이전 페이지로 돌아갔을 때 모달이 닫히는 기능을 쉽게 만들 수 있습니다.\
 즉, Intercepting Routes는 사용자가 페이지를 완전히 벗어나지 않고도 새로운 내용을 볼 수 있도록 해주는 기능으로, 특히 모달 창을 띄울 때 유용합니다.
+
+## Route Groups
+
+Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 않고 폴더를 그룹화하여 논리적으로 파일을 구성하는 기능입니다.\
+폴더 이름을 괄호로 묶어 `(folder)`와 같은 형태로 사용합니다.\
+이렇게 하면 URL 경로에 해당 폴더가 포함되지 않습니다.
+
+### 주요 활용 방법
+
+#### URL 경로에 영향을 주지 않고 경로를 그룹화
+
+경로 세그먼트를 논리적으로 그룹화하면서 URL 구조에는 변화가 없습니다.
+
+![route-group-organisation](./img/route-group-organisation.png)
+
+- app 폴더 안에 있는 폴더들은 일반적으로 그 이름이 URL 경로로 표시됩니다.\
+만약 `app/shop` 폴더가 있다면, 해당 파일은 `/shop` 경로에서 볼 수 있습니다.
+
+- 그러나 폴더 이름을 괄호 안에 넣어 `(shop)`과 같이 작성하면, 이 폴더는 URL에 나타나지 않습니다.\
+이를 통해 URL 경로에 영향을 주지 않으면서 파일을 그룹화할 수 있습니다.
+
+![route-group-multiple-layouts](./img/route-group-multiple-layouts.png)
+
+- 예시: `(marketing)` 및 `(shop)` 내부의 경로는 동일한 URL 계층 구조를 공유하지만, 각 그룹 내에 `layout.js` 파일을 추가하여 각 그룹에 대해 다른 레이아웃을 생성할 수 있습니다.
+
+#### 중첩 레이아웃 활성화
+
+- 동일한 URL 경로에서 여러 레이아웃을 적용해야 할 때, Route Groups을 사용하여 각 그룹별로 `layout.js` 파일을 추가할 수 있습니다.
+
+![route-group-opt-in-layouts](./img/route-group-opt-in-layouts.png)
+
+- 예시: `(shop)` 폴더에 `layout.js` 파일을 추가하여 `account`와 `cart` 경로에 동일한 레이아웃을 적용할 수 있으며, 다른 경로 `(checkout)`에는 레이아웃을 적용하지 않을 수 있습니다.
+
+#### 여러 루트 레이아웃 생성
+
+- 루트 레이아웃은 페이지 전체에 적용되는 최상위 레이아웃입니다.\
+`layout.js` 파일을 Route Groups에 각각 추가하여 애플리케이션의 각 섹션을 독립적인 UI로 분리할 수 있습니다.
+
+- 예시: 최상위 `layout.js` 파일을 제거하고 `(marketing)` 및 `(shop)` 각각의 폴더 안에 `layout.js` 파일을 추가하면, 해당 그룹별로 완전히 다른 UI가 적용됩니다.\
+이렇게 하면 애플리케이션의 특정 섹션들에 각기 다른 UI를 사용할 수 있습니다.
+
+![route-group-multiple-root-layouts](./img/route-group-multiple-root-layouts.png)
+
+루트 전용 레이아웃 설정도 가능합니다.\
+루트 페이지에는 헤더를 사용하고 싶지 않은 경우 예시:
+
+![folder-example](./img/folder-example.png)
+
+```tsx
+// app.(content).layout.js
+
+import MainHeader from '@/components/main-header';
+import '../globals.css';
+
+export const metadata = {
+  title: 'Next.js Page Routing & Rendering',
+  description: 'Learn how to route to different pages.',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <div id='page'>
+          <MainHeader />
+          {children}
+        </div>
+      </body>
+    </html>
+  )
+}
+```
+
+```tsx
+// app.(marketing).layout.js
+
+import '../globals.css';
+
+export const metadata = {
+  title: 'Next.js Page Routing & Rendering',
+  description: 'Learn how to route to different pages.',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+### 유의사항
+
+- Route Group은 URL 경로에 영향을 주지 않으며, 이름은 파일 구성용으로만 사용됩니다.
+
+- 동일한 URL로 연결될 수 있는 경로 그룹은 오류를 일으킬 수 있습니다 (예: `(marketing)/about`과 `(shop)/about`은 둘 다 `/about`으로 연결).
+
+- 여러 루트 레이아웃을 사용할 경우, 내비게이션 시 전체 페이지가 로드됩니다.
+
+## Route Handlers
+
+![route-special-file](./img/route-special-file.png)
+
+Route Handlers를 사용하면 웹 `Request`와 `Response` API를 사용하여 특정 라우트에 대한 사용자 정의 요청 핸들러를 만들 수 있습니다.
+
+Route Handlers는 `app` 디렉토리 내에서만 사용할 수 있습니다.\
+`pages` 디렉토리 내의 API Routes와 동일한 기능을 하므로, API Routes와 Route Handlers를 함께 사용할 필요가 없습니다.
+
+```tsx
+// app/api/test/route.js
+
+export function GET(request) {
+
+  return new Response('Hello!')
+}
+```
+
+```tsx
+export default async function DashboardPage() {
+  const response = await fetch("http://localhost:3000/api/test");
+  const data = await response.json();
+
+  console.log(data) // Hello!
+}
+```
+
+## Convention
+
+Route Handlers는 `app` 디렉토리 내의 `route.ts` 파일로 정의됩니다.
+
+```ts
+// app/api/route.ts
+export async function GET(request: Request) {}
+```
+
+Route Handlers는 `page.js` 및 `layout.js`와 유사하게 `app` 디렉토리 내 어디에나 중첩될 수 있습니다.\
+하지만 `page.js`와 동일한 라우트 경로(세그먼트) 레벨에 `route.js` 파일이 있을 수 없습니다.
+
+### Supported HTTP Methods
+
+`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS` HTTP 메서드를 지원합니다.\
+지원되지 않는 메서드가 호출되면 `405 Method Not Allowed` 응답을 반환합니다.
+
+### Extended `NextRequest` and `NextResponse` APIs
+
+Next.js는 기본 `Request` 및 `Response` API를 지원하는 것 외에도, `NextRequest`와 `NextResponse`를 확장하여 고급 사용 사례를 위한 편리한 헬퍼를 제공합니다.
+
+### Caching
+
+Route Handlers는 기본적으로 캐시되지 않습니다.\
+그러나 `GET` 메서드에 대해 캐시를 선택할 수 있습니다.\
+Route Handler 파일에 `export const dynamic = 'force-static'`과 같은 route config option을 사용합니다.
+
+```ts filename="app/items/route.ts" switcher
+export const dynamic = 'force-static'
+
+export async function GET() {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+  })
+  const data = await res.json()
+
+  return Response.json({ data })
+}
+```
+
+### Special Route Handlers
+
+`sitemap.ts`, `opengraph-image.tsx`, `icon.tsx` 및 기타 메타데이터 파일과 같은 특별한 Route Handlers는 동적 함수나 동적 구성 옵션을 사용하지 않는 한 기본적으로 정적입니다.
+
+### Route Resolution
+
+`route`는 가장 낮은 레벨의 라우팅 원시 형태로 간주할 수 있습니다.
+
+- `page`와 같은 레이아웃이나 클라이언트 측 탐색에 참여하지 않습니다.
+- `page.js`와 동일한 라우트에 `route.js` 파일이 있을 수 없습니다.
+
+Page | Route | Result
+:-: | :-: | :-:
+`app/page.js`        | `app/route.js`     | X
+`app/page.js`        | `app/api/route.js` | O
+`app/[user]/page.js` | `app/api/route.js` | O
+
+각 `route.js` 또는 `page.js` 파일은 해당 라우트에 대한 모든 HTTP 메서드를 처리합니다.
+
+```jsx filename="app/page.js"
+export default function Page() {
+  return <h1>Hello, Next.js!</h1>
+}
+
+// ❌ Conflict
+// `app/route.js`
+export async function POST(request) {}
+```
+
+## Examples
+
+다음 예제는 Route Handlers를 다른 Next.js API 및 기능과 결합하는 방법을 보여줍니다.
+
+### Revalidating Cached Data
+
+`next.revalidate` 옵션을 사용하여 캐시된 데이터를 재검증할 수 있습니다.
+
+```ts filename="app/items/route.ts" switcher
+export async function GET() {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    next: { revalidate: 60 }, // 60초마다 재검증
+  })
+  const data = await res.json()
+
+  return Response.json(data)
+}
+```
+
+또는 `revalidate` 세그먼트 구성 옵션을 사용할 수 있습니다:
+
+```ts
+export const revalidate = 60
+```
+
+### Dynamic Functions
+
+Route Handlers는 Next.js의 `cookies` 및 `headers`와 같은 동적 함수와 함께 사용할 수 있습니다.
+
+#### Cookies
+
+`next/headers`에서 `cookies`를 사용하여 쿠키를 읽거나 설정할 수 있습니다.\
+이 서버 함수는 Route Handler에서 직접 호출되거나 다른 함수 내에서 중첩될 수 있습니다.
+
+또는 `Set-Cookie`헤더를 사용하여 새 `Response`를 반환할 수 있습니다.
+
+```ts filename="app/api/route.ts" switcher
+import { cookies } from 'next/headers'
+
+export async function GET(request: Request) {
+  const cookieStore = cookies()
+  const token = cookieStore.get('token')
+
+  return new Response('Hello, Next.js!', {
+    status: 200,
+    headers: { 'Set-Cookie': `token=${token.value}` },
+  })
+}
+```
+
+기본 웹 API를 사용하여 요청에서 쿠키를 읽을 수도 있습니다 (`NextRequest`)
+
+```ts filename="app/api/route.ts" switcher
+import { type NextRequest } from 'next/server'
+
+export async function GET(request: NextRequest) {
+  const token = request.cookies.get('token')
+}
+```
+
+#### Headers
+
+`next/headers`에서 `headers`를 사용하여 헤더를 읽을 수 있습니다.\
+이 서버 함수는 Route Handler에서 직접 호출되거나 다른 함수 내에서 중첩될 수 있습니다.
+
+이 `headers` 인스턴스는 읽기 전용입니다.\
+헤더를 설정하려면 새 `headers`와 함께 새 `Response`를 반환해야 합니다.
+
+```ts filename="app/api/route.ts" switcher
+import { headers } from 'next/headers'
+
+export async function GET(request: Request) {
+  const headersList = headers()
+  const referer = headersList.get('referer')
+
+  return new Response('Hello, Next.js!', {
+    status: 200,
+    headers: { referer: referer },
+  })
+}
+```
+
+기본 웹 API를 사용하여 요청에서 헤더를 읽을 수도 있습니다 (`NextRequest`)
+
+```ts filename="app/api/route.ts" switcher
+import { type NextRequest } from 'next/server'
+
+export async function GET(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers)
+}
+```
+
+### Redirects
+
+```ts filename="app/api/route.ts" switcher
+import { redirect } from 'next/navigation'
+
+export async function GET(request: Request) {
+  redirect('https://nextjs.org/')
+}
+```
+
+### Dynamic Route Segments
+
+Route Handlers는 Dynamic Segments를 사용하여 동적 데이터를 기반으로 요청 핸들러를 생성할 수 있습니다.
+
+```ts filename="app/items/[slug]/route.ts" switcher
+export async function GET(
+  request: Request,
+  { params }: { params: { slug: string } },
+) {
+  const slug = params.slug // 'a', 'b', 또는 'c'
+}
+```
+
+Route                       | Example URL | `params`
+--------------------------- | ----------- | ---------------
+`app/items/[slug]/route.js` | `/items/a`  | `{ slug: 'a' }`
+`app/items/[slug]/route.js` | `/items/b`  | `{ slug: 'b' }`
+`app/items/[slug]/route.js` | `/items/c`  | `{ slug: 'c' }`
+
+### URL Query Parameters
+
+Route Handler에 전달되는 요청 객체는 `NextRequest` 인스턴스로, 쿼리 매개변수를 보다 쉽게 처리할 수 있는 편리한 추가 메서드를 제공합니다.
+
+```ts filename="app/api/search/route.ts" switcher
+import { type NextRequest } from 'next/server'
+
+export function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const query = searchParams.get('query')
+  // query는 /api/search?query=hello일 때 "hello"입니다.
+}
+```
+
+### Streaming
+
+스트리밍은 OpenAI와 같은 대형 언어 모델(LLM)과 함께 AI 생성 콘텐츠를 위해 일반적으로 사용됩니다.\
+AI SDK에서 자세히 알아보세요.
+
+```ts filename="app/api/chat/route.ts" switcher
+import { openai } from '@ai-sdk/openai'
+import { StreamingTextResponse, streamText } from 'ai'
+
+export async function POST(req) {
+  const { messages } = await req.json()
+  const result = await streamText({
+    model: openai('gpt-4-turbo'),
+    messages,
+  })
+
+  return new StreamingTextResponse(result.toAIStream())
+}
+```
+
+이러한 추상화는 스트림을 생성하기 위해 웹 API를 사용합니다.\
+기본 웹 API를 직접 사용할 수도 있습니다.
+
+```ts filename="app/api/route.ts" switcher
+// https://developer.mozilla.org/docs/Web/API/ReadableStream#convert_async_iterator_to_stream
+function iteratorToStream(iterator: any) {
+  return new ReadableStream({
+    async pull(controller) {
+      const { value, done } = await iterator.next()
+
+      if (done) {
+        controller.close()
+      } else {
+        controller.enqueue(value)
+      }
+    },
+  })
+}
+
+function sleep(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time)
+  })
+}
+
+const encoder = new TextEncoder()
+
+async function* makeIterator() {
+  yield encoder.encode('<p>One</p>')
+  await sleep(200)
+  yield encoder.encode('<p>Two</p>')
+  await sleep(200)
+  yield encoder.encode('<p>Three</p>')
+}
+
+export async function GET() {
+  const iterator = makeIterator()
+  const stream = iteratorToStream(iterator)
+
+  return new Response(stream)
+}
+```
+
+### Request Body
+
+기본 웹 API 메서드를 사용하여 `Request` 본문을 읽을 수 있습니다:
+
+```ts filename="app/items/route.ts" switcher
+export async function POST(request: Request) {
+  const res = await request.json()
+  return Response.json({ res })
+}
+```
+
+### Request Body FormData
+
+`request.formData()` 함수를 사용하여 `FormData`를 읽을 수 있습니다:
+
+```ts filename="app/items/route.ts" switcher
+export async function POST(request: Request) {
+  const formData = await request.formData()
+  const name = formData.get('name')
+  const email = formData.get('email')
+  return Response.json({ name, email })
+}
+```
+
+`formData` 데이터는 모두 문자열이므로 `zod-form-data`를 사용하여 요청을 검증하고 원하는 형식(예: `number`)으로 데이터를 가져올 수 있습니다.
+
+### CORS
+
+기본 웹 API 메서드를 사용하여 특정 Route Handler에 대한 CORS 헤더를 설정할 수 있습니다:
+
+```ts filename="app/api/route.ts" switcher
+export async function GET(request: Request) {
+  return new Response('Hello, Next.js!', {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
+}
+```
+
+### Webhooks
+
+Route Handler를 사용하여 타사 서비스의 웹훅을 수신할 수 있습니다:
+
+```ts filename="app/api/route.ts" switcher
+export async function POST(request: Request) {
+  try {
+    const text = await request.text()
+    // 웹훅 페이로드 처리
+  } catch (error) {
+    return new Response(`Webhook error: ${error.message}`, {
+      status: 400,
+    })
+  }
+
+  return new Response('Success!', {
+    status: 200,
+  })
+}
+```
+
+특히, Pages Router의 API Routes와 달리 `bodyParser`를 사용하여 추가 구성을 할 필요가 없습니다.
+
+### Non-UI Responses
+
+Route Handlers를 사용하여 UI가 아닌 콘텐츠를 반환할 수 있습니다.\
+`sitemap.xml`, `robots.txt`, `app icons`, `open graph images` 등은 모두 기본적으로 지원됩니다.
+
+```ts filename="app/rss.xml/route.ts" switcher
+export async function GET() {
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+<channel>
+  <title>Next.js Documentation</title>
+  <link>https://nextjs.org/docs</link>
+  <description>The React Framework for the Web</description>
+</channel>
+
+</rss>`,
+    {
+      headers: {
+        'Content-Type': 'text/xml',
+      },
+    },
+  )
+}
+```
+
+### Segment Config Options
+
+Route Handlers는 페이지 및 레이아웃과 동일한 route segment configuration을 사용합니다.
+
+```ts filename="app/items/route.ts" switcher
+export const dynamic = 'auto'
+export const dynamicParams = true
+export const revalidate = false
+export const fetchCache = 'auto'
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
+```
