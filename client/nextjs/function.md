@@ -1,6 +1,6 @@
 # Function
 
-## usePathName
+## usePathName()
 
 `usePathname`은 현재 URL의 경로명을 읽을 수 있게 해주는 클라이언트 컴포넌트 훅입니다.
 
@@ -35,7 +35,7 @@ export default function ExampleClientComponent() {
 새로운 경로로 이동할 때, 이 컴포넌트는 다시 가져올 필요가 없습니다.\
 대신, 컴포넌트는 한 번 다운로드(클라이언트 자바스크립트 번들)되고 현재 상태에 따라 다시 렌더링됩니다.
 
-### 알아두면 좋은 점
+### usePathName 알아두면 좋은 점
 
 - 서버 컴포넌트에서 현재 URL을 읽는 것은 지원되지 않습니다.\
 이는 페이지 탐색 간 레이아웃 상태가 유지되도록 지원하기 위한 의도적인 설계입니다.
@@ -44,7 +44,7 @@ export default function ExampleClientComponent() {
   - 대체 경로가 렌더링되거나 Next.js에 의해 자동으로 정적으로 최적화된 pages 디렉토리 페이지일 때 usePathname이 null을 반환할 수 있습니다.
   - 프로젝트에 app 및 pages 디렉토리가 모두 있는 경우 Next.js가 자동으로 타입을 업데이트합니다.
 
-## Parameters
+### usePathName Parameters
 
 ```ts
 const pathname = usePathname()
@@ -52,7 +52,7 @@ const pathname = usePathname()
 
 `usePathname`은 파라미터를 받지 않습니다.
 
-## Returns
+### usePathName Returns
 
 `usePathname`은 현재 URL의 경로명을 나타내는 문자열을 반환합니다.\
 
@@ -65,7 +65,7 @@ URL | 반환 값
 `/dashboard?v=2` | `'/dashboard'`
 `/blog/hello-world` | `'/blog/hello-world'`
 
-## Examples
+### usePathName Examples
 
 경로 변경에 반응하여 작업 수행
 
@@ -99,9 +99,9 @@ function ExampleClientComponent() {
 }
 ```
 
-## revalidatePath
+## revalidatePath()
 
-revalidatePath 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 무효화할 수 있게 해줍니다.
+`revalidatePath` 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 무효화할 수 있게 해줍니다.
 
 ### 캐시된 데이터란?
 
@@ -146,7 +146,7 @@ revalidatePath('/blog/post-1')
 
 이는 다음 페이지 방문 시 특정 URL을 재검증합니다.
 
-#### page 경로 재검증
+#### revalidatePath page 경로 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -159,7 +159,7 @@ revalidatePath('/(main)/post/[slug]', 'page')
 특정 페이지 이하의 페이지는 무효화되지 않습니다.\
 예를 들어, `/blog/[slug]`는 `/blog/[slug]/[author]`를 무효화하지 않습니다.
 
-#### layout 경로 재검증
+#### revalidatePath layout 경로 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -172,7 +172,7 @@ revalidatePath('/(main)/post/[slug]', 'layout')
 이는 동일한 레이아웃을 가진 페이지들이 다음 방문 시 재검증되도록 합니다.\
 예를 들어, 위의 경우에서 `/blog/[slug]/[another]`도 다음 방문 시 재검증됩니다.
 
-#### 모든 데이터 재검증
+#### revalidatePath 모든 데이터 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -182,7 +182,7 @@ revalidatePath('/', 'layout')
 
 이는 클라이언트 측 라우터 캐시를 제거하고, 다음 페이지 방문 시 데이터 캐시를 재검증합니다.
 
-#### 서버 액션
+#### revalidatePath 서버 액션
 
 ```ts
 // app/actions.ts
@@ -196,7 +196,7 @@ export default async function submit() {
 }
 ```
 
-#### 라우트 핸들러
+#### revalidatePath 라우트 핸들러
 
 ```ts
 // app/api/revalidate/route.ts
@@ -219,32 +219,13 @@ export async function GET(request: NextRequest) {
 }
 ```
 
-```js
-// app/api/revalidate/route.js
-import { revalidatePath } from 'next/cache'
-
-export async function GET(request) {
-  const path = request.nextUrl.searchParams.get('path')
-
-  if (path) {
-    revalidatePath(path)
-    return Response.json({ revalidated: true, now: Date.now() })
-  }
-
-  return Response.json({
-    revalidated: false,
-    now: Date.now(),
-    message: 'Missing path to revalidate',
-  })
-}
-```
-
 ## useRouter
 
 Next.js에서 클라이언트 컴포넌트 내에서 프로그래밍 방식으로 라우트를 변경할 수 있도록 도와줍니다.\
-하지만 대부분의 네비게이션 상황에서는 `<Link>` 컴포넌트를 사용하는 것이 권장됩니다.\ `useRouter`는 특별한 요구 사항이 있을 때 유용합니다.
+하지만 대부분의 네비게이션 상황에서는 `<Link>` 컴포넌트를 사용하는 것이 권장됩니다.\
+`useRouter`는 특별한 요구 사항이 있을 때 유용합니다.
 
-### 기본 예시
+### useRouter 기본 예시
 
 ```tsx
 'use client'
@@ -301,7 +282,7 @@ export default function Page() {
 
 4. `router.events`는 다른 방식으로 대체되었습니다.
 
-### 라우트 변경 감지
+### 라우트 변경 감지 (`usePathname`, `useSearchParams`)
 
 클라이언트 컴포넌트 내에서 URL 변경을 감지하려면 `usePathname()`과 `useSearchParams()` 훅을 사용하여 라우트 변경을 처리할 수 있습니다.
 
@@ -325,7 +306,7 @@ export function NavigationEvents() {
 }
 ```
 
-### 스크롤 상단으로 이동 방지
+### useRouter 스크롤 상단으로 이동 방지
 
 Next.js는 기본적으로 새로운 경로로 이동할 때 페이지 상단으로 자동 스크롤합니다.\
 이 동작을 비활성화하려면 `router.push()`나 `router.replace()`에 `scroll: false` 옵션을 전달하면 됩니다.

@@ -18,7 +18,7 @@ NextJS는 실제로 앱에서 사전 생성될 수 있는 모든 페이지를 �
 
 따라서 NextJS에게 캐시의 전체나 일부를 비우고 가장 최신 데이터를 가져오게 해야 합니다.
 
-## Server Actions and Mutations
+## Server Actions and Mutations (`action`)
 
 Server Action은 React의 `"use server"` 지시어를 사용하여 정의할 수 있습니다.\
 이 지시어는 Server Action이라는 것을 생성하는데, 특정 함수를 오직 서버에서만 실행될 수 있게 보장해주는 기능입니다.
@@ -90,18 +90,6 @@ export default function ClientComponent({
   updateItemAction: (formData: FormData) => void
 }) {
   return <form action={updateItemAction}>{/* ... */}</form>
-```
-
-자바스크립트
-
-```jsx
-// app/client-component.jsx
-
-'use client'
-
-export default function ClientComponent({ updateItemAction }) {
-  return <form action={updateItemAction}>{/* ... */}</form>
-}
 ```
 
 ### Server Actions 호출 방법

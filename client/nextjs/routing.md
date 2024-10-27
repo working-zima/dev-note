@@ -13,7 +13,7 @@ export default function Page() {
 }
 ```
 
-## 동적 라우트
+## 동적 라우트 (`[folderName]`)
 
 ![dynamic-routes](./img/dynamic-routes.png)
 
@@ -141,9 +141,9 @@ export default function BlogPostPage({ params }) {
 }
 ```
 
-## Parallel Routes
+## Parallel Routes(`@folderName`)
 
-![parallel-routes](./img/parallel-routes.png);
+![parallel-routes](./img/parallel-routes.png)
 
 하나의 화면 안에 여러 개의 페이지를 병렬로 함께 렌더링 시켜주는 패턴.
 
@@ -154,7 +154,7 @@ Parallel Routes는 Next.js에서 동적인 앱을 구축할 때, 동일한 레�
 
 ### Slots
 
-![parallel-routes-file-system](./img/parallel-routes-file-system.png);
+![parallel-routes-file-system](./img/parallel-routes-file-system.png)
 
 Parallel Routes는 slots라는 개념을 사용합니다. Slots는 `@folder` 규칙을 따라 파일 구조 내에서 정의됩니다.\
 
@@ -313,7 +313,7 @@ Parallel Routes는 독립적으로 스트리밍될 수 있으므로 각 라우�
 
 ![parallel-routes-cinematic-universe](./img/parallel-routes-cinematic-universe.png)
 
-## Intercepting Routes
+## Intercepting Routes(`(.)folderName`)
 
 ![one-bite-intercepting](./img/one-bite-intercepting.png)
 
@@ -351,7 +351,7 @@ Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지�
 사용자가 페이지를 새로고침해도 모달이 계속 열려 있거나, 이전 페이지로 돌아갔을 때 모달이 닫히는 기능을 쉽게 만들 수 있습니다.\
 즉, Intercepting Routes는 사용자가 페이지를 완전히 벗어나지 않고도 새로운 내용을 볼 수 있도록 해주는 기능으로, 특히 모달 창을 띄울 때 유용합니다.
 
-## Route Groups
+## Route Groups(`(folderName)`)
 
 Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 않고 폴더를 그룹화하여 논리적으로 파일을 구성하는 기능입니다.\
 폴더 이름을 괄호로 묶어 `(folder)`와 같은 형태로 사용합니다.\
@@ -452,7 +452,7 @@ export default function RootLayout({ children }) {
 
 - 여러 루트 레이아웃을 사용할 경우, 내비게이션 시 전체 페이지가 로드됩니다.
 
-## Route Handlers
+## Route Handlers(`api/route.ts`)
 
 ![route-special-file](./img/route-special-file.png)
 
@@ -472,14 +472,14 @@ export function GET(request) {
 
 ```tsx
 export default async function DashboardPage() {
-  const response = await fetch("http://localhost:3000/api/test");
-  const data = await response.json();
+  const response = await fetch("http://localhost:3000/api/test")
+  const data = await response.json()
 
   console.log(data) // Hello!
 }
 ```
 
-## Convention
+### Convention
 
 Route Handlers는 `app` 디렉토리 내의 `route.ts` 파일로 정의됩니다.
 
@@ -550,8 +550,6 @@ export default function Page() {
 // `app/route.js`
 export async function POST(request) {}
 ```
-
-## Examples
 
 다음 예제는 Route Handlers를 다른 Next.js API 및 기능과 결합하는 방법을 보여줍니다.
 
