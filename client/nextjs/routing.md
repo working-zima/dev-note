@@ -62,14 +62,14 @@ Route | Example URL | params
 `app/blog/[slug]/page.js` | `/blog/b` | `{ slug: 'b' }`
 `app/blog/[slug]/page.js` | `/blog/c` | `{ slug: 'c' }`
 
-### Catch-all Segments
+### Catch-all Segments (`[...folderName]`)
 
 ![catch-all](./img/catch-all.png)
 
 Catch-all 세그먼트는 여러 세그먼트(경로의 일부)를 한 번에 처리하는 기능입니다.\
 파일 이름에 대괄호(`[]`)와 줄임표(`...`)를 사용하여 해당 경로의 모든 하위 세그먼트를 캡처합니다.
 
-예를 들어, app/shop/[...slug]/page.js라는 파일이 있으면 /shop 뒤에 오는 경로들이 무엇이든 다 처리할 수 있습니다.
+예를 들어, `app/shop/[...slug]/page.js`라는 파일이 있으면 `/shop` 뒤에 오는 경로들이 무엇이든 다 처리할 수 있습니다.
 
 다음과 같은 경로들이 모두 일치합니다.
 
@@ -89,7 +89,7 @@ params는 경로 뒤에 오는 세그먼트들을 배열로 저장합니다. 예
 
 즉, 뒤에 몇 개의 세그먼트가 오든 그 경로를 모두 캡처할 수 있는 기능입니다.
 
-### Optional Catch-all Segments
+### Optional Catch-all Segments (`[[...folderName]]`)
 
 ![optional-catch-all](./img/optional-catch-all.png)
 
@@ -98,7 +98,7 @@ Optional Catch-all 세그먼트는 catch-all과 거의 같지만, 추가로 경�
 
 예를 들어, `app/shop/[[...slug]]/page.js`라는 파일이 있으면 다음과 같은 경로들에 모두 일치합니다:
 
-- `/shop`
+- `/shop` (경로에 세그먼트가 아예 없는 경우)
 
 - `/shop/clothes`
 

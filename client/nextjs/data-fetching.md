@@ -23,6 +23,9 @@ NextJS는 실제로 앱에서 사전 생성될 수 있는 모든 페이지를 �
 Server Action은 React의 `"use server"` 지시어를 사용하여 정의할 수 있습니다.\
 이 지시어는 Server Action이라는 것을 생성하는데, 특정 함수를 오직 서버에서만 실행될 수 있게 보장해주는 기능입니다.
 
+Server Action은 NextJS 특유의 기능이 아닌 React 자체에서 지원하는 기능입니다.\
+클라이언트 측 표준 React 프로젝트에는 해당되지 않지만, React를 감싸는 NextJS와 같은 프레임워크로 잠금 해제되는 기능입니다.
+
 ### 인라인 함수에서의 사용
 
 async 함수의 본문 상단에 `"use server"` 지시어를 추가하여 해당 함수를 Server Action으로 설정할 수 있습니다.
@@ -76,8 +79,6 @@ Server Action을 클라이언트 컴포넌트의 `prop`으로 전달하는 것�
 ```tsx
 <ClientComponent updateItemAction={updateItem} />
 ```
-
-타입스크립트
 
 ```tsx
 // app/client-component.tsx
@@ -142,8 +143,10 @@ export default function ClientComponent({
 "use client"
 
 import classes from './page.module.css';
+
 // server action을 import
 import { shareMeal } from '@/lib/actions';
+
 import ImagePicker from '@/components/meals/image-picker';
 import MealsFormSubmit from '@/components/meals/meals-form-submit';
 
@@ -197,10 +200,10 @@ export default function ShareMealPage() {
 }
 ```
 
-컴포넌트 내 어딘가에서 클라이언트용 기능을 사용하기 위해 `'use client'` 를 사용할 수 있고, 서버 측의 `form` 제출 제어 로직을 JSX 코드와 같은 파일에 두고 싶지 않기 때문에 분리하였습니다.
+컴포넌트 내 어딘가에서 클라이언트용 기능을 사용하기 위해 `"use client"` 를 사용할 수 있고, 서버 측의 `form` 제출 제어 로직을 JSX 코드와 같은 파일에 두고 싶지 않기 때문에 분리하였습니다.
 
 ```jsx
-'use server';
+"use server";
 
 import { redirect } from "next/navigation";
 

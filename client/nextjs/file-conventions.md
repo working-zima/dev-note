@@ -223,6 +223,9 @@ export default function Loading() {
 }
 ```
 
+`loading.js`는 전체 페이지 컴포넌트 단위 로딩에 적합합니다.\
+React의 `Suspense`는 경계를 정의함으로써 특정 컴포넌트 단위에서 세밀한 로딩 처리가 필요할 때 사용하면 좋습니다.
+
 ### route.js
 
 API 경로 생성(즉, JSX 코드가 아닌 데이터를 반환하는 페이지, 예: JSON 형식)

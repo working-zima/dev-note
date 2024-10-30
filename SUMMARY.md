@@ -19,6 +19,8 @@
     - [useController](library/react-hook-form/use-controller.md)
   - [Slugify](library/slugify.md)
   - [XSS](library/xss.md)
+  - [Zustand](library/zustand/README.md)
+    - [Zustand](library/zustand/zustand.md)
 
 ### CLIENT
 
@@ -34,10 +36,13 @@
     - [Rendering](client/nextjs/rendering.md)
     - [File Conventions](client/nextjs/file-conventions.md)
     - [Function](client/nextjs/function.md)
+    - [Data Fetching](client/nextjs/data-fetching.md)
     - [Image](client/nextjs/image.md)
   - [React](client/react/README.md)
     - [useRef](client/react/useref.md)
     - [portals](client/react/portals.md)
+    - [useFormStatus](client/react/useFormStatus.md)
+    - [useActionState](client/react/useActionState.md.md)
   - [Web API](client/webapi/README.md)
     - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
     - [Intersection Observer](client/webapi/intersection-observer.md)
