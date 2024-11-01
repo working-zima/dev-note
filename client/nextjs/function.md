@@ -101,13 +101,17 @@ function ExampleClientComponent() {
 
 ## revalidatePath()
 
-`revalidatePath` 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 무효화할 수 있게 해줍니다.
+`revalidatePath` 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 삭제할 수 있게 해줍니다.
+
+NextJS는 기본적으로 캐시된 페이지를 보여줍니다.\
+데이터베이스의 데이터가 변경되었다고 해서 페이지가 업데이트되지는 않기 때문에 오래된 데이터에 기반했을지 모르는 페이지를 보여줄 수 있습니다.\
+`revalidatePath`는 데이터를 변경할 때마다 호출해야 하는 함수이며, `revalidatePath`를 통해 NextJS에 일부 페이지의 데이터가 변경되었다는 것을 알리고 어떤 페이지의 데이터가 변경되었는지도 알려야 합니다.
 
 ### 캐시된 데이터란?
 
 웹사이트를 방문할 때 서버에서 데이터를 받아오면, 이 데이터를 다시 요청할 필요 없이 미리 저장해 두는 것을 "캐싱"이라고 합니다.\
 하지만, 이 데이터가 오래되어 업데이트가 필요한 경우, 캐시를 지우고 새 데이터를 불러와야 합니다.\
-revalidatePath는 이 캐시를 지워주는 역할을 합니다.
+`revalidatePath`는 이 캐시를 지워주는 역할을 합니다.
 
 ### 어떻게 동작하나요?
 
@@ -141,6 +145,7 @@ revalidatePath(path: string, type?: 'page' | 'layout'): void;
 
 ```ts
 import { revalidatePath } from 'next/cache'
+// /blog/post-1 경로가 해당
 revalidatePath('/blog/post-1')
 ```
 
@@ -150,8 +155,9 @@ revalidatePath('/blog/post-1')
 
 ```ts
 import { revalidatePath } from 'next/cache'
+// /blog/[slug] 경로의 page가 해당
 revalidatePath('/blog/[slug]', 'page')
-// 또는 경로 그룹과 함께 사용
+// /(main)/post/[slug] 경로의 page가 해당
 revalidatePath('/(main)/post/[slug]', 'page')
 ```
 
