@@ -1,5 +1,35 @@
 # Data Fetching
 
+## React와 Next.js의 Data Fetching 비교
+
+### React의 Data Fetching
+
+![react-rendering](./img/react-rendering.png)
+
+React는 FCP 이후(컴포넌트 마운트 이후) 백엔드 서버에 데이터 요청을 하기 때문에 데이터가 포함된 페이지를 보게 될 때까지 시간이 오래 걸립니다.
+
+![react-data-fetching](./img/react-data-fetching.png)
+
+### Next.js의 Data Fetching
+
+#### 서버사이드 렌더링 (SSR)
+
+![nextjs-data-fetching](./img/nextjs-data-fetching.png)
+
+Next.js는 사전 렌더링 기능을 통해 FCP도 빠르지만 서버에서 JS코드를 실행해서 사전 렌더링 진행하는 과정에서 현재 필요한 데이터를 미리 불러오도록 설정할 수 있습니다.\
+그렇게 된다면 사용자는 추가적인 로딩 없이 초기 페이지를 빠르게 볼 수 있습니다.
+
+요청이 들어올 때 마다 사전 렌더링을 진행하는 가장 기본적인 렌더링 방식을 서버사이드 렌더링이라고 합니다.
+
+#### 정적 사이트 생성 (SSG)
+
+![build-time-data-fetching](./img/build-time-data-fetching.png)
+
+그런데 만약 백엔드 서버의 응답이 느리거나 문제가 발생한다면 차라리 리엑트의 방식이 더 나을 수도 있게 됩니다.\
+그런 경우를 대비하여 Next.js는 사전 렌더링이 오래 걸릴것이라고 예상되는 페이지의 경우 빌드할 때 미리 사전 렌더링을 하도록 설정하게 할 수 있습니다.
+
+빌드 타임에 미리 페이지를 사전 렌더링 해두는 방식을 정적 사이트 생성이라고 합니다.
+
 ## 캐싱
 
 NextJS는 안보이는곳에서 굉장히 공격적인 캐싱을 합니다.\
@@ -20,6 +50,9 @@ NextJS는 실제로 앱에서 사전 생성될 수 있는 모든 페이지를 �
 
 ## Server Actions and Mutations (`action`)
 
+Server Action은 브라우저에서 호출할 수 있는 서버에서 실행되는 비동기 함수입니다.\
+별도의 api 없이 함수 하나 만으로 브라우저에서 Next.js의 서버측에서 실행되는 함수를 직접 호출 할 수 있습니다.
+
 Server Action은 React의 `"use server"` 지시어를 사용하여 정의할 수 있습니다.\
 이 지시어는 Server Action이라는 것을 생성하는데, 특정 함수를 오직 서버에서만 실행될 수 있게 보장해주는 기능입니다.
 
@@ -38,9 +71,17 @@ export default function Page() {
   async function create() {
     'use server'
     // 데이터 변조
+    const name = formData.get("name");
+    // 예시) 서버에서만 가능한 sql문으로 데이터 베이스에도 직접 접근 가능
+    await sql`INSERT INTO Names (name) VALUES(${name})`;
   }
 
-  return '...'
+  return (
+    <form action={create}>
+      <input name="name" />
+      <button type="submit">제출</button>
+    </form>
+  )
 }
 ```
 
@@ -223,3 +264,7 @@ export const shareMeal = async (formData) => {
   redirect('/meals');
 }
 ```
+
+## 자료
+
+- [한 입 크기로 잘라먹는 Next.js(15+)](https://www.udemy.com/course/onebite-next/?srsltid=AfmBOorFsq4T73zxeAwsqbj4QsTR-KI1w--pDL5kZwMkM7g-kfZKfFSV)

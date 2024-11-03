@@ -28,11 +28,13 @@ JS Bundle에 서비스에 접근 가능한 모든 컴포넌트 코드가 존재�
 - FCP가 6sec 이상일 경우 이탈율 106% 증가
 - FCP가 10sec 이상일 경우 이탈율 123% 증가
 
-### Nest.js를 사용하는 이유
+### Next.js를 사용하는 이유
 
 ![nextjs-rendering](./img/nextjs-rendering.png)
 
-Nest.js는 렌더링 과정에서 서버측에서 JS로 미리 렌더링하여 빠른 FCP를 달성하였습니다.\
+Nest.js는 렌더링 과정에서 서버측에서 JS로 미리 렌더링합니다.\
+바로 상호작용은 되지 않지만 완성된 html을 사전 렌더링하기 때문에 빠른 FCP를 달성하였습니다.\
+단, JS Bundle은 현재 페이지에 필요한 JS Bundle만 전달 됩니다.
 
 ![nextjs-after-rendering](./img/nextjs-after-rendering.png)
 
@@ -42,6 +44,11 @@ Nest.js는 렌더링 과정에서 서버측에서 JS로 미리 렌더링하여 �
 - JS 렌더링: 자바스크립트 코드(React 컴포넌트)를 HTML로 변환하는 과정
 - TTI(Time To Interactive): 상호작용까지 가능해진 시점
 - Hydration: JS 코드를 기존 HTML 요소들과 연결
+
+![nextjs-pre-fetching](./img/nextjs-pre-fetching.png)
+
+여기서 JS Bundle은 용량을 줄이기 위해 요청 페이지의 JS Bundle만 전달 됩니다.\
+이후 Pre Fetching을 통해 현재 페이지에서 이동할 수 있는 모든 페이지의 JS 코드를 불러옵니다.
 
 ## 자료
 
