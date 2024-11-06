@@ -13,9 +13,14 @@
 
 ### layout.js
 
-모든 Next 프로젝트에는 최소 하나의 Root `layout.js` 파일이 필요합니다.\
+모든 Next 프로젝트에는 최소 하나의 Root `layout.js` 파일이 필요합니다.
+
+![layout](./img/layout.png)
+
 또한 중첩된 `layout.js` 파일도 있을 수 있습니다.\
 `layout.js`는 서로 상쇄되지 않고 중첩된다는 것이 중요합니다.
+
+![nested-layout](./img/nested-layout.png)
 
 형제 및 중첩 페이지를 감싸는 신규 레이아웃 생성합니다.
 

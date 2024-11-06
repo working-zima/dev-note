@@ -9,10 +9,43 @@ Next.js는 풀스택 프레임워크이기 때문에 프론트엔드 뿐 아니�
 기본적으로 Next.js에서 모든 컴포넌트는 서버 컴포넌트입니다.\
 따라서 Next.js와 작업할 때 코드는 백엔드에서도 실행됩니다.
 
+## React 18 버전 부터 추가된 서버 컴포넌트를 적용하면서 달라진 렌더링
+
+Next.js가 렌더링 과정중 문제가 있습니다.\
+사전 렌더링 과정 중 상호작용을 위한 Hydration을 위해 JS Bundle을 전달합니다.\
+JS Bundle에 포함이 되어서 브라우저에 전달된 리엑트 컴포넌트들은 한 번 더 실행이 됩니다.
+
+그런데 여기서 JS Bundle에 포함된 컴포넌트들에는 한 번 더 실행이 되지 않아도 되는 컴포넌트도 포함되어 있습니다.
+
+![nextjs-rendering](./img/nextjs-rendering.png)
+
+JS Bundle에는 상호작용이 꼭 필요한 React Hooks나 event 등이 있는 컴포넌트들과 상호작용 기능이 없어서 Hydration이 필요하지 않은 정적인 컴포넌트도 같이 포함이 되어 있었습니다.
+
+![next-component-dom](./img/next-component-dom.png)
+
+하지만 페이지 라우터에서는 상호작용이 필요한 컴포넌트와 그렇지 않은 컴포넌트를 분류하지 않았습니다.\
+JS Bundle에 포함시켰기 때문에 JS Bundle의 크기는 불필요하게 커졌습니다.\
+또한 어쩔 수 없이 상호작용이 필요 없는 컴포넌트들도 한 번 더 실행하기 때문에 Hydration이 진행되는 시간도 늘어나서 TTI까지의 시간도 늦춰졌습니다.
+
+![no-server-component](./img/no-server-component.png)
+
+그래서 사전 렌더링 과정에서 상호작용이 없는 컴포넌트를 JS Bundle에서 제외시키기 위해 다른 유형으로 분류하였습니다.
+
+![server-and-client](./img/server-and-client.png)
+
+유형을 분류하기 위해 나온 것이 리엑트 서버 컴포넌트입니다.\
+상호작용이 없어서 서버측에서만 실행되면 되는 컴포넌트를 서버 컴포넌트로 분류했습니다.\
+상호작용이 있어서 Hydration이 필요하기 때문에 서버와 브라우저에서 한 번씩 실행되어야 하는 컴포넌트는 기존의 클라이언트 컴포넌트로 분류했습니다.
+
+![only-client-component](./img/only-client-component.png)
+
+Next 서버가 사전 렌더링을 진행하는 과정에서 HTML을 생성하기 위한 렌더링을 진행할 때는 모든 컴포넌트를 실행합니다.\
+하지만 JS Bundle에 전달하는 과정에서는 서버 컴포넌트를 제외하고 클라이언트 컴포넌트만 브라우저에 전달합니다.
+
 ## 리액트 서버 컴포넌트
 
 React Server Components는 UI를 서버에서 렌더링하고, 캐시를 통해 성능을 최적화하는 기능입니다.\
-모든 리액트 컴포넌트들은 그것들이 페이지인지, 레이아웃인지, 기본 컴포넌트인지에 상관없이 브라우저가 아닌 오직 서버에서만 렌더링됩니다.\
+모든 리액트 컴포넌트들은 그것들이 페이지인지, 레이아웃인지, 기본 컴포넌트인지에 상관없이 브라우저가 아닌 오직 서버에서만 사전 렌더링 진행할 때 딱 한 번 실행됩니다.\
 이것을 리액트 서버 컴포넌트라 부릅니다.
 
 예시로 `console.log()`를 사용해도 브라우저 개발자 툴에서 실행 로그를 확인할 수 없으며 터미널에서만 확인할 수 있습니다.
@@ -92,6 +125,8 @@ Next.js는 기본적으로 Streaming을 지원하며, `loading.js` 파일과 Rea
 
 어떤 사용자 상호작용을 기다리고 있는 부분은 클라이언트에서 실행되는 코드가 필요하므로 클라이언트 컴포넌트여야 합니다.\
 상호작용에 사용하는 eventHandler, 리액트 훅들은 서버 측에서는 사용 불가하기 때문에 클라이언트 컴포넌트를 사용해야합니다.
+
+클라이언트 컴포넌트는 사전 렌더링 진행할 때 한 번, 하이드레이션 진행할 때 한 번, 총 두 번 실행됩니다.
 
 ### 클라이언트 컴포넌트 사용 이유
 
@@ -219,6 +254,158 @@ export default function Page() {
 
 이렇게 하면 클라이언트 컴포넌트와 서버 컴포넌트가 서로 독립적으로 렌더링될 수 있습니다.
 
+## 주의 사항
+
+### 서버 컴포넌트에는 브라우저에서 실행될 코드가 포함되면 안됩니다
+
+```jsx
+// src/app/page.tsx
+export default function Home() {
+  // React Hooks 불가
+  const [state, setState] = useState("");
+  useEffect(() => {});
+
+  return (
+    <div
+    // 이벤트 핸들러 불가
+      onClick={() => {
+        console.log("Click!");
+      }}
+    >
+      인덱스
+    </div>
+  )
+}
+```
+
+```jsx
+import BrowserLib from "BrowserLib";
+
+export default function Home() {
+  // 브라우저에서 실행되는 기능을 담고 있는 라이브러리 호출 불가
+  BrowserLib();
+
+  return <div>인덱스</div>
+}
+```
+
+### 클라이언트 컴포넌트는 클라이언트에서만 실행되는게 아닙니다
+
+```jsx
+"use client";
+
+export default function Home() {
+  // server와 client에서 각각 한 번씩 두 번 실행
+  // 터미널과 브라우저 모두에서 볼 수 있음
+  console.log("렌더링");
+
+  return <div>인덱스</div>
+}
+```
+
+### 클라이언트 컴포넌트에서 서버 컴포넌트를 import 할 수 없습니다
+
+```jsx
+export default function ServerComponent() {
+
+  return <div>서버 컴포넌트</div>;
+}
+```
+
+```jsx
+"use client";
+
+// 불가능
+import ServerComponent from "./server-component.tsx"
+
+export default function ClientComponent() {
+
+  return <ServerComponent />
+}
+```
+
+클라이언트 컴포넌트의 코드는 서버와 브라우저에서 모두 실행이 됩니다.
+서버 컴포넌트의 코드는 오직 서버에서만 실행 됩니다.
+따라서 Hydration을 위해 브라우저에서 실행될 때 서버 컴포넌트의 코드는 존재하지 않기 때문에 문제가 발생합니다.
+
+클라이언트 컴포넌트에서 서버 컴포넌트를 import 하면 Next.js는 문제가 발생할 것을 알기에 서버 컴포넌트를 자동으로 클라이언트 컴포넌트로 변경합니다.
+
+만약 어쩔 수 없이 클라이언트 컴포넌트가 서버 컴포넌트를 자식으로 가져야 한다면 `children props`로 받아서 렌더링을 시켜주는 방법이 있습니다.
+
+```tsx
+"use client";
+
+// 불가능
+import ServerComponent from "./server-component.tsx"
+
+export default function ClientComponent({
+  children
+  }: {
+    children: ReactNode
+  }) {
+
+  return <div>{children}</div>
+}
+```
+
+`children Props`로 전달된 서버 컴포넌트는 클라이언트 컴포넌트로 변경되지 않습니다.\
+서버 컴포넌트를 직접 실행할 필요 없이 서버 컴포넌트의 결과만 `children props`로 전달 받는 구조이기 때문입니다.
+
+```tsx
+import ClientComponent from "./client-component";
+import ServerComponent from "./server-component";
+
+export default function Home() {
+  return (
+    <div>
+      <ClientComponent>
+        <ServerComponent>
+      </ClientComponent>
+    </div>
+  )
+}
+```
+
+### 서버 컴포넌트에서 클라이언트 컴포넌트에게 직렬화 되지 않는 Props는 전달 불가능합니다
+
+직렬화는 객체, 배열, 클래스 등의 복잡한 구조의 데이터를 네트워크 상으로 전송하기 위해 아주 단순한 형태(문자열, Byte)로 변환하는 것입니다.
+
+```jsx
+// before
+const person = { name: "이정환", age: 27 }
+```
+
+```jsx
+// after
+{"name":"이정환","age":27}
+```
+
+자바스크립트의 함수는 직렬화가 불가능합니다.\
+자바스크립트의 함수는 값이 아닌 코드 블럭을 포함하고 있는 특수한 형태이기 때문입니다.\
+또한 클로저, 렉시컬 스코프 같은 다양한 환경에 의존하는 경우가 많기 때문에 단순한 문자열이나 Byte로 변환하기 힘듭니다.
+
+따라서 서버 컴포넌트에서 클라이언트 컴포넌트로 향하는 Props에는 함수를 전달할 수 없습니다.
+
+![nextjs-rendering](./img/nextjs-rendering.png)
+
+JS를 실행하여 사전 렌더링을 진행할 때, 서버 컴포넌트만 따로 먼저 실행하고 이후에 클라이언트 컴포넌트를 실행합니다.
+
+![pre-render](./img/pre-render.png)
+
+서버 컴포넌트를 실행하면 RSC Payload라는 JSON과 비슷한 형태의 문자열이 생성됩니다.
+
+#### RSC Payload
+
+RSC Payload는 React Server Component의 순수한 데이터이며 직렬화 한 결과입니다.
+
+![rsc-payload](./img/rsc-payload.png)
+
+RSC Payload에는 서버 컴포넌트의 렌더링 결과, 연결된 클라이언트 컴포넌트의 위치, 클라이언트 컴포넌트에게 전달하는 Props의 값을 포함합니다.
+
+만약 서버 컴포넌트에서 클라이언트 컴포넌트로 함수 형태의 값을 전달한다면 해당 함수값도 직렬화 되어서 RSC Payload에 포함이 되어야 합니다.\
+하지만 함수는 직렬화가 불가능하기 때문에 RSC Payload에 포함이 될 수 없습니다.
+
 ## 자료
 
-[NEXT.js](https://nextjs.org/learn/dashboard-app)
+- [NEXT.js](https://nextjs.org/learn/dashboard-app)
+- [한 입 크기로 잘라먹는 Next.js(15+)](https://www.udemy.com/course/onebite-next/?srsltid=AfmBOorFsq4T73zxeAwsqbj4QsTR-KI1w--pDL5kZwMkM7g-kfZKfFSV)
