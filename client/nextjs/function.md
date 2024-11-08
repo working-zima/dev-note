@@ -340,3 +340,134 @@ export default function Page() {
 
 - `Suspense`: `useSearchParams()`를 사용할 때는 클라이언트 렌더링 중 가장 가까운 `Suspense` 경계까지 감싸줘야 합니다.\
 이는 정적 렌더링 시 클라이언트 사이드 렌더링이 발생하기 때문입니다.
+
+## generateStaticParams
+
+Next.js에서 동적 경로를 빌드 시점에 미리 생성할 수 있게 합니다.\
+이 함수는 동적 경로가 필요한 페이지의 특정 경로 매개변수들을 미리 정의하고, 각 페이지를 정적으로 렌더링하는데 사용됩니다.
+
+```tsx
+// book/[id]/page.tsx
+import { notFound } from "next/navigation";
+import style from "./page.module.css";
+
+// book/1, bool/2, book/3 페이지가 static 페이지로 빌드 타임에 렌더링 되어 만들어 짐
+export function generateStaticParams () {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }]
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string | string[] }>;
+}) {
+  const { id: pathVariable } = await params;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${pathVariable}`
+  )
+  if (!response.ok) {
+    if (response.status === 404 ) notFound();
+    return <div>오류가 발생했습니다...</div>;
+  }
+
+  const book = await response.json();
+
+  return (...);
+}
+```
+
+### generateStaticParams 주요 개념
+
+- 동작 방식: `generateStaticParams`가 반환한 경로에 맞춰 페이지를 정적으로 생성합니다.
+
+- 함수 호출 시점: 개발(next dev)에서는 경로 이동 시마다 호출되고, 빌드(next build)에서는 한 번 실행됩니다.\
+ISR(Incremental Static Regeneration) 중에는 재실행되지 않습니다.
+
+- 사용 이유: `getStaticPaths`와 유사하게, 경로를 정적 페이지로 미리 생성하여 성능을 향상시킵니다.
+
+### 여러 동적 세그먼트 및 캐치 올 경로
+
+`generateStaticParams`는 단일 세그먼트뿐만 아니라 여러 세그먼트를 다룰 수 있습니다.\
+예를 들어 `/products/[category]/[product]` 경로가 있을 때, 두 세그먼트에 대한 경로 목록을 반환할 수 있습니다.
+
+```jsx
+export function generateStaticParams() {
+  return [
+    { category: 'a', product: '1' },
+    { category: 'b', product: '2' },
+    { category: 'c', product: '3' },
+  ];
+}
+```
+
+### 동적 렌더링 제어
+
+- 일부 경로만 생성\
+: 빌드 시 특정 경로만 미리 생성하고, 나머지는 런타임 시 렌더링하고 싶다면 일부만 반환하고, `dynamicParams` 옵션을 설정할 수 있습니다.
+
+- 모든 경로를 런타임에 생성\
+: 경로를 빌드 시 생성하지 않고 런타임에 동적으로 렌더링하려면 빈 배열을 반환하거나 `dynamic = 'force-static'`을 설정합니다.
+
+### generateStaticParams 활용 예시
+
+1. 모든 경로를 빌드 시 정적으로 생성
+
+    ```jsx
+    export async function generateStaticParams() {
+      const posts = await fetch('https://.../posts').then((res) => res.json());
+      return posts.map((post) => ({ slug: post.slug }));
+    }
+    ```
+
+2. 일부 경로만 빌드 시 생성\
+: 경로의 일부만 반환하여 첫 방문 시 나머지를 동적으로 렌더링할 수 있습니다.
+
+3. 캐치올 동적 세그먼트\
+: `slug` 배열을 통해 `/product/[...slug]`와 같은 경로를 설정할 수 있습니다.
+
+    ```jsx
+    export function generateStaticParams() {
+      return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }];
+    }
+    ```
+
+### generateStaticParams 주의
+
+1. `generateStaticParams`가 반환하는 URL parameter 값은 문자열이여야 합니다.
+
+2. `generateStaticParams` 함수를 내보내게 되면,
+페이지 컴포넌트 내부의 데이터 캐싱이 설정되지 않은 `fetch`가 존재하지 않더라도 해당 페이지가 Static page로 강제로 설정됩니다.
+
+### dynamicParams
+
+`generateStaticParams`이 반환한 URL parameter 이외에는 404 Page로 보내버리고 싶다면 `dynamicParams`를 `false`로 하면 됩니다.
+
+```tsx
+export const dynamicParams = false;
+
+// book/1, bool/2, book/3 페이지 이외의 페이지는 404로 보내짐
+export function generateStaticParams () {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }]
+}
+```
+
+## dynamic
+
+특정 페이지의 유형을 강제로 Static 또는 Dynamic 페이지로 설정합니다.
+
+```ts
+export const dynamic = 'auto'
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'
+```
+
+1. auto: 아무것도 강제하지 않음(기본값)
+
+2. force-dynamic: 페이지를 강제로 Dynamic 페이지로 설정
+
+3. force-static: 페이지를 강제로 Static 페이지로 설정.\
+페이지 내부에서 사용한 동적 함수는 빈 값(`undefined`)을 반환하도록 설정됨.\
+데이터 fetching도 캐싱되도록 설정됨.
+
+4. error: 페이지를 강제로 Static 페이지로 설정\
+(Static 페이지로 설정하면 안되는 이유가 있다면 빌드 오류 발생)
