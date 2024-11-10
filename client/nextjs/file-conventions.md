@@ -182,35 +182,50 @@ export default function NewsDetailPage({ params }) {
 
 ### error.js
 
-기타 오류에 대한 폴백 페이지입니다. (형제 또는 중첩 페이지 또는 레이아웃에서 전달된)
+기타 오류에 대한 폴백 페이지입니다.\
+형제 또는 중첩 페이지 또는 레이아웃에서 전달됩니다.
+
+error.js에는 `"use client"` 지시자를 설정해야 합니다.\
+오류는 서버가 작동 중일 때 말고도 클라이언트 사이드에서도 발생할 수 있기 때문인데 클라이언트 컴포넌트는 서버와 클라이언트 측에서 모두 실행되기 때문입니다.
+
+#### error.js의 props
+
+- `error`: 현재 발생한 에러의 정보
+- `reset`: 에러가 발생한 페이지를 복구하기 위해 다시 렌더링 해보는 기능\
+(클라이언트 측에서 서버에서 전달 받은 데이터로 리렌더링, 데이터 fetching X)
 
 ```tsx
-'use client' // 오류는 서버가 작동 중일 때 말고도 클라이언트 사이드에서도 발생할 수 있기 때문에
+"use client"
 
-import { useEffect } from 'react'
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
+  error: Error
   reset: () => void
 }) {
+  const router = useRouter()
+
   useEffect(() => {
-    // Log the error to an error reporting service
+    // 에러를 콘솔로 출력
     console.error(error)
   }, [error])
 
   return (
     <div>
       <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
+      <button onClick={() => {
+        // 콜백 함수 안에 있는 UI를 변경시키는 작업을 일괄적으로 처리
+        // (router.refresh()가 reset()보다 늦으면 안되기 때문에 사용)
+        startTransition(() => {
+          router.refresh(); // 현재 페이지에 필요한 서버 컴포넌트를 다시 불러옴
+          reset(); // 에러 상태를 초기화, 컴포넌트를 다시 렌더링
+        })
+      }}>
+        다시 시도
       </button>
     </div>
   )
@@ -228,8 +243,16 @@ export default function Loading() {
 }
 ```
 
-`loading.js`는 전체 페이지 컴포넌트 단위 로딩에 적합합니다.\
-React의 `Suspense`는 경계를 정의함으로써 특정 컴포넌트 단위에서 세밀한 로딩 처리가 필요할 때 사용하면 좋습니다.
+#### loading.js 주의
+
+1. loading.js는 page 컴포넌트에만 스트리밍을 적용할 수 있습니다.\
+(컴포넌트는 `Suspense`를 사용)
+
+2. `async` 키워드가 붙어 비동기로 작동하도록 설정된 page 컴포넌트만 loading.js가 스트리밍 됩니다.
+
+3. loading.js는 해당 경로 페이지 뿐만 아니라 아래 경로에 있는 모든 비동기 페이지 컴포넌트까지 스트리밍이 되도록 됩니다.
+
+4. loading.js 스트리밍은 브라우저에서 쿼리 스트링이 변경될 때는 트리거 되지 않습니다.
 
 ### route.js
 

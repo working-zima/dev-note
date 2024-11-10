@@ -31,9 +31,9 @@ function Search() {
 export function Searchbar() {
   return (
     // 사전 렌더링에서는 fallback에 해당하는 UI를 렌더링
-    <Suspense fallback={<div>Loading ...</div>}>
+    < fallback={<div>Loading ...</div>}>
       <Search />
-    </Suspense>
+    </>
   )
 }
 ```

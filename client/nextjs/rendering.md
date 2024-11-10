@@ -121,6 +121,31 @@ Next.js는 기본적으로 Streaming을 지원하며, `loading.js` 파일과 Rea
 
 이렇게 각 렌더링 방식은 사용자의 요구와 페이지 특성에 맞게 선택될 수 있으며, 성능과 사용자 경험을 동시에 고려한 전략입니다.
 
+Static 페이지는 빌드 타임에 모든 비동기 작업을 끝내기 때문에 스트리밍을 사용 의미가 없습니다.\
+따라서 Streaming은 Dynamic 페이지에서 사용할 때 유용합니다.
+
+#### Loading과 Suspense의 차이
+
+`loading.js`는 전체 페이지 컴포넌트 단위 로딩에 적합합니다.\
+React의 `Suspense`는 경계를 정의함으로써 특정 컴포넌트 단위에서 세밀한 로딩 처리가 필요할 때 사용하면 좋습니다.
+
+#### 쿼리 스트링이 변경될 때 Suspense로 스트리밍 하기
+
+`Suspense` 스트리밍은 브라우저에서 쿼리 스트링이 변경될 때 트리거 되지 않습니다.\
+그래서 검색에서 `Suspense`를 이용할 때 최초 검색 이후에는 `Suspense`가 적용되지 않는 문제가 발생했습니다.\
+하지만 `Suspense` 컴포넌트에 `key` props를 전달하여 쿼리 스트링이 변경될 때 트리거 되도록 할 수 있습니다.
+
+```tsx
+const { q } = await searchParams;
+
+<Suspense key={q || ""} fallback={<div>Loading ...</div>}>
+  <SearchResult q={q || ""}/>
+</Suspense>
+```
+
+React에서 `key`가 변하면 `Suspense`를 새로운 컴포넌트로 인식하여 새로 그리고, 다시 `fallback` 상태로 돌아갑니다.\
+따라서 `key`의 값으로 쿼리 스트링을 전달하면 쿼리 스트링이 변경될 때마다 `Suspense`는 트리거 됩니다.
+
 ## 클라이언트 컴포넌트
 
 어떤 사용자 상호작용을 기다리고 있는 부분은 클라이언트에서 실행되는 코드가 필요하므로 클라이언트 컴포넌트여야 합니다.\
