@@ -112,7 +112,7 @@ export default function Page() {
     'use server'
     // 데이터 변조
     const name = formData.get("name");
-    // 예시) 서버에서만 가능한 sql문으로 데이터 베이스에도 직접 접근 가능
+    // 예시) 서버에서만 실행 가능한 sql문으로 데이터 베이스에도 직접 접근 가능
     await sql`INSERT INTO Names (name) VALUES(${name})`;
   }
 
