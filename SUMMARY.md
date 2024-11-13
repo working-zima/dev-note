@@ -62,7 +62,7 @@
     - [useRef](client/react/useref.md)
     - [portals](client/react/portals.md)
     - [useFormStatus](client/react/useFormStatus.md)
-    - [useActionState](client/react/useActionState.md.md)
+    - [useActionState](client/react/useActionState.md)
   - [Web API](client/webapi/README.md)
     - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
     - [Intersection Observer](client/webapi/intersection-observer.md)
