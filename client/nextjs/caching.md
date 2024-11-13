@@ -11,10 +11,10 @@ Router Cache | RSC 페이로드 | Client | 네비게이션 시 서버 요청 감
 
 ## Data Cache
 
-fetch 메서드를 활용해 백엔드 서버로부터 불러온 데이터를 Next 서버에서 보관하는 기능입니다.\
+`fetch` 메서드를 활용해 백엔드 서버로부터 불러온 데이터를 Next 서버에서 보관하는 기능입니다.\
 서버 가동중에는 영구적으로 데이터를 보관하거나, 특정 시간을 주기로 갱신 시키는 것도 가능합니다.
 
-Next에서 fetch의 두 번째 인수에 옵션으로 적용할 수 있습니다.
+Next에서 `fetch`의 두 번째 인수에 옵션으로 적용할 수 있습니다.
 
 ### 예시
 
@@ -22,22 +22,43 @@ Next에서 fetch의 두 번째 인수에 옵션으로 적용할 수 있습니다
 const response = await fetch(`~/api`, { cache: "force-cache" });
 ```
 
-- `{ cache: "no-store" }`: 캐싱을 하지 않도록 설정하여 데이터 페칭의 결과를 저장하지 않습니다. (15버전의 기본값)
+#### 1. `{ cache: "no-store" }`
 
-    ![data-cache-no-store](./img/data-cache-no-store.png)
+캐싱을 하지 않도록 설정하여 데이터 페칭의 결과를 저장하지 않습니다. (15버전의 기본값)
 
-- `{ cache: "force-cache" }`:  요청의 결과를 무조건 캐싱하며 한 번 호출 된 이후에는 다시 호출되지 않습니다.\
+![data-cache-no-store](./img/data-cache-no-store.png)
+
+#### 2. `{ cache: "force-cache" }`
+
+요청의 결과를 무조건 캐싱하며 한 번 호출 된 이후에는 다시 호출되지 않습니다.\
 캐싱된 데이터는 JSON 형태로 Next의 서버에 보관됩니다.
 
-    ![data-cache-force-cache](./img/data-cache-force-cache.png)
+![data-cache-force-cache](./img/data-cache-force-cache.png)
 
-- `{ next: { revalidate: 10 } }`: Page Router의 ISR 방식과 비슷하게 특정 시간을 주기로 캐시를 업데이트 합니다.
+#### 3. `{ next: { revalidate: 10 } }`
 
-    ![data-cache-revalidate1](./img/data-cache-revalidate1.png)
+Page Router의 ISR 방식과 비슷하게 특정 시간을 주기로 캐시를 업데이트 합니다.
 
-    ![data-cache-revalidate2](./img/data-cache-revalidate2.png)
+![data-cache-revalidate1](./img/data-cache-revalidate1.png)
 
-- `{ next: { tag: ['a'] } }`: Page Router의 On-Demand ISR 방식과 비슷하게 요청이 들어왔을 때 데이터를 최신화 합니다.
+![data-cache-revalidate2](./img/data-cache-revalidate2.png)
+
+#### 4. `{ next: { tag: ['a'] } }`
+
+Page Router의 On-Demand ISR 방식과 비슷하게 요청이 들어왔을 때 데이터를 최신화 합니다.\
+특정 태그를 붙일 수 있는 옵션으로 태그를 통해 데이터 캐시를 초기화 하거나 재검증 시키도록 설정할 수 있습니다.
+
+```ts
+// 태그로 데이터 캐시
+fetch(`https://...`, { next: { tags: ['a', 'b', 'c'] } });
+```
+
+그런 다음, 태그와 함께 `revalidateTag`를 호출하여 캐시 항목을 제거할 수 있습니다:
+
+```ts
+// 특정 태그가 있는 항목을 재검증
+revalidateTag('a');
+```
 
 ## Request Memoization
 

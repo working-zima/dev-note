@@ -101,11 +101,19 @@ function ExampleClientComponent() {
 
 ## revalidatePath()
 
-`revalidatePath` 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 삭제할 수 있게 해줍니다.
+`revalidatePath` 함수는 특정 경로에 대해 캐시된 데이터를 필요에 따라 삭제할 수 있게 해줍니다.\
+`revalidatePath` 는 서버 측에 특정 경로에 해당하는 페이지를 다시 생성(재검증)해 줄 것을 요청합니다.\
+특정 경로의 페이지는 랜더링이 진행되고 아래 컴포넌트도 랜더링을 진행합니다.
 
 NextJS는 기본적으로 캐시된 페이지를 보여줍니다.\
 데이터베이스의 데이터가 변경되었다고 해서 페이지가 업데이트되지는 않기 때문에 오래된 데이터에 기반했을지 모르는 페이지를 보여줄 수 있습니다.\
 `revalidatePath`는 데이터를 변경할 때마다 호출해야 하는 함수이며, `revalidatePath`를 통해 NextJS에 일부 페이지의 데이터가 변경되었다는 것을 알리고 어떤 페이지의 데이터가 변경되었는지도 알려야 합니다.
+
+`revalidatePath`를 사용할 수 있는 두 가지 장소가 있으며, 달성하려는 목표에 따라 다릅니다:
+
+- `Route Handlers`: 서드 파티 이벤트(예: 웹훅)에 응답하여 데이터를 재검증합니다.
+
+- `Server Actions`: 사용자 상호작용(예: 폼 제출, 버튼 클릭) 후 데이터를 재검증합니다.
 
 ### 캐시된 데이터란?
 
@@ -139,9 +147,11 @@ revalidatePath(path: string, type?: 'page' | 'layout'): void;
 
 `revalidatePath`는 값을 반환하지 않습니다.
 
-### revalidatePath Examples
+### revalidatePath 의 다양한 재검증 방식 Examples
 
-#### 특정 URL 재검증
+#### 1. 특정 URL 재검증
+
+특정 주소에 해당하는 페이지만 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -149,9 +159,9 @@ import { revalidatePath } from 'next/cache'
 revalidatePath('/blog/post-1')
 ```
 
-이는 다음 페이지 방문 시 특정 URL을 재검증합니다.
+#### 2. revalidatePath page 경로 재검증
 
-#### revalidatePath page 경로 재검증
+특정 경로의 모든 동적 페이지를 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -165,7 +175,9 @@ revalidatePath('/(main)/post/[slug]', 'page')
 특정 페이지 이하의 페이지는 무효화되지 않습니다.\
 예를 들어, `/blog/[slug]`는 `/blog/[slug]/[author]`를 무효화하지 않습니다.
 
-#### revalidatePath layout 경로 재검증
+#### 3. revalidatePath layout 경로 재검증
+
+특정 레이아웃을 갖는 모든 페이지 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -178,7 +190,7 @@ revalidatePath('/(main)/post/[slug]', 'layout')
 이는 동일한 레이아웃을 가진 페이지들이 다음 방문 시 재검증되도록 합니다.\
 예를 들어, 위의 경우에서 `/blog/[slug]/[another]`도 다음 방문 시 재검증됩니다.
 
-#### revalidatePath 모든 데이터 재검증
+#### 4. revalidatePath 모든 데이터 재검증
 
 ```ts
 import { revalidatePath } from 'next/cache'
@@ -188,7 +200,88 @@ revalidatePath('/', 'layout')
 
 이는 클라이언트 측 라우터 캐시를 제거하고, 다음 페이지 방문 시 데이터 캐시를 재검증합니다.
 
-#### revalidatePath 서버 액션
+#### 5. revalidateTag 태그 기준, 데이터 캐시 재검증
+
+특정 캐시 태그에 대해 필요에 따라 캐시된 데이터를 무효화할 수 있게 해줍니다.
+
+앞서 나온 옵션들은 해당 경로의 모든 데이터 캐시를 삭제하기 때문에 불필요한 캐시도 삭제될 수 있습니다.\
+`revalidateTag`는 오직 태그 값을 갖고 있는 `fetch` 의 데이터 캐시만 삭제 하기 때문에 호율적으로 페이지를 재검증 할 수 있습니다.
+
+##### revalidateTag 사용 예시
+
+`fetch`의 캐시 옵션을 태그로 설정합니다.
+
+```tsx
+// 태그로 데이터 캐시
+fetch(`https://...`, { next: { tags: ['a', 'b', 'c'] } });
+```
+
+`fetch`의 태그를 똑같이 명시하고 `revalidateTag`가 호출이 되게 되면 해당 태그 값을 갖는 모든 데이터 캐시가 재검증 됩니다.
+
+```ts
+// 특정 태그가 있는 항목을 재검증
+revalidateTag('a');
+```
+
+##### revalidateTag 실제 사용 예시
+
+```ts
+import { revalidatePath } from 'next/cache'
+
+async function ReviewList({ bookId }: { bookId: string }) {
+  // `fetch` 메서드의 태그 옵션을 캐시로 설정
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`,
+    { next : { tags: [`review-${bookId}`] } }
+  )
+
+  if (!response.ok) {
+    throw new Error(`Review fetch failed: ${response.statusText}`)
+  }
+
+  const reviews: ReviewData[] = await response.json();
+
+  return (
+    <section>
+      {reviews.map((review) => (
+        <ReviewItem key={`review-item-${review.id}`} {...review}/>
+      ))}
+    </section>
+  )
+}
+```
+
+```ts
+"use server"
+
+import { revalidateTag } from "next/cache";
+
+export async function createReviewAction (formData: FormData) {
+  const bookId = formData.get("bookId")?.toString();
+  const content = formData.get("content")?.toString();
+  const author = formData.get("author")?.toString();
+
+  if (!bookId || !content || !author) return;
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`, {
+        method: "POST",
+        body: JSON.stringify({ bookId, content, author })
+      }
+    )
+
+    // `fetch` 메서드의 태그와 동일한 태그를 사용
+    revalidateTag(`review-${bookId}`)
+  } catch(err) {
+    console.error(err);
+
+    return;
+  }
+}
+```
+
+### revalidatePath 서버 액션
 
 ```ts
 // app/actions.ts
@@ -202,7 +295,7 @@ export default async function submit() {
 }
 ```
 
-#### revalidatePath 라우트 핸들러
+### revalidatePath 라우트 핸들러
 
 ```ts
 // app/api/revalidate/route.ts
@@ -224,6 +317,31 @@ export async function GET(request: NextRequest) {
   })
 }
 ```
+
+### revalidatePath 주의
+
+- `revalidatePath`는 서버측에서만 호출 할 수 있습니다.
+
+- `revalidatePath`는 해당 페이지를 데이터 캐시와 풀 라우트 캐시까지 삭제합니다.\
+즉 다음 번 페이지는 다이나믹 페이지처럼 느리게 생성이 됩니다.
+
+#### revalidatePath 이후 과정
+
+![after-revalidate](./img/after-revalidate.png)
+
+1. `revalidatePath` 요청이 들어오게 되면 서버는 빌드 타임에 생성된 풀 라우트 캐시와 데이터 캐시를 삭제합니다.
+
+2. 이후 캐시가 삭제된 페이지는 새롭게 생성되게 됩니다.
+
+3. 페이지가 새롭게 생성되면서 서버에서 받는 데이터를 데이터 케시에 저장합니다.
+
+4. 페이지가 생성되고 브라우저로부터 다음 번 요청이 왔을 때 실시간으로 다시 페이지를 생성하며 풀 라우트 캐시에 저장합니다.
+
+### revalidatePath vs. router.refreshs
+
+`router.refresh`를 호출하면 Router 캐시가 지워지고, Data Cache 또는 Full Route Cache를 무효화하지 않고 서버에서 경로 세그먼트가 다시 렌더링됩니다.
+
+차이점은 `revalidatePath`는 Data Cache와 Full Route Cache를 제거하는 반면, `router.refresh()`는 클라이언트 측 API로서 Data Cache와 Full Route Cache를 변경하지 않습니다.
 
 ## useRouter
 

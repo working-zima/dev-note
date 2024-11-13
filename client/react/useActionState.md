@@ -19,7 +19,9 @@ import { useFormState } from 'react-dom';
 `useActionState(action, initialState, permalink?)`
 
 컴포넌트 최상위 레벨에서 `useActionState`를 호출하여 폼 액션이 실행될 때 업데이트되는 컴포넌트 state를 생성합니다.\
-`useActionState`는 기존의 formAction 함수와 초기 state를 전달받고, 폼에서 사용할 새로운 액션을 반환합니다. 이와 함께 최신 폼 sta te와 액션이 여전히 진행(Pending) 중인지 여부도 반환합니다. 최신 폼 State는 제공된 함수에도 전달됩니다.
+`useActionState`는 기존의 `formAction` 함수와 `initialState`를 전달받고, 폼에서 사용할 새로운 액션을 반환합니다.\
+이와 함께 최신 폼 `state`와 액션이 여전히 진행(`isPending`) 중인지 여부도 반환합니다.\
+최신 `State`는 제공된 함수에도 전달됩니다.
 
 ```jsx
 import { useActionState } from "react";
@@ -29,7 +31,8 @@ async function increment(previousState, formData) {
 }
 
 function StatefulForm({}) {
-  const [state, formAction] = useActionState(increment, 0);
+  const [state, formAction, isPending] = useActionState(increment, 0);
+
   return (
     <form>
       {state}
@@ -39,15 +42,26 @@ function StatefulForm({}) {
 }
 ```
 
-폼 state는 폼을 마지막으로 제출했을 때 액션에서 반환되는 값입니다. 폼이 제출되기 전이라면 전달한 초기 state와 같습니다.
+폼 state는 폼을 마지막으로 제출했을 때 액션에서 반환되는 값입니다.\
+폼이 제출되기 전이라면 전달한 초기 state와 같습니다.
 
 Server Action과 함께 사용하는 경우, `useActionState`를 사용하여 hydration이 완료되기 전에도 폼 제출에 대한 서버의 응답을 보여줄 수 있습니다.
 
 ### 매개변수
 
-- `fn`: 폼이 제출되거나 버튼을 눌렀을 때 호출될 함수입니다. 함수가 실행될 때, 첫 번째 인수로 폼의 이전 state를 전달합니다. state는 초기에 전달한 `initialState`이고, 이후에는 이전 실행의 반환값입니다. 그 후 일반적으로 폼 액션에 전달하는 인수들이 이어집니다.
+```jsx
+import { useActionState } from "react";
 
-- `initialState`: 초기 state로 설정하고자 하는 값으로, 직렬화 할 수 있는 값일 수 있습니다. 액션이 처음 호출된 후에는 이 인수를 무시합니다.
+const [state, formAction, isPending] = useActionState(fn, initialState, permalink?);
+```
+
+- `fn`: 폼이 제출되거나 버튼을 눌렀을 때 호출될 함수(action)입니다.\
+함수가 실행될 때, 첫 번째 인수로 폼의 이전 state를 전달합니다.\
+`state`는 초기에 전달한 `initialState`이고, 이후에는 이전 실행의 반환값입니다.\
+그 후 일반적으로 폼 액션에 전달하는 인수들이 이어집니다.
+
+- `initialState`: 초기 state로 설정하고자 하는 값으로, 직렬화 할 수 있는 값일 수 있습니다.\
+액션이 처음 호출된 후에는 이 인수를 무시합니다.
 
 - optional `permalink`: 이 폼이 수정하는 고유의 URL이 포함된 문자열입니다. 점진적인 향상과 함께 동적 콘텐츠(예: 피드)가 있는 페이지에서 사용합니다. `fn`이 서버 액션이고 폼이 자바스크립트 번들이 로드되기 전에 제출된다면, 브라우저는 현재의 페이지 URL이 아닌 명시된 `permalink의` URL로 이동합니다. React가 상태를 전달하는 방법을 알 수 있도록 동일한 폼 컴포넌트가 대상 페이지에 렌더링 되어야 합니다(동일한 액션 `fn` 및 `permalink` 포함). 폼이 hydrated하면 이 매개변수는 아무런 영향을 미치지 않습니다.
 
@@ -55,7 +69,12 @@ Server Action과 함께 사용하는 경우, `useActionState`를 사용하여 hy
 
 `useActionState`는 다음 3가지 값들이 포함된 배열을 반환합니다.
 
-- 현재 state입니다. 첫 번째 렌더링에서는 전달한 `initialState`와 일치합니다. 액션이 실행된 이후에는 액션에서 반환한 값과 일치합니다.
+```ts
+const [state, formAction, isPending] = useActionState(fn, initialState);
+```
+
+- 현재 `state`입니다. 첫 번째 렌더링에서는 전달한 `initialState`와 일치합니다.\
+`Action`이 실행된 이후에는 `Action`에서 반환한 값과 일치합니다.
 
 - form 컴포넌트의 `action` prop에 전달하거나 폼 내부 `button` 컴포넌트의 `formAction` prop에 전달할 수 있는 새로운 액션입니다.
 
@@ -79,7 +98,7 @@ import { action } from './actions.js';
 
 function MyComponent() {
   // useActionState(action prop, initial state)
-  const [state, formAction] = useActionState(action, null);
+  const [state, formAction, isPending] = useActionState(action, null);
   // ...
   return (
     <formAction={formAction}>
@@ -89,7 +108,7 @@ function MyComponent() {
 }
 ```
 
-useActionState는 다음 3가지 항목들이 포함된 배열을 반환합니다.
+`useActionState`는 다음 3가지 항목들이 포함된 배열을 반환합니다.
 
 1. `state`: 폼의 현재 `state`입니다.\
 처음에는 전달한 `initial state`로 설정되며, 폼이 제출된 후에는 전달한 `action prop`의 반환값으로 설정됩니다.
@@ -103,6 +122,15 @@ useActionState는 다음 3가지 항목들이 포함된 배열을 반환합니�
 전달한 `action`은 또한 폼의 현재 `state`를 새로운 첫 번째 인수로 받게 됩니다. 폼이 처음 제출되면 제공한 `initial state`이며, 이후 제출에서는 액션이 마지막으로 호출된 시점의 반환값이 됩니다. 나머지 인수는 `useActionState`를 사용하지 않았을 때와 동일합니다.
 
 ```jsx
+// useActionState 적용 전 액션
+function action(formData) {
+  // ...
+  return 'next state';
+}
+```
+
+```jsx
+// useActionState 적용 후 액션
 function action(currentState, formData) {
   // ...
   return 'next state';
@@ -113,12 +141,10 @@ function action(currentState, formData) {
 
 #### 오류 표시하기
 
-예시 1 of 2: 오류 표시하기
-Server Action에서 반환한 오류 메시지나 토스트와 같은 메시지를 표시하려면 해당 액션을 useActionState 호출로 감싸세요.
+Server Action에서 반환한 오류 메시지나 토스트와 같은 메시지를 표시하려면 해당 액션을 `useActionState` 호출로 감싸세요.
 
 ```jsx
 //App.js
-actions.js
 
 import { useActionState, useState } from "react";
 import { addToCart } from "./actions.js";
@@ -146,6 +172,8 @@ export default function App() {
 ```
 
 ```jsx
+// actions.js
+
 "use server";
 
 export async function addToCart(prevState, queryData) {
@@ -163,8 +191,6 @@ export async function addToCart(prevState, queryData) {
 ```
 
 #### 폼 제출 후 구조화된 정보 표시하기
-
-예시 2 of 2: 폼 제출 후 구조화된 정보 표시하기
 
 ```jsx
 import { useActionState, useState } from "react";
@@ -235,3 +261,114 @@ function action(currentState, formData) {
 ## 중요
 
 React Canary 버전에서 `useActionState` 라고 불리는 이 API 는 React DOM 에 소속 되어있습니다.
+
+## 번외 Next.js 사용 예시
+
+```tsx
+"use client"
+
+import { useActionState, useEffect } from 'react'
+
+import style from './review-editor.module.css'
+
+import { createReviewAction } from '@/actions/create-review.action'
+
+export default function ReviewEditor({ bookId }: { bookId: string }) {
+  const [state, formAction, isPending] = useActionState(
+    createReviewAction,
+    null
+  );
+
+  // state값이 바뀔 때 error 발생 여부 확인
+  useEffect(() => {
+    if (state && !state.status) {
+      alert(state.error);
+    }
+  }, [state])
+
+  // form의 action은 createReviewAction에서 formAction으로 변경하여 useActionState 사용
+  // isPending으로 pending 확인하여 disabled 적용
+  return (
+    <section>
+      <form
+        className={style.form_container}
+        action={formAction}
+      >
+        <input
+          name="bookId"
+          value={bookId}
+          hidden
+          readOnly
+        />
+        <textarea
+          disabled={isPending}
+          name="content"
+          placeholder="리뷰 내용"
+          required
+        />
+        <div className={style.submit_container}>
+          <input
+            disabled={isPending}
+            name="author"
+            placeholder="작성자"
+            required
+          />
+          <button
+            disabled={isPending}
+            type="submit"
+          >
+            {isPending ? "..." : "작성하기"}
+          </button>
+        </div>
+      </form>
+    </section>
+  )
+}
+```
+
+```tsx
+"use server"
+
+import { revalidateTag } from "next/cache";
+
+export async function createReviewAction (state: any, formData: FormData) {
+  const bookId = formData.get("bookId")?.toString();
+  const content = formData.get("content")?.toString();
+  const author = formData.get("author")?.toString();
+
+  if (!bookId || !content || !author) {
+    // useActionState의 state로 반환할 객체
+    return {
+      status: false,
+      error: "리뷰 내용과 작성자를 입력해주세요",
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`, {
+        method: "POST",
+        body: JSON.stringify({ bookId, content, author })
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    revalidateTag(`review-${bookId}`)
+
+    // useActionState의 state로 반환할 객체
+    return {
+      status: true,
+      error: "",
+    }
+  } catch(err) {
+    // useActionState의 state로 반환할 객체
+    return {
+      status: false,
+      error: `리뷰 저장에 실패했습니다: ${err}`,
+    }
+  }
+}
+```

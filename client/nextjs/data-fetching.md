@@ -96,6 +96,23 @@ Server Action은 브라우저에서 호출할 수 있는 서버에서 실행되�
 Server Action은 React의 `"use server"` 지시어를 사용하여 정의할 수 있습니다.\
 이 지시어는 Server Action이라는 것을 생성하는데, 특정 함수를 오직 서버에서만 실행될 수 있게 보장해주는 기능입니다.
 
+### Server Action 동작 순서
+
+정리하자면,
+
+1. `"use server"`라는 지시자를 통해 Server Action을 만들 수 있습니다.
+2. 해당하는 Server Action을 호출하는 `form`을 브라우저 측에서 제출하면 자동으로 Server Action을 호출하는 http request가 서버에게 날라갑니다.
+3. Server Action은 컴파일 결과 자동으로 특정한 hash 값을 갖는 api로써 설정이 됩니다.
+4. 브라우저 측에서 Server Action을 호출할 때 `Request Headers`에 `Next-Action`이라는 이름으로 현재 호출하고자 하는 Server Action의 hash 값까지 함께 명시합니다.
+5. request의 `Payload` 탭에는 request와 함께 전송된 값을 확인해볼 수 있습니다.
+
+요약하자면,
+
+1. 코드상에 Server Action을 만들면 Server Action 내부의 코드를 실행하는 api가 자동으로 생성됩니다.
+2. api는 브라우저에서 `action` 속성으로 이어진 `form` 태그를 제출 했을 때 자동으로 호출됩니다.
+
+### React와 Server Action
+
 Server Action은 NextJS 특유의 기능이 아닌 React 자체에서 지원하는 기능입니다.\
 클라이언트 측 표준 React 프로젝트에는 해당되지 않지만, React를 감싸는 NextJS와 같은 프레임워크로 잠금 해제되는 기능입니다.
 
@@ -303,6 +320,24 @@ export const shareMeal = async (formData) => {
   await saveMeal(meal);
   redirect('/meals');
 }
+```
+
+### Server Action에 Id값 전달하기
+
+Server Action에서 필요하지만 `form`으로 입력 받기 힘든 경우가 있습니다.\
+예를 들면 게시물의 `Id`가 있습니다.\
+사용자에게 `Id`를 입력시키라고 할 수 없기 때문에 `input`에 `Id`를 value로 고정시킵니다.\
+`hidden` 과 `readOnly` 속성으로 `input`을 감추고 작성하지 못하도록 합니다.
+
+```tsx
+<section>
+  <form action={createReviewAction}>
+    <input name="bookId" value={bookId} hidden readOnly />
+    <input required name="content" placeholder="리뷰 내용" />
+    <input required name="author" placeholder="작성자" />
+    <button type="submit">작성하기</button>
+  </form>
+</section>
 ```
 
 ## 자료
