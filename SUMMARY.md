@@ -40,6 +40,11 @@
       - [Aspect Ratio](library/tailwind/layout/aspect-ratio.md)
       - [Container](library/tailwind/layout/container.md)
       - [Columns](library/tailwind/layout/columns.md)
+  - [Jotai](library/zotai/README.md)
+    - [Atom](library/zotai/core/atom.md)
+    - [Provider](library/zotai/core/provider.md)
+    - [Store](library/zotai/core/store.md)
+    - [useAtom](library/zotai/core/use-atom.md)
 
 ### CLIENT
 
