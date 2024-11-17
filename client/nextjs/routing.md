@@ -6,10 +6,10 @@ Next.js에서는 `a`태그 대신 `Link` 컴포넌트를 사용합니다.\
 `a`태그를 사용할 경우 경로 간 새로고침이 발생합니다.
 
 ```tsx
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function Page() {
-  return <Link href="/dashboard">Dashboard</Link>
+  return <Link href="/dashboard">Dashboard</Link>;
 }
 ```
 
@@ -29,38 +29,38 @@ export default function BlogPage() {
   return (
     <main>
       <h1>The Blog</h1>
-      <p><Link href="/blog/post-1">Post 1</Link></p>
-      <p><Link href="/blog/post-2">Post 2</Link></p>
+      <p>
+        <Link href="/blog/post-1">Post 1</Link>
+      </p>
+      <p>
+        <Link href="/blog/post-2">Post 2</Link>
+      </p>
     </main>
-  )
+  );
 }
 ```
 
 ```tsx
 // app/blog/[slug]/page.js
 
-export default function BlogPostPage({
-  params
-}: {
-  params: { slug: string }
-}) {
-// post-1 또는 post-2
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  // post-1 또는 post-2
   return (
     <main>
       <h1>My Post: {params.slug}</h1>
     </main>
-  )
+  );
 }
 ```
 
 `<p><Link href="/blog/post-1">Post 1</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-1` 이 됩니다.\
 `<p><Link href="/blog/post-2">Post 2</Link></p>` 링크를 클릭하면 `[slug]`폴더는 `post-2` 이 됩니다.
 
-Route | Example URL | params
-:-: | :-: | :-:
-`app/blog/[slug]/page.js` | `/blog/a` | `{ slug: 'a' }`
-`app/blog/[slug]/page.js` | `/blog/b` | `{ slug: 'b' }`
-`app/blog/[slug]/page.js` | `/blog/c` | `{ slug: 'c' }`
+|           Route           | Example URL |     params      |
+| :-----------------------: | :---------: | :-------------: |
+| `app/blog/[slug]/page.js` |  `/blog/a`  | `{ slug: 'a' }` |
+| `app/blog/[slug]/page.js` |  `/blog/b`  | `{ slug: 'b' }` |
+| `app/blog/[slug]/page.js` |  `/blog/c`  | `{ slug: 'c' }` |
 
 ### Catch-all Segments (`[...folderName]`)
 
@@ -131,13 +131,13 @@ NextJS는 `props` 객체를 모든 페이지 컴포넌트에 넘기며 `params`�
 
 export default function BlogPostPage({ params }) {
   // `http://localhost:3000/blog/post-1`으로 접근 했을 때
-  console.log(params) // { slug: 'post-1' }
+  console.log(params); // { slug: 'post-1' }
 
   return (
     <main>
       <h1>Blog Post</h1>
     </main>
-  )
+  );
 }
 ```
 
@@ -156,17 +156,17 @@ Parallel Routes는 Next.js에서 동적인 앱을 구축할 때, 동일한 레�
 
 ![parallel-routes-file-system](./img/parallel-routes-file-system.png)
 
-Parallel Routes는 slots라는 개념을 사용합니다. Slots는 `@folder` 규칙을 따라 파일 구조 내에서 정의됩니다.\
+Parallel Routes는 slots라는 개념을 사용합니다. Slots는 `@folder` 규칙을 따라 파일 구조 내에서 정의됩니다.
 
 예를 들어:
 
 ```graphql
 app/
-  ├── layout.js
+  ├── @team/team
+  │   └── page.js
   ├── @analytics/
   │   └── page.js
-  └── @team/
-      └── page.js
+  └── layout.js
 ```
 
 위의 파일 구조에서는 `@team`과 `@analytics`라는 두 개의 slot이 정의됩니다.\
@@ -175,22 +175,24 @@ app/
 ### 레이아웃에서 Slots 사용 예시
 
 ```tsx
+// app/layout.js
+
 export default function Layout({
   children,
   team,
   analytics,
 }: {
-  children: React.ReactNode
-  analytics: React.ReactNode
-  team: React.ReactNode
+  children: React.ReactNode;
+  analytics: React.ReactNode;
+  team: React.ReactNode;
 }) {
   return (
     <>
-      {children}   {/*메인 콘텐츠 */}
-      {team}       {/* 팀 관련 콘텐츠 */}
-      {analytics}  {/* 분석 관련 콘텐츠*/}
+      {children} {/*메인 콘텐츠 */}
+      {team} {/* 팀 관련 콘텐츠 */}
+      {analytics} {/* 분석 관련 콘텐츠*/}
     </>
-  )
+  );
 }
 ```
 
@@ -207,6 +209,73 @@ Slots는 내부적으로 분리된 레이아웃이지만, 라우트 세그먼트
 `children` prop은 기본적으로 모든 레이아웃에 포함된 slot으로, 특별히 정의하지 않아도 됩니다.\
 Parallel Routes는 복잡한 앱에서 UI를 효율적으로 관리할 수 있게 도와줍니다.
 
+```graphql
+app/
+  ├── @team/team
+  │   └── page.js
+  ├── @analytics/
+  │   └── page.js
+  ├── page.js     /* layout에서 children으로 받아오는 페이지 */
+  └── layout.js
+```
+
+위의 경로는 사실 아래와 같다고 생각해도 됩니다.
+
+```graphql
+app/
+  ├── @team/team
+  │   └── page.js
+  ├── @analytics/
+  │   └── page.js
+  ├── @children/
+  │   └── page.js
+  └── layout.js
+```
+
+### 하위 추가 URL 경로가 있을 때
+
+```graphql
+app/
+  ├── @analytics/
+  │   └── page.js
+  │   └── setting/
+  │       └── page.js /* setting일 때 전달되는 컴포넌트 */
+  ├── @team/
+  │   └── page.js     /* setting일 때 전달되는 컴포넌트 */
+  ├── layout.js
+  └── page.js         /* setting일 때 전달되는 컴포넌트 */
+```
+
+만약 `/setting` 경로가 되면 `layout`에게 전달되는 props는 어떻게 되는 걸까요?\
+`@analytics/`의 경우는 `setting/` 폴더 아래의 `page`컴포넌트가 전달됩니다.\
+`@team/`의 경우 `setting/` 폴더가 존재하지 않기 때문에 404 처리가 되어야 하지만 Next.js는 이전의 컴포넌트인 `page` 컴포넌트를 전달하도록 되어 있습니다.\
+`children`의 경우에도 `app` 밑에 `setting/` 폴더가 없기 때문에 이전 `page` 컴포넌트를 전달하게 됩니다.
+
+#### 하위 추가 URL 경로 주의할 점
+
+항상 각각의 slot이 이전의 페이지를 유지하게 되는 건 아닙니다.\
+브라우저 측에서 클라이언트 사이드 렌더링 방식으로 페이지를 이동하는 `Link` 컴포넌트를 이용할 때에만 한정됩니다.
+
+해당 경로에서 브라우저를 새로고침하게 되면 `404 page`로 리다이렉션됩니다.\
+브라우저에서 처음 접속하게 되는 경우에는 `layout` 컴포넌트에서 이전의 페이지를 모르기 때문에 이전의 페이지를 렌더링 할 수 없기 때문입니다.
+
+이러한 사항을 방지해 주기 위해서는 slot에 `404 page` 대신 렌더링할 `default` page를 만들어 주어야 합니다.\
+`children`도 해당되는 내용이기 때문에 상위 폴더에도 추가해야 합니다.
+
+```graphql
+app/
+  ├── @analytics/
+  │   └── page.js
+  │   └── setting/
+  │       └── page.js /* /setting 경로에서 새로고침할 때 전달되는 컴포넌트 */
+  ├── @team/
+  │   └── page.js
+  │   └── default.js  /* /setting 경로에서 새로고침할 때 전달되는 컴포넌트 */
+  ├── default.js      /* /setting 경로에서 새로고침할 때 전달되는 컴포넌트 */
+  ├── layout.js
+  └── page.js
+```
+
 ### Active state and navigation
 
 Parallel Routes에서의 Active State와 Navigation은 사용자가 여러 페이지를 탐색할 때 각 slot에 어떤 콘텐츠가 표시될지를 결정하는 중요한 요소입니다.
@@ -214,10 +283,10 @@ Parallel Routes에서의 Active State와 Navigation은 사용자가 여러 페�
 #### Soft Navigation vs Hard Navigation
 
 - Soft Navigation: 클라이언트 측 탐색에서 페이지 일부만 업데이트되며, 다른 slot의 활성 상태는 유지됩니다.\
-예를 들어, 대시보드의 한 부분만 변경하고 나머지는 그대로 남겨둡니다.
+  예를 들어, 대시보드의 한 부분만 변경하고 나머지는 그대로 남겨둡니다.
 
 - Hard Navigation: 전체 페이지를 새로고침할 때, Next.js는 현재 URL과 일치하지 않는 slot의 활성 상태를 기억하지 않습니다.\
-이 경우, `default.js` 파일을 사용하여 기본 상태를 렌더링하거나 해당하는 파일이 없으면 `404` 에러 페이지가 표시됩니다.
+  이 경우, `default.js` 파일을 사용하여 기본 상태를 렌더링하거나 해당하는 파일이 없으면 `404` 에러 페이지가 표시됩니다.
 
 #### default.js
 
@@ -233,16 +302,12 @@ Parallel Routes에서의 Active State와 Navigation은 사용자가 여러 페�
 이를 통해 현재 어떤 하위 페이지가 활성 상태인지 알 수 있습니다.
 
 ```tsx
-'use client'
+"use client";
 
-import { useSelectedLayoutSegment } from 'next/navigation'
+import { useSelectedLayoutSegment } from "next/navigation";
 
-export default function Layout({
-  auth
-}: {
-    auth: React.ReactNode
-}) {
-  const loginSegment = useSelectedLayoutSegment('auth')
+export default function Layout({ auth }: { auth: React.ReactNode }) {
+  const loginSegment = useSelectedLayoutSegment("auth");
   // ...
 }
 ```
@@ -260,18 +325,18 @@ Parallel Routes를 사용하여 사용자 역할과 같은 특정 조건에 따�
 ![conditional-routes-ui](./img/conditional-routes-ui.png)
 
 ```tsx
-app/dashboard/layout.tsx
-import { checkUserRole } from '@/lib/auth'
+app / dashboard / layout.tsx;
+import { checkUserRole } from "@/lib/auth";
 
 export default function Layout({
   user,
   admin,
 }: {
-  user: React.ReactNode
-  admin: React.ReactNode
+  user: React.ReactNode;
+  admin: React.ReactNode;
 }) {
-  const role = checkUserRole()
-  return <>{role === 'admin' ? admin : user}</>
+  const role = checkUserRole();
+  return <>{role === "admin" ? admin : user}</>;
 }
 ```
 
@@ -288,13 +353,9 @@ export default function Layout({
 
 ```tsx
 // filename="app/@analytics/layout.tsx" switcher
-import Link from 'next/link'
+import Link from "next/link";
 
-export default function Layout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <nav>
@@ -303,7 +364,7 @@ export default function Layout({
       </nav>
       <div>{children}</div>
     </>
-  )
+  );
 }
 ```
 
@@ -315,7 +376,24 @@ Parallel Routes는 독립적으로 스트리밍될 수 있으므로 각 라우�
 
 ## Intercepting Routes(`(.)folderName`)
 
+초기 접속 요청이 아닌 클라이언트 사이드 방식 렌더링, 즉 `Link`나 `Router`의 `push`처럼 클라이언트 측에서 경로를 변경할 때 사용하는 라우팅 패턴입니다.\
+이 패턴은 사용자가 동일한 경로에 접속하더라도 요청을 가로채서 원래 렌더링될 페이지 대신 원하는 페이지를 렌더링하도록 설정할 수 있습니다.
+
 ![one-bite-intercepting](./img/one-bite-intercepting.png)
+
+### Intercepting Routes의 실제 사용 예시
+
+![instagram-example](./img/instagram-example.png)
+
+인스타그램에서 게시물을 클릭하면 피드 페이지 위로 모달 형태의 상세 페이지가 보입니다.
+
+![instagram-intercepting](./img/instagram-intercepting.png)
+
+상세 페이지에서 새로 고침을 하면 원래의 상세 페이지로 돌아오게 됩니다.
+
+![instagram-refresh](./img/instagram-refresh.png)
+
+모달 형태의 상세 페이지와 원래의 상세 페이지의 URL 경로가 같지만, 렌더링된 화면은 다릅니다.
 
 웹사이트에서 새로운 페이지로 완전히 이동하지 않고, 현재 페이지 위에 다른 페이지의 내용을 겹쳐서 보여줄 수 있는 기능입니다.\
 예를 들어, 사진 목록에서 사진을 클릭했을 때, 새 창이 아닌, 현재 페이지 위에 사진을 모달(팝업 창)로 띄워서 보여주는 것입니다.\
@@ -329,9 +407,10 @@ Parallel Routes는 독립적으로 스트리밍될 수 있으므로 각 라우�
 
 ### 경로 규칙
 
-Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지정합니다. 이 규칙은 부모 디렉토리로 가는 것과 비슷합니다.
+Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지정합니다. 이 규칙은 부모 디렉토리로 가는 것과 비슷합니다.\
+어떤 경로의 폴더를 intercepting 하는지에 따라 달라집니다.
 
-- `(.)`: 현재 위치와 같은 경로입니다.
+- `(.)`: 현재 위치와 같은 경로입니다. (동일 경로)
 
 - `( .. )`: 한 단계 위의 경로입니다.
 
@@ -351,6 +430,126 @@ Intercepting Routes에서는 `( .. )` 같은 규칙을 사용해 경로를 지�
 사용자가 페이지를 새로고침해도 모달이 계속 열려 있거나, 이전 페이지로 돌아갔을 때 모달이 닫히는 기능을 쉽게 만들 수 있습니다.\
 즉, Intercepting Routes는 사용자가 페이지를 완전히 벗어나지 않고도 새로운 내용을 볼 수 있도록 해주는 기능으로, 특히 모달 창을 띄울 때 유용합니다.
 
+```graphql
+src/
+  ├── app/
+  │   ├── @modal/
+  │   │   └── default.tsx
+  │   │   └── (.)book/
+  │   │       └── [id]/
+  │   │           └── page.tsx
+  │   ├── book/
+  │   │   └── [id]/
+  │   │       └──page.tsx
+  │   └── layout.tsx
+  └── components/
+      └──modal.tsx
+```
+
+아래의 코드 예시는 `book/[id]/page.js`로 가는 경로를 `(.)book/[id]/page.js` 로 인터셉트합니다.\
+`(.)book/[id]/page.js`는 병렬 라우팅을 사용하여 `@madal` slot의 부모 layout인, root의 `layout.js`에 `modal` props 로 전달합니다.\
+
+```tsx
+// src/app/@modal/(.)book/[id]/page.tsx
+import BookPage from "@/app/book/[id]/page";
+
+import Modal from "@/components/modal";
+
+export default function Page(props: any) {
+  return (
+    <Modal>
+      <BookPage {...props} />
+    </Modal>
+  );
+}
+```
+
+`createPortal`로 `src/app/layout.tsx`에 있는 `modal-root` 라는 id를 가진 요소에서 `dialog`를 두어 사용합니다.
+
+```tsx
+// src/components/modal.tsx
+
+"use client";
+
+import { ReactNode, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+
+import { useRouter } from "next/navigation";
+
+import style from "./modal.module.css";
+
+export default function Modal({ children }: { children: ReactNode }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+
+  // 모달이 꺼져 있다면 dialog 열기
+  useEffect(() => {
+    if (!dialogRef.current?.open) {
+      dialogRef.current?.showModal();
+      dialogRef.current?.scrollTo({
+        top: 0,
+      });
+    }
+  }, []);
+
+  return createPortal(
+    <dialog
+      className={style.modal}
+      ref={dialogRef}
+      // 백드롭이나 esc 누를 시 뒤로가기
+      onClick={(e) => {
+        if ((e.target as any).nodeName === "DIALOG") {
+          router.back();
+        }
+      }}
+      onClose={() => router.back()}
+    >
+      {children}
+    </dialog>,
+    document.getElementById("modal-root") as HTMLElement
+  );
+}
+```
+
+`@modal/(.)book/[id]/page.js`에서 `modal` props를 받아옵니다.
+
+```tsx
+// src/app/layout.tsx
+
+import "./globals.css";
+import style from "./layout.module.css";
+
+export default function RootLayout({
+  children,
+  modal,
+}: Readonly<{
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        <div className={style.container}>
+          <main>{children}</main>
+        </div>
+        {modal}
+        <div id="modal-root"></div>
+      </body>
+    </html>
+  );
+}
+```
+
+`@modal`에서 `"/"` 경로일 때 보여줄 `modal` props가 없기 때문에 `default`로 `null`을 전달해 줍니다.
+
+```tsx
+// src/app/@modal/default.tsx
+
+export default function Default() {
+  return null;
+}
+```
+
 ## Route Groups(`(folderName)`)
 
 Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 않고 폴더를 그룹화하여 논리적으로 파일을 구성하는 기능입니다.\
@@ -366,10 +565,10 @@ Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 
 ![route-group-organisation](./img/route-group-organisation.png)
 
 - app 폴더 안에 있는 폴더들은 일반적으로 그 이름이 URL 경로로 표시됩니다.\
-만약 `app/shop` 폴더가 있다면, 해당 파일은 `/shop` 경로에서 볼 수 있습니다.
+  만약 `app/shop` 폴더가 있다면, 해당 파일은 `/shop` 경로에서 볼 수 있습니다.
 
 - 그러나 폴더 이름을 괄호 안에 넣어 `(shop)`과 같이 작성하면, 이 폴더는 URL에 나타나지 않습니다.\
-이를 통해 URL 경로에 영향을 주지 않으면서 파일을 그룹화할 수 있습니다.
+  이를 통해 URL 경로에 영향을 주지 않으면서 파일을 그룹화할 수 있습니다.
 
 ![route-group-multiple-layouts](./img/route-group-multiple-layouts.png)
 
@@ -386,10 +585,10 @@ Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 
 #### 여러 루트 레이아웃 생성
 
 - 루트 레이아웃은 페이지 전체에 적용되는 최상위 레이아웃입니다.\
-`layout.js` 파일을 Route Groups에 각각 추가하여 애플리케이션의 각 섹션을 독립적인 UI로 분리할 수 있습니다.
+  `layout.js` 파일을 Route Groups에 각각 추가하여 애플리케이션의 각 섹션을 독립적인 UI로 분리할 수 있습니다.
 
 - 예시: 최상위 `layout.js` 파일을 제거하고 `(marketing)` 및 `(shop)` 각각의 폴더 안에 `layout.js` 파일을 추가하면, 해당 그룹별로 완전히 다른 UI가 적용됩니다.\
-이렇게 하면 애플리케이션의 특정 섹션들에 각기 다른 UI를 사용할 수 있습니다.
+  이렇게 하면 애플리케이션의 특정 섹션들에 각기 다른 UI를 사용할 수 있습니다.
 
 ![route-group-multiple-root-layouts](./img/route-group-multiple-root-layouts.png)
 
@@ -401,46 +600,44 @@ Route Groups는 Next.js 애플리케이션에서 URL 경로에 영향을 주지 
 ```tsx
 // app.(content).layout.js
 
-import MainHeader from '@/components/main-header';
-import '../globals.css';
+import MainHeader from "@/components/main-header";
+import "../globals.css";
 
 export const metadata = {
-  title: 'Next.js Page Routing & Rendering',
-  description: 'Learn how to route to different pages.',
-}
+  title: "Next.js Page Routing & Rendering",
+  description: "Learn how to route to different pages.",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div id='page'>
+        <div id="page">
           <MainHeader />
           {children}
         </div>
       </body>
     </html>
-  )
+  );
 }
 ```
 
 ```tsx
 // app.(marketing).layout.js
 
-import '../globals.css';
+import "../globals.css";
 
 export const metadata = {
-  title: 'Next.js Page Routing & Rendering',
-  description: 'Learn how to route to different pages.',
-}
+  title: "Next.js Page Routing & Rendering",
+  description: "Learn how to route to different pages.",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  )
+  );
 }
 ```
 
@@ -465,17 +662,16 @@ Route Handlers는 `app` 디렉토리 내에서만 사용할 수 있습니다.\
 // app/api/test/route.js
 
 export function GET(request) {
-
-  return new Response('Hello!')
+  return new Response("Hello!");
 }
 ```
 
 ```tsx
 export default async function DashboardPage() {
-  const response = await fetch("http://localhost:3000/api/test")
-  const data = await response.json()
+  const response = await fetch("http://localhost:3000/api/test");
+  const data = await response.json();
 
-  console.log(data) // Hello!
+  console.log(data); // Hello!
 }
 ```
 
@@ -507,18 +703,18 @@ Route Handlers는 기본적으로 캐시되지 않습니다.\
 Route Handler 파일에 `export const dynamic = 'force-static'`과 같은 route config option을 사용합니다.
 
 ```ts filename="app/items/route.ts" switcher
-export const dynamic = 'force-static'
+export const dynamic = "force-static";
 
 export async function GET() {
-  const res = await fetch('https://data.mongodb-api.com/...', {
+  const res = await fetch("https://data.mongodb-api.com/...", {
     headers: {
-      'Content-Type': 'application/json',
-      'API-Key': process.env.DATA_API_KEY,
+      "Content-Type": "application/json",
+      "API-Key": process.env.DATA_API_KEY,
     },
-  })
-  const data = await res.json()
+  });
+  const data = await res.json();
 
-  return Response.json({ data })
+  return Response.json({ data });
 }
 ```
 
@@ -533,17 +729,17 @@ export async function GET() {
 - `page`와 같은 레이아웃이나 클라이언트 측 탐색에 참여하지 않습니다.
 - `page.js`와 동일한 라우트에 `route.js` 파일이 있을 수 없습니다.
 
-Page | Route | Result
-:-: | :-: | :-:
-`app/page.js`        | `app/route.js`     | X
-`app/page.js`        | `app/api/route.js` | O
-`app/[user]/page.js` | `app/api/route.js` | O
+|         Page         |       Route        | Result |
+| :------------------: | :----------------: | :----: |
+|    `app/page.js`     |   `app/route.js`   |   X    |
+|    `app/page.js`     | `app/api/route.js` |   O    |
+| `app/[user]/page.js` | `app/api/route.js` |   O    |
 
 각 `route.js` 또는 `page.js` 파일은 해당 라우트에 대한 모든 HTTP 메서드를 처리합니다.
 
 ```jsx filename="app/page.js"
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>
+  return <h1>Hello, Next.js!</h1>;
 }
 
 // ❌ Conflict
@@ -559,19 +755,19 @@ export async function POST(request) {}
 
 ```ts filename="app/items/route.ts" switcher
 export async function GET() {
-  const res = await fetch('https://data.mongodb-api.com/...', {
+  const res = await fetch("https://data.mongodb-api.com/...", {
     next: { revalidate: 60 }, // 60초마다 재검증
-  })
-  const data = await res.json()
+  });
+  const data = await res.json();
 
-  return Response.json(data)
+  return Response.json(data);
 }
 ```
 
 또는 `revalidate` 세그먼트 구성 옵션을 사용할 수 있습니다:
 
 ```ts
-export const revalidate = 60
+export const revalidate = 60;
 ```
 
 ### Dynamic Functions
@@ -586,26 +782,26 @@ Route Handlers는 Next.js의 `cookies` 및 `headers`와 같은 동적 함수와 
 또는 `Set-Cookie`헤더를 사용하여 새 `Response`를 반환할 수 있습니다.
 
 ```ts filename="app/api/route.ts" switcher
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
-  const cookieStore = cookies()
-  const token = cookieStore.get('token')
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
 
-  return new Response('Hello, Next.js!', {
+  return new Response("Hello, Next.js!", {
     status: 200,
-    headers: { 'Set-Cookie': `token=${token.value}` },
-  })
+    headers: { "Set-Cookie": `token=${token.value}` },
+  });
 }
 ```
 
 기본 웹 API를 사용하여 요청에서 쿠키를 읽을 수도 있습니다 (`NextRequest`)
 
 ```ts filename="app/api/route.ts" switcher
-import { type NextRequest } from 'next/server'
+import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const token = request.cookies.get('token')
+  const token = request.cookies.get("token");
 }
 ```
 
@@ -618,36 +814,36 @@ export async function GET(request: NextRequest) {
 헤더를 설정하려면 새 `headers`와 함께 새 `Response`를 반환해야 합니다.
 
 ```ts filename="app/api/route.ts" switcher
-import { headers } from 'next/headers'
+import { headers } from "next/headers";
 
 export async function GET(request: Request) {
-  const headersList = headers()
-  const referer = headersList.get('referer')
+  const headersList = headers();
+  const referer = headersList.get("referer");
 
-  return new Response('Hello, Next.js!', {
+  return new Response("Hello, Next.js!", {
     status: 200,
     headers: { referer: referer },
-  })
+  });
 }
 ```
 
 기본 웹 API를 사용하여 요청에서 헤더를 읽을 수도 있습니다 (`NextRequest`)
 
 ```ts filename="app/api/route.ts" switcher
-import { type NextRequest } from 'next/server'
+import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const requestHeaders = new Headers(request.headers)
+  const requestHeaders = new Headers(request.headers);
 }
 ```
 
 ### Redirects
 
 ```ts filename="app/api/route.ts" switcher
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
-  redirect('https://nextjs.org/')
+  redirect("https://nextjs.org/");
 }
 ```
 
@@ -658,28 +854,28 @@ Route Handlers는 Dynamic Segments를 사용하여 동적 데이터를 기반으
 ```ts filename="app/items/[slug]/route.ts" switcher
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } },
+  { params }: { params: { slug: string } }
 ) {
-  const slug = params.slug // 'a', 'b', 또는 'c'
+  const slug = params.slug; // 'a', 'b', 또는 'c'
 }
 ```
 
-Route                       | Example URL | `params`
---------------------------- | ----------- | ---------------
-`app/items/[slug]/route.js` | `/items/a`  | `{ slug: 'a' }`
-`app/items/[slug]/route.js` | `/items/b`  | `{ slug: 'b' }`
-`app/items/[slug]/route.js` | `/items/c`  | `{ slug: 'c' }`
+| Route                       | Example URL | `params`        |
+| --------------------------- | ----------- | --------------- |
+| `app/items/[slug]/route.js` | `/items/a`  | `{ slug: 'a' }` |
+| `app/items/[slug]/route.js` | `/items/b`  | `{ slug: 'b' }` |
+| `app/items/[slug]/route.js` | `/items/c`  | `{ slug: 'c' }` |
 
 ### URL Query Parameters
 
 Route Handler에 전달되는 요청 객체는 `NextRequest` 인스턴스로, 쿼리 매개변수를 보다 쉽게 처리할 수 있는 편리한 추가 메서드를 제공합니다.
 
 ```ts filename="app/api/search/route.ts" switcher
-import { type NextRequest } from 'next/server'
+import { type NextRequest } from "next/server";
 
 export function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const query = searchParams.get('query')
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
   // query는 /api/search?query=hello일 때 "hello"입니다.
 }
 ```
@@ -690,17 +886,17 @@ export function GET(request: NextRequest) {
 AI SDK에서 자세히 알아보세요.
 
 ```ts filename="app/api/chat/route.ts" switcher
-import { openai } from '@ai-sdk/openai'
-import { StreamingTextResponse, streamText } from 'ai'
+import { openai } from "@ai-sdk/openai";
+import { StreamingTextResponse, streamText } from "ai";
 
 export async function POST(req) {
-  const { messages } = await req.json()
+  const { messages } = await req.json();
   const result = await streamText({
-    model: openai('gpt-4-turbo'),
+    model: openai("gpt-4-turbo"),
     messages,
-  })
+  });
 
-  return new StreamingTextResponse(result.toAIStream())
+  return new StreamingTextResponse(result.toAIStream());
 }
 ```
 
@@ -712,38 +908,38 @@ export async function POST(req) {
 function iteratorToStream(iterator: any) {
   return new ReadableStream({
     async pull(controller) {
-      const { value, done } = await iterator.next()
+      const { value, done } = await iterator.next();
 
       if (done) {
-        controller.close()
+        controller.close();
       } else {
-        controller.enqueue(value)
+        controller.enqueue(value);
       }
     },
-  })
+  });
 }
 
 function sleep(time: number) {
   return new Promise((resolve) => {
-    setTimeout(resolve, time)
-  })
+    setTimeout(resolve, time);
+  });
 }
 
-const encoder = new TextEncoder()
+const encoder = new TextEncoder();
 
 async function* makeIterator() {
-  yield encoder.encode('<p>One</p>')
-  await sleep(200)
-  yield encoder.encode('<p>Two</p>')
-  await sleep(200)
-  yield encoder.encode('<p>Three</p>')
+  yield encoder.encode("<p>One</p>");
+  await sleep(200);
+  yield encoder.encode("<p>Two</p>");
+  await sleep(200);
+  yield encoder.encode("<p>Three</p>");
 }
 
 export async function GET() {
-  const iterator = makeIterator()
-  const stream = iteratorToStream(iterator)
+  const iterator = makeIterator();
+  const stream = iteratorToStream(iterator);
 
-  return new Response(stream)
+  return new Response(stream);
 }
 ```
 
@@ -753,8 +949,8 @@ export async function GET() {
 
 ```ts filename="app/items/route.ts" switcher
 export async function POST(request: Request) {
-  const res = await request.json()
-  return Response.json({ res })
+  const res = await request.json();
+  return Response.json({ res });
 }
 ```
 
@@ -764,10 +960,10 @@ export async function POST(request: Request) {
 
 ```ts filename="app/items/route.ts" switcher
 export async function POST(request: Request) {
-  const formData = await request.formData()
-  const name = formData.get('name')
-  const email = formData.get('email')
-  return Response.json({ name, email })
+  const formData = await request.formData();
+  const name = formData.get("name");
+  const email = formData.get("email");
+  return Response.json({ name, email });
 }
 ```
 
@@ -779,14 +975,14 @@ export async function POST(request: Request) {
 
 ```ts filename="app/api/route.ts" switcher
 export async function GET(request: Request) {
-  return new Response('Hello, Next.js!', {
+  return new Response("Hello, Next.js!", {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
-  })
+  });
 }
 ```
 
@@ -797,17 +993,17 @@ Route Handler를 사용하여 타사 서비스의 웹훅을 수신할 수 있습
 ```ts filename="app/api/route.ts" switcher
 export async function POST(request: Request) {
   try {
-    const text = await request.text()
+    const text = await request.text();
     // 웹훅 페이로드 처리
   } catch (error) {
     return new Response(`Webhook error: ${error.message}`, {
       status: 400,
-    })
+    });
   }
 
-  return new Response('Success!', {
+  return new Response("Success!", {
     status: 200,
-  })
+  });
 }
 ```
 
@@ -833,10 +1029,10 @@ export async function GET() {
 </rss>`,
     {
       headers: {
-        'Content-Type': 'text/xml',
+        "Content-Type": "text/xml",
       },
-    },
-  )
+    }
+  );
 }
 ```
 
@@ -845,10 +1041,14 @@ export async function GET() {
 Route Handlers는 페이지 및 레이아웃과 동일한 route segment configuration을 사용합니다.
 
 ```ts filename="app/items/route.ts" switcher
-export const dynamic = 'auto'
-export const dynamicParams = true
-export const revalidate = false
-export const fetchCache = 'auto'
-export const runtime = 'nodejs'
-export const preferredRegion = 'auto'
+export const dynamic = "auto";
+export const dynamicParams = true;
+export const revalidate = false;
+export const fetchCache = "auto";
+export const runtime = "nodejs";
+export const preferredRegion = "auto";
 ```
+
+## 참고
+
+- [한 입 크기로 잘라먹는 Next.js(15+)](https://www.udemy.com/course/onebite-next/?srsltid=AfmBOorVVEPJU4_dI-KQEwEmGyG9RPB7H94pAGu-nnZpXFxO48bQKkN7)
