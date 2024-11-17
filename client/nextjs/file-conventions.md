@@ -30,13 +30,13 @@
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body>{children}</body>
     </html>
-  )
+  );
 }
 ```
 
@@ -46,9 +46,9 @@ export default function RootLayout({
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return <section>{children}</section>
+  return <section>{children}</section>;
 }
 ```
 
@@ -58,8 +58,8 @@ metadata 사용
 // app/layout.js
 
 export const metadata = {
-  title: 'NextJS Course App',
-  description: 'Your first NextJS app!',
+  title: "NextJS Course App",
+  description: "Your first NextJS app!",
 };
 
 export default function RootLayout({ children }) {
@@ -76,11 +76,33 @@ export default function RootLayout({ children }) {
 `<head>`에 들어가는 모든 내용은 `metadata`에 의해 설정되거나 NextJS로 인해 이면에서 자동으로 설정됩니다.\
 page 또는 layout에서만 사용 가능합니다.
 
-`metadata`는 동적으로도 생성 가능합니다.
+```tsx
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: meal.title,
+  description: meal.summary,
+  openGraph: {
+    title: meal.title,
+    description: meal.summary,
+    images: ["/thumbnail.png"],
+  },
+};
+```
+
+`metadata`는 `generateMetadata`로 현재 페이지 메타 데이터를 동적으로도 생성 가능합니다.\
+`generateMetadata`는 현재 page가 전달 받는 매개변수를 그대로 받을 수 있습니다.
 
 ```tsx
-export async function generateMetadata({ params }) {
-  const meal = getMeal(params.mealSlug)
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ mealSlug?: string }>;
+}): Promise<Metadata> {
+  const { mealSlug } = await params;
+  const meal = getMeal(mealSlug);
 
   if (!meal) {
     // 이 컴포넌트가 실행되는것을 멈추고 제일 가까운 not-found나 오류화면을 보여줌
@@ -89,10 +111,19 @@ export async function generateMetadata({ params }) {
 
   return {
     title: meal.title,
-    description: meal.summary
+    description: meal.summary,
+    openGraph: {
+      title: meal.title,
+      description: meal.summary,
+      images: ["/thumbnail.png"],
+    },
   };
 }
 ```
+
+> openGraph는 떤 HTML 문서의 메타정보를 쉽게 표시하기 위해서 메타정보에 해당하는 제목, 설명, 문서의 타입, 대표 URL 등 다양한 요소들에 대해서 사람들이 통일해서 쓸 수 있도록 정의해놓은 프로토콜
+
+![opengraph](./img/opengraph2.png)
 
 #### children
 
@@ -110,10 +141,10 @@ export default function Page({
   params,
   searchParams,
 }: {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  return <h1>My Page</h1>
+  return <h1>My Page</h1>;
 }
 ```
 
@@ -124,7 +155,7 @@ export default function Page({
 ```tsx
 // app/not-found.tsx
 
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -133,7 +164,7 @@ export default function NotFound() {
       <p>Could not find requested resource</p>
       <Link href="/">Return Home</Link>
     </div>
-  )
+  );
 }
 ```
 
@@ -155,9 +186,7 @@ import { DUMMY_NEWS } from "@/dummy-news";
 
 export default function NewsDetailPage({ params }) {
   const newSlug = params.slug;
-  const newsItem = DUMMY_NEWS.find(
-    newsItem => newsItem.slug === newSlug
-  );
+  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newSlug);
 
   // [slug] 부분에 들어갈 동적 경로의 페이지가 있는지 없는지 확인
   if (!newsItem) {
@@ -167,16 +196,13 @@ export default function NewsDetailPage({ params }) {
   return (
     <article className="news-article">
       <header>
-        <img
-          src={`/images/news/${newsItem.image}`}
-          alt={newsItem.title}
-        />
+        <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
         <h1>{newsItem.title}</h1>
         <time dateTime={newsItem.date}>{newsItem.date}</time>
       </header>
       <p>{newsItem.content}</p>
     </article>
-  )
+  );
 }
 ```
 
@@ -192,43 +218,45 @@ error.js에는 `"use client"` 지시자를 설정해야 합니다.\
 
 - `error`: 현재 발생한 에러의 정보
 - `reset`: 에러가 발생한 페이지를 복구하기 위해 다시 렌더링 해보는 기능\
-(클라이언트 측에서 서버에서 전달 받은 데이터로 리렌더링, 데이터 fetching X)
+  (클라이언트 측에서 서버에서 전달 받은 데이터로 리렌더링, 데이터 fetching X)
 
 ```tsx
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error
-  reset: () => void
+  error: Error;
+  reset: () => void;
 }) {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     // 에러를 콘솔로 출력
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <div>
       <h2>Something went wrong!</h2>
-      <button onClick={() => {
-        // 콜백 함수 안에 있는 UI를 변경시키는 작업을 일괄적으로 처리
-        // (router.refresh()가 reset()보다 늦으면 안되기 때문에 사용)
-        startTransition(() => {
-          router.refresh(); // 현재 페이지에 필요한 서버 컴포넌트를 다시 불러옴
-          reset(); // 에러 상태를 초기화, 컴포넌트를 다시 렌더링
-        })
-      }}>
+      <button
+        onClick={() => {
+          // 콜백 함수 안에 있는 UI를 변경시키는 작업을 일괄적으로 처리
+          // (router.refresh()가 reset()보다 늦으면 안되기 때문에 사용)
+          startTransition(() => {
+            router.refresh(); // 현재 페이지에 필요한 서버 컴포넌트를 다시 불러옴
+            reset(); // 에러 상태를 초기화, 컴포넌트를 다시 렌더링
+          });
+        }}
+      >
         다시 시도
       </button>
     </div>
-  )
+  );
 }
 ```
 
@@ -239,14 +267,14 @@ export default function Error({
 ```tsx
 export default function Loading() {
   // 커스텀 로딩 스켈레톤 컴포넌트를 사용할 수도 있음
-  return <p>Loading...</p>
+  return <p>Loading...</p>;
 }
 ```
 
 #### loading.js 주의
 
 1. loading.js는 page 컴포넌트에만 스트리밍을 적용할 수 있습니다.\
-(컴포넌트는 `Suspense`를 사용)
+   (컴포넌트는 `Suspense`를 사용)
 
 2. `async` 키워드가 붙어 비동기로 작동하도록 설정된 page 컴포넌트만 loading.js가 스트리밍 됩니다.
 
@@ -281,11 +309,11 @@ export async function OPTIONS(request: Request) {}
 // app/dashboard/[team]/route.ts
 
 type Params = {
-  team: string
-}
+  team: string;
+};
 
 export async function GET(request: Request, context: { params: Params }) {
-  const team = context.params.team // '1'
+  const team = context.params.team; // '1'
 }
 
 // Params라는 타입을 정의하여 라우트의 URL 파라미터 타입을 지정합니다.
@@ -310,16 +338,16 @@ module.exports = {
   experimental: {
     instrumentationHook: true,
   },
-}
+};
 ```
 
 #### Export
 
 ```tsx
-import { registerOTel } from '@vercel/otel'
+import { registerOTel } from "@vercel/otel";
 
 export function register() {
-  registerOTel('next-app')
+  registerOTel("next-app");
 }
 ```
 
@@ -338,18 +366,18 @@ export function register() {
 ```tsx
 // middleware.ts
 
-import { NextResponse, NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from "next/server";
 
 // 이 함수 내부에서 await을 사용하는 경우, async로 표시할 수 있습니다.
 export function middleware(request: NextRequest) {
   // 요청을 /home으로 리디렉션
-  return NextResponse.redirect(new URL('/home', request.url))
+  return NextResponse.redirect(new URL("/home", request.url));
 }
 
 export const config = {
   // about 경로에 미들웨어를 적용
-  matcher: '/about/:path*',
-}
+  matcher: "/about/:path*",
+};
 ```
 
 #### Middleware function
@@ -376,7 +404,7 @@ export default function middleware(request) {
 - 단일 경로의 경우: 문자열을 직접 사용하여 경로를 정의합니다. 예: `'/about'`.
 
 - 여러 경로의 경우: 배열을 사용하여 여러 경로를 나열합니다.\
-예시: `matcher: ['/about', '/contact']`는 `/about` 및 `/contact` 경로의 요청에 미들웨어를 적용합니다.\
+  예시: `matcher: ['/about', '/contact']`는 `/about` 및 `/contact` 경로의 요청에 미들웨어를 적용합니다.\
 
 즉, 이 경로들이 아닌 다른 경로의 요청은 미들웨어를 거치지 않고 그대로 진행되며, 미들웨어가 실행되는 범위를 선택적으로 제한할 수 있는 기능입니다.
 
@@ -399,17 +427,17 @@ export default function middleware(request) {
 export const config = {
   matcher: [
     {
-      source: '/api/*',
-      regexp: '^/api/(.*)',
+      source: "/api/*",
+      regexp: "^/api/(.*)",
       locale: false,
       has: [
-        { type: 'header', key: 'Authorization', value: 'Bearer Token' },
-        { type: 'query', key: 'userId', value: '123' },
+        { type: "header", key: "Authorization", value: "Bearer Token" },
+        { type: "query", key: "userId", value: "123" },
       ],
-      missing: [{ type: 'cookie', key: 'session', value: 'active' }],
+      missing: [{ type: "cookie", key: "session", value: "active" }],
     },
   ],
-}
+};
 ```
 
 #### `request`
@@ -417,7 +445,7 @@ export const config = {
 미들웨어를 정의할 때, 기본 내보내기 함수는 `request`라는 단일 매개변수를 받습니다. 이 매개변수는 들어오는 HTTP 요청을 나타내는 `NextRequest`의 인스턴스입니다.
 
 ```tsx filename="middleware.ts" switcher
-import type { NextRequest } from 'next/server'
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   // 미들웨어 로직은 여기에 작성됩니다.
@@ -450,12 +478,8 @@ Node.js 런타임은 사용할 수 없습니다.
 ```tsx
 // app/template.tsx
 
-export default function Template({
-  children
-}: {
-  children: React.ReactNode
-}) {
-  return <div>{children}</div>
+export default function Template({ children }: { children: React.ReactNode }) {
+  return <div>{children}</div>;
 }
 ```
 
@@ -480,7 +504,7 @@ export default function header() {
       <img src="/logo.png" alt="A server surrounded by magic sparkles." />
       <h1>Welcome to this NextJS Course!</h1>
     </>
-  )
+  );
 }
 ```
 
@@ -491,15 +515,17 @@ export default function header() {
 
 import Link from "next/link";
 
-import Header from './components/header'
+import Header from "./components/header";
 
 export default function Home() {
-  console.log(`Executing...`)
+  console.log(`Executing...`);
   return (
     <main>
       <Header />
       <p>🔥 Let&apos;s get started! 🔥</p>
-      <p><Link href="/about">About Us</Link></p>
+      <p>
+        <Link href="/about">About Us</Link>
+      </p>
     </main>
   );
 }
@@ -512,15 +538,17 @@ export default function Home() {
 
 import Link from "next/link";
 
-import Header from '@/components/header'
+import Header from "@/components/header";
 
 export default function Home() {
-  console.log(`Executing...`)
+  console.log(`Executing...`);
   return (
     <main>
       <Header />
       <p>🔥 Let&apos;s get started! 🔥</p>
-      <p><Link href="/about">About Us</Link></p>
+      <p>
+        <Link href="/about">About Us</Link>
+      </p>
     </main>
   );
 }
@@ -537,3 +565,7 @@ export default function Home() {
   }
 }
 ```
+
+## 참고
+
+- [PHP로 오픈그래프 송신 및 수신 예제](https://notejb.blogspot.com/2019/01/php.html)

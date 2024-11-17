@@ -3,7 +3,7 @@
 ## Image(`import Image from 'next/image'`)
 
 Next.js에서는 특별한 내장 이미지 요소가 있고 이것은 더 최적화된 방법으로 이미지를 출력할 수 있게 도와줍니다.\
-예를 들어 페이지에서 실제로 보이는 경우에만 이미지가 표시되도록 이미지를 지연 로딩하여 구현합니다./
+예를 들어 페이지에서 실제로 보이는 경우에만 이미지가 표시되도록 이미지를 지연 로딩하여 구현하며 경량화된 이미지 타입으로 불러옵니다.\
 추가적인 구성 없이 자동적으로 이를 실행해줍니다.
 
 ```tsx
@@ -18,8 +18,11 @@ export default function Page() {
 
 html의 이미지 요소를 보면 추가되어 있는 속성을 볼 수 있습니다.
 
-`loading="lazy"`은 이미지가 지연로딩되도록 합니다.\
+`loading="lazy"`은 이미지가 지연로딩되도록 합니다.
+
 `width="1024" height="1024"` 자동적으로 너비와 높이를 추론되어 있으며, 원한다면 덮어 쓸 수 있습니다.\
+불필요하게 큰 이미지의 크기를 고정시켜 효율적으로 이미지를 불러올 수 있습니다.
+
 `srcset`으로 포트와 웹사이트를 방문하는 기기에 따라 크기가 조정된 이미지가 로딩되도록 보장하며, 자동적으로 사용자에 의해 사용되는 브라우저에 가장 알맞는 파일 포맷으로 이미지를 서브합니다.
 
 ```html
@@ -74,7 +77,7 @@ warn-once.js:16 Image with src "/_next/static/media/logo.5daadb4d.png" was detec
 ```
 
 만약 로고처럼 첫 로딩 시 보이는 이미지라면 레이지로딩을 할 필요가 없습니다.\
-`priority` 속성을 다음과 같이 추가하여 우선적으로 로딩되도록 하면 됩니다.
+`priority` 속성을 아래와 같이 추가하여 우선적으로 로딩되도록 하면 됩니다.
 
 ```tsx
 // app/page.js
@@ -84,4 +87,25 @@ import Image from "next/image";
 export default function Page() {
   return <Image src={logoImg} alt="A plate with food on it" priority />;
 }
+```
+
+### domains
+
+```plaintext
+// 에러
+
+Error: Invalid src prop (https://도메인/main_3250387/32503877629.20220527022132.jpg) on `next/image`, hostname "도메인" is not configured under images in your `next.config.js`
+```
+
+사용하고자 하는 이미지가 현재 Next 프로젝트에 저장되있는게 아니라 외부 URL을 사용하는 경우 Next.js의 보안 때문에 차단됩니다.
+해결하기 위해서는 `next.config.js`의 `domains` 속성에 추가해서 불러오는 이미지가 안전하다는 것을 알려줘야 합니다.
+
+```js
+// next.config.js
+
+module.exports = {
+  images: {
+    domains: ["도메인 주소"],
+  },
+};
 ```
