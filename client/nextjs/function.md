@@ -6,25 +6,25 @@
 
 ```tsx
 // app/example-client-component.tsx
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 export default function ExampleClientComponent() {
-  const pathname = usePathname()
-  return <p>Current pathname: {pathname}</p>
+  const pathname = usePathname();
+  return <p>Current pathname: {pathname}</p>;
 }
 ```
 
 ```js
 // app/example-client-component.js
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 export default function ExampleClientComponent() {
-  const pathname = usePathname()
-  return <p>Current pathname: {pathname}</p>
+  const pathname = usePathname();
+  return <p>Current pathname: {pathname}</p>;
 }
 ```
 
@@ -38,16 +38,16 @@ export default function ExampleClientComponent() {
 ### usePathName 알아두면 좋은 점
 
 - 서버 컴포넌트에서 현재 URL을 읽는 것은 지원되지 않습니다.\
-이는 페이지 탐색 간 레이아웃 상태가 유지되도록 지원하기 위한 의도적인 설계입니다.
+  이는 페이지 탐색 간 레이아웃 상태가 유지되도록 지원하기 위한 의도적인 설계입니다.
 
 - 호환 모드:
-  - 대체 경로가 렌더링되거나 Next.js에 의해 자동으로 정적으로 최적화된 pages 디렉토리 페이지일 때 usePathname이 null을 반환할 수 있습니다.
+  - 대체 경로가 렌더링되거나 Next.js에 의해 자동으로 정적으로 최적화된 pages 디렉토리 페이지일 때 usePathname이 `null`을 반환할 수 있습니다.
   - 프로젝트에 app 및 pages 디렉토리가 모두 있는 경우 Next.js가 자동으로 타입을 업데이트합니다.
 
 ### usePathName Parameters
 
 ```ts
-const pathname = usePathname()
+const pathname = usePathname();
 ```
 
 `usePathname`은 파라미터를 받지 않습니다.
@@ -58,12 +58,12 @@ const pathname = usePathname()
 
 예를 들어
 
-URL | 반환 값
-:-: | :-:
-`/` | `'/'`
-`/dashboard` | `'/dashboard'`
-`/dashboard?v=2` | `'/dashboard'`
-`/blog/hello-world` | `'/blog/hello-world'`
+|         URL         |        반환 값        |
+| :-----------------: | :-------------------: |
+|         `/`         |         `'/'`         |
+|    `/dashboard`     |    `'/dashboard'`     |
+|  `/dashboard?v=2`   |    `'/dashboard'`     |
+| `/blog/hello-world` | `'/blog/hello-world'` |
 
 ### usePathName Examples
 
@@ -71,31 +71,31 @@ URL | 반환 값
 
 ```tsx
 // app/example-client-component.tsx
-'use client'
+"use client";
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from "next/navigation";
 
 function ExampleClientComponent() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   useEffect(() => {
     // 여기에서 작업 수행...
-  }, [pathname, searchParams])
+  }, [pathname, searchParams]);
 }
 ```
 
 ```js
-app/example-client-component.js
-'use client'
+app / example - client - component.js;
+("use client");
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from "next/navigation";
 
 function ExampleClientComponent() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   useEffect(() => {
     // 여기에서 작업 수행...
-  }, [pathname, searchParams])
+  }, [pathname, searchParams]);
 }
 ```
 
@@ -154,9 +154,9 @@ revalidatePath(path: string, type?: 'page' | 'layout'): void;
 특정 주소에 해당하는 페이지만 재검증
 
 ```ts
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 // /blog/post-1 경로가 해당
-revalidatePath('/blog/post-1')
+revalidatePath("/blog/post-1");
 ```
 
 #### 2. revalidatePath page 경로 재검증
@@ -164,11 +164,11 @@ revalidatePath('/blog/post-1')
 특정 경로의 모든 동적 페이지를 재검증
 
 ```ts
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 // /blog/[slug] 경로의 page가 해당
-revalidatePath('/blog/[slug]', 'page')
+revalidatePath("/blog/[slug]", "page");
 // /(main)/post/[slug] 경로의 page가 해당
-revalidatePath('/(main)/post/[slug]', 'page')
+revalidatePath("/(main)/post/[slug]", "page");
 ```
 
 이는 다음 페이지 방문 시 제공된 `page` 파일과 일치하는 모든 URL을 재검증합니다.\
@@ -180,10 +180,10 @@ revalidatePath('/(main)/post/[slug]', 'page')
 특정 레이아웃을 갖는 모든 페이지 재검증
 
 ```ts
-import { revalidatePath } from 'next/cache'
-revalidatePath('/blog/[slug]', 'layout')
+import { revalidatePath } from "next/cache";
+revalidatePath("/blog/[slug]", "layout");
 // 또는 경로 그룹과 함께 사용
-revalidatePath('/(main)/post/[slug]', 'layout')
+revalidatePath("/(main)/post/[slug]", "layout");
 ```
 
 이는 다음 페이지 방문 시 제공된 `layout` 파일과 일치하는 모든 URL을 재검증합니다.\
@@ -193,9 +193,9 @@ revalidatePath('/(main)/post/[slug]', 'layout')
 #### 4. revalidatePath 모든 데이터 재검증
 
 ```ts
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 
-revalidatePath('/', 'layout')
+revalidatePath("/", "layout");
 ```
 
 이는 클라이언트 측 라우터 캐시를 제거하고, 다음 페이지 방문 시 데이터 캐시를 재검증합니다.
@@ -213,30 +213,30 @@ revalidatePath('/', 'layout')
 
 ```tsx
 // 태그로 데이터 캐시
-fetch(`https://...`, { next: { tags: ['a', 'b', 'c'] } });
+fetch(`https://...`, { next: { tags: ["a", "b", "c"] } });
 ```
 
 `fetch`의 태그를 똑같이 명시하고 `revalidateTag`가 호출이 되게 되면 해당 태그 값을 갖는 모든 데이터 캐시가 재검증 됩니다.
 
 ```ts
 // 특정 태그가 있는 항목을 재검증
-revalidateTag('a');
+revalidateTag("a");
 ```
 
 ##### revalidateTag 실제 사용 예시
 
 ```ts
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 
 async function ReviewList({ bookId }: { bookId: string }) {
   // `fetch` 메서드의 태그 옵션을 캐시로 설정
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`,
-    { next : { tags: [`review-${bookId}`] } }
-  )
+    { next: { tags: [`review-${bookId}`] } }
+  );
 
   if (!response.ok) {
-    throw new Error(`Review fetch failed: ${response.statusText}`)
+    throw new Error(`Review fetch failed: ${response.statusText}`);
   }
 
   const reviews: ReviewData[] = await response.json();
@@ -244,19 +244,19 @@ async function ReviewList({ bookId }: { bookId: string }) {
   return (
     <section>
       {reviews.map((review) => (
-        <ReviewItem key={`review-item-${review.id}`} {...review}/>
+        <ReviewItem key={`review-item-${review.id}`} {...review} />
       ))}
     </section>
-  )
+  );
 }
 ```
 
 ```ts
-"use server"
+"use server";
 
 import { revalidateTag } from "next/cache";
 
-export async function createReviewAction (formData: FormData) {
+export async function createReviewAction(formData: FormData) {
   const bookId = formData.get("bookId")?.toString();
   const content = formData.get("content")?.toString();
   const author = formData.get("author")?.toString();
@@ -265,15 +265,16 @@ export async function createReviewAction (formData: FormData) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`, {
+      `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`,
+      {
         method: "POST",
-        body: JSON.stringify({ bookId, content, author })
+        body: JSON.stringify({ bookId, content, author }),
       }
-    )
+    );
 
     // `fetch` 메서드의 태그와 동일한 태그를 사용
-    revalidateTag(`review-${bookId}`)
-  } catch(err) {
+    revalidateTag(`review-${bookId}`);
+  } catch (err) {
     console.error(err);
 
     return;
@@ -285,13 +286,13 @@ export async function createReviewAction (formData: FormData) {
 
 ```ts
 // app/actions.ts
-'use server'
+"use server";
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 
 export default async function submit() {
-  await submitForm()
-  revalidatePath('/')
+  await submitForm();
+  revalidatePath("/");
 }
 ```
 
@@ -299,22 +300,22 @@ export default async function submit() {
 
 ```ts
 // app/api/revalidate/route.ts
-import { revalidatePath } from 'next/cache'
-import type { NextRequest } from 'next/server'
+import { revalidatePath } from "next/cache";
+import type { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const path = request.nextUrl.searchParams.get('path')
+  const path = request.nextUrl.searchParams.get("path");
 
   if (path) {
-    revalidatePath(path)
-    return Response.json({ revalidated: true, now: Date.now() })
+    revalidatePath(path);
+    return Response.json({ revalidated: true, now: Date.now() });
   }
 
   return Response.json({
     revalidated: false,
     now: Date.now(),
-    message: 'Missing path to revalidate',
-  })
+    message: "Missing path to revalidate",
+  });
 }
 ```
 
@@ -323,7 +324,7 @@ export async function GET(request: NextRequest) {
 - `revalidatePath`는 서버측에서만 호출 할 수 있습니다.
 
 - `revalidatePath`는 해당 페이지를 데이터 캐시와 풀 라우트 캐시까지 삭제합니다.\
-즉 다음 번 페이지는 다이나믹 페이지처럼 느리게 생성이 됩니다.
+  즉 다음 번 페이지는 다이나믹 페이지처럼 느리게 생성이 됩니다.
 
 #### revalidatePath 이후 과정
 
@@ -346,49 +347,52 @@ export async function GET(request: NextRequest) {
 ## useRouter
 
 Next.js에서 클라이언트 컴포넌트 내에서 프로그래밍 방식으로 라우트를 변경할 수 있도록 도와줍니다.\
+(서버 컴포넌트에서는 `redirect` 사용)\
 하지만 대부분의 네비게이션 상황에서는 `<Link>` 컴포넌트를 사용하는 것이 권장됩니다.\
 `useRouter`는 특별한 요구 사항이 있을 때 유용합니다.
 
 ### useRouter 기본 예시
 
 ```tsx
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
-    <button type="button" onClick={() => router.push('/dashboard')}>
+    <button type="button" onClick={() => router.push("/dashboard")}>
       대시보드로 이동
     </button>
-  )
+  );
 }
 ```
 
 ### useRouter의 주요 메서드
 
 - `router.push(href: string, { scroll: boolean })`:\
-새로운 라우트로 이동하며 브라우저의 히스토리 스택에 새 항목을 추가합니다.\
-`scroll` 옵션을 `false`로 설정하면 페이지 상단으로 스크롤되는 것을 방지할 수 있습니다.
+  새로운 라우트로 이동하며 브라우저의 히스토리 스택에 새 항목을 추가합니다.\
+  `scroll` 옵션을 `false`로 설정하면 페이지 상단으로 스크롤되는 것을 방지할 수 있습니다.\
+  뒤로가기를 했을 때 직전 히스토리로 이동합니다.
 
 - `router.replace(href: string, { scroll: boolean })`:\
-`push()`와 유사하지만, 히스토리 항목을 새로 추가하지 않고 현재 항목을 대체합니다.
+  `push()`와 유사하지만, 히스토리 항목을 새로 추가하지 않고 현재 항목을 대체합니다.\
+  즉, 뒤로가기를 했을 때 이전 히스토리를 건너 뛰게 됩니다.
 
 - `router.refresh()`:\
-현재 페이지를 새로고침하여 서버에서 최신 데이터를 다시 요청합니다.\
-서버 컴포넌트를 업데이트하면서 클라이언트 측 상태(useState)나 브라우저 상태(예: 스크롤 위치)는 유지됩니다.
+  현재 페이지를 새로고침하여 서버에서 최신 데이터를 다시 요청합니다.\
+  서버 컴포넌트를 업데이트하면서 클라이언트 측 상태(useState)나 브라우저 상태(예: 스크롤 위치)는 유지됩니다.
 
 - `router.prefetch(href: string)`:\
-빠른 클라이언트 전환을 위해 특정 경로를 미리 로드합니다.\
-이는 페이지 전환 성능을 향상시키기 위해 사용됩니다.
+  빠른 클라이언트 전환을 위해 특정 경로를 미리 로드합니다.\
+  이는 페이지 전환 성능을 향상시키기 위해 사용됩니다.
 
 - `router.back()`:\
-브라우저의 히스토리 스택에서 이전 페이지로 이동합니다.
+  브라우저의 히스토리 스택에서 이전 페이지로 이동합니다.
 
 - `router.forward()`:\
-히스토리 스택에서 다음 페이지로 이동합니다.
+  히스토리 스택에서 다음 페이지로 이동합니다.
 
 #### useRouter 주의 사항
 
@@ -411,22 +415,22 @@ export default function Page() {
 클라이언트 컴포넌트 내에서 URL 변경을 감지하려면 `usePathname()`과 `useSearchParams()` 훅을 사용하여 라우트 변경을 처리할 수 있습니다.
 
 ```jsx
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export function NavigationEvents() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const url = `${pathname}?${searchParams}`
-    console.log(url)
+    const url = `${pathname}?${searchParams}`;
+    console.log(url);
     // 현재 URL을 처리할 수 있습니다
-  }, [pathname, searchParams])
+  }, [pathname, searchParams]);
 
-  return '...'
+  return "...";
 }
 ```
 
@@ -436,28 +440,127 @@ Next.js는 기본적으로 새로운 경로로 이동할 때 페이지 상단으
 이 동작을 비활성화하려면 `router.push()`나 `router.replace()`에 `scroll: false` 옵션을 전달하면 됩니다.
 
 ```tsx
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <button
       type="button"
-      onClick={() => router.push('/dashboard', { scroll: false })}
+      onClick={() => router.push("/dashboard", { scroll: false })}
     >
       대시보드
     </button>
-  )
+  );
 }
 ```
 
 #### useRouter 참고 사항
 
 - `Suspense`: `useSearchParams()`를 사용할 때는 클라이언트 렌더링 중 가장 가까운 `Suspense` 경계까지 감싸줘야 합니다.\
-이는 정적 렌더링 시 클라이언트 사이드 렌더링이 발생하기 때문입니다.
+  이는 정적 렌더링 시 클라이언트 사이드 렌더링이 발생하기 때문입니다.
+
+## useSearchParams
+
+`useSearchParams`는 현재 URL의 query string을 읽을 수 있게 해주는 Client Component 훅입니다.
+
+```tsx
+import { useSearchParams } from "next/navigation";
+
+const searchParams = useSearchParams();
+```
+
+### returns
+
+#### URLSearchParams.get()
+
+검색 파라미터와 연결된 첫 번째 값을 반환합니다.
+
+| URL                  | `searchParams.get("a")` |
+| -------------------- | ----------------------- |
+| `/dashboard?a=1`     | `'1'`                   |
+| `/dashboard?a=`      | `''`                    |
+| `/dashboard?b=3`     | `null`                  |
+| `/dashboard?a=1&a=2` | `'1'`                   |
+
+#### URLSearchParams.has()
+
+주어진 파라미터가 존재하는지 여부를 나타내는 불리언 값을 반환합니다.
+
+| URL              | `searchParams.has("a")` |
+| ---------------- | ----------------------- |
+| `/dashboard?a=1` | `true`                  |
+| `/dashboard?b=3` | `false`                 |
+
+#### URLSearchParams.getAll()
+
+특정 검색 파라미터(key)에 대한 모든 값을 배열로 반환합니다.
+
+| URL                  | `searchParams.getAll("a")` |
+| -------------------- | -------------------------- |
+| `/dashboard?a=1&a=2` | `['1', '2']`               |
+| `/dashboard?b=3`     | `[]`                       |
+| `/dashboard?c=`      | `[]`                       |
+| `/dashboard`         | `[]`                       |
+
+#### URLSearchParams.keys()
+
+URLSearchParams 객체의 모든 키(key)를 `Iterator`로 반환합니다.
+
+| URL                  | `searchParams.keys()` |
+| -------------------- | --------------------- |
+| `/dashboard?a=1`     | `['a']`               |
+| `/dashboard?a=1&b=2` | `['a', 'b']`          |
+| `/dashboard`         | `[]`                  |
+
+#### URLSearchParams.values()
+
+URLSearchParams 객체의 모든 값(value)을 `Iterator`로 반환합니다.
+
+| URL                  | `searchParams.values()` |
+| -------------------- | ----------------------- |
+| `/dashboard?a=1`     | `['1']`                 |
+| `/dashboard?a=1&b=2` | `['1', '2']`            |
+
+#### URLSearchParams.entries()
+
+URLSearchParams 객체의 모든 키-값 쌍을 `[key, value]` 형태의 `Iterator`로 반환합니다.
+
+| URL                  | `searchParams.entries()`   |
+| -------------------- | -------------------------- |
+| `/dashboard?a=1`     | `[['a', '1']]`             |
+| `/dashboard?a=1&b=2` | `[['a', '1'], ['b', '2']]` |
+
+#### URLSearchParams.forEach()
+
+URLSearchParams 객체의 모든 키-값 쌍에 대해 콜백 함수를 실행합니다.
+
+```tsx
+const searchParams = new URLSearchParams("?a=1&b=2");
+
+searchParams.forEach((value, key) => {
+  console.log(`${key}: ${value}`);
+});
+
+// 출력 결과
+// a: 1
+// b: 2
+```
+
+| URL                  | 콜백 결과      |
+| -------------------- | -------------- |
+| `/dashboard?a=1&b=2` | `a: 1`, `b: 2` |
+
+#### URLSearchParams.toString()
+
+URLSearchParams 객체를 query string 형식의 문자열로 반환합니다.
+
+| 설정       | `searchParams.toString()` |
+| ---------- | ------------------------- |
+| `?a=1&b=2` | `'a=1&b=2'`               |
 
 ## generateStaticParams
 
@@ -500,7 +603,7 @@ export default async function Page({
 - 동작 방식: `generateStaticParams`가 반환한 경로에 맞춰 페이지를 정적으로 생성합니다.
 
 - 함수 호출 시점: 개발(next dev)에서는 경로 이동 시마다 호출되고, 빌드(next build)에서는 한 번 실행됩니다.\
-ISR(Incremental Static Regeneration) 중에는 재실행되지 않습니다.
+  ISR(Incremental Static Regeneration) 중에는 재실행되지 않습니다.
 
 - 사용 이유: `getStaticPaths`와 유사하게, 경로를 정적 페이지로 미리 생성하여 성능을 향상시킵니다.
 
@@ -512,9 +615,9 @@ ISR(Incremental Static Regeneration) 중에는 재실행되지 않습니다.
 ```jsx
 export function generateStaticParams() {
   return [
-    { category: 'a', product: '1' },
-    { category: 'b', product: '2' },
-    { category: 'c', product: '3' },
+    { category: "a", product: "1" },
+    { category: "b", product: "2" },
+    { category: "c", product: "3" },
   ];
 }
 ```
@@ -522,40 +625,40 @@ export function generateStaticParams() {
 ### 동적 렌더링 제어
 
 - 일부 경로만 생성\
-: 빌드 시 특정 경로만 미리 생성하고, 나머지는 런타임 시 렌더링하고 싶다면 일부만 반환하고, `dynamicParams` 옵션을 설정할 수 있습니다.
+  : 빌드 시 특정 경로만 미리 생성하고, 나머지는 런타임 시 렌더링하고 싶다면 일부만 반환하고, `dynamicParams` 옵션을 설정할 수 있습니다.
 
 - 모든 경로를 런타임에 생성\
-: 경로를 빌드 시 생성하지 않고 런타임에 동적으로 렌더링하려면 빈 배열을 반환하거나 `dynamic = 'force-static'`을 설정합니다.
+  : 경로를 빌드 시 생성하지 않고 런타임에 동적으로 렌더링하려면 빈 배열을 반환하거나 `dynamic = 'force-static'`을 설정합니다.
 
 ### generateStaticParams 활용 예시
 
-1. 모든 경로를 빌드 시 정적으로 생성
+1.  모든 경로를 빌드 시 정적으로 생성
 
     ```jsx
     export async function generateStaticParams() {
-      const posts = await fetch('https://.../posts').then((res) => res.json());
+      const posts = await fetch("https://.../posts").then((res) => res.json());
       return posts.map((post) => ({ slug: post.slug }));
     }
     ```
 
-2. 일부 경로만 빌드 시 생성\
-: 경로의 일부만 반환하여 첫 방문 시 나머지를 동적으로 렌더링할 수 있습니다.
+2.  일부 경로만 빌드 시 생성\
+    : 경로의 일부만 반환하여 첫 방문 시 나머지를 동적으로 렌더링할 수 있습니다.
 
-3. 캐치올 동적 세그먼트\
-: `slug` 배열을 통해 `/product/[...slug]`와 같은 경로를 설정할 수 있습니다.
+3.  캐치올 동적 세그먼트\
+    : `slug` 배열을 통해 `/product/[...slug]`와 같은 경로를 설정할 수 있습니다.
 
-    ```jsx
-    export function generateStaticParams() {
-      return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }];
-    }
-    ```
+        ```jsx
+        export function generateStaticParams() {
+          return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }];
+        }
+        ```
 
 ### generateStaticParams 주의
 
 1. `generateStaticParams`가 반환하는 URL parameter 값은 문자열이여야 합니다.
 
 2. `generateStaticParams` 함수를 내보내게 되면,
-페이지 컴포넌트 내부의 데이터 캐싱이 설정되지 않은 `fetch`가 존재하지 않더라도 해당 페이지가 Static page로 강제로 설정됩니다.
+   페이지 컴포넌트 내부의 데이터 캐싱이 설정되지 않은 `fetch`가 존재하지 않더라도 해당 페이지가 Static page로 강제로 설정됩니다.
 
 ### dynamicParams
 
@@ -565,8 +668,8 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 // book/1, bool/2, book/3 페이지 이외의 페이지는 404로 보내짐
-export function generateStaticParams () {
-  return [{ id: "1" }, { id: "2" }, { id: "3" }]
+export function generateStaticParams() {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 ```
 
@@ -575,7 +678,7 @@ export function generateStaticParams () {
 특정 페이지의 유형을 강제로 Static 또는 Dynamic 페이지로 설정합니다.
 
 ```ts
-export const dynamic = 'auto'
+export const dynamic = "auto";
 // 'auto' | 'force-dynamic' | 'error' | 'force-static'
 ```
 
@@ -584,8 +687,47 @@ export const dynamic = 'auto'
 2. force-dynamic: 페이지를 강제로 Dynamic 페이지로 설정
 
 3. force-static: 페이지를 강제로 Static 페이지로 설정.\
-페이지 내부에서 사용한 동적 함수는 빈 값(`undefined`)을 반환하도록 설정됨.\
-데이터 fetching도 캐싱되도록 설정됨.
+   페이지 내부에서 사용한 동적 함수는 빈 값(`undefined`)을 반환하도록 설정됨.\
+   데이터 fetching도 캐싱되도록 설정됨.
 
 4. error: 페이지를 강제로 Static 페이지로 설정\
-(Static 페이지로 설정하면 안되는 이유가 있다면 빌드 오류 발생)
+   (Static 페이지로 설정하면 안되는 이유가 있다면 빌드 오류 발생)
+
+## useSelectedLayoutSegment
+
+```tsx
+const segment = useSelectedLayoutSegment(parallelRoutesKey?: string)
+```
+
+Client Component 훅으로, 호출된 Layout 바로 아래 수준의 활성 경로 세그먼트를 읽을 수 있게 해줍니다.\
+탭과 같은 내비게이션 UI에서 유용하며, 부모 Layout 내부에서 활성 자식 세그먼트에 따라 스타일을 변경할 수 있습니다.
+
+`useSelectedLayoutSegment`는 한 단계 아래의 세그먼트만 반환합니다.\
+모든 활성 세그먼트를 반환하려면 `useSelectedLayoutSegments`를 참조하세요.
+
+|          Layout           |           방문한 URL           | 반환된 세그먼트 |
+| :-----------------------: | :----------------------------: | :-------------: |
+|      `app/layout.js`      |              `/`               |     `null`      |
+|      `app/layout.js`      |         `/dashboard `          |  `'dashboard'`  |
+| `app/dashboard/layout.js` |         `/dashboard `          |     `null`      |
+| `app/dashboard/layout.js` |     `/dashboard/settings`      |  `'settings'`   |
+| `app/dashboard/layout.js` |     `/dashboard/analytics`     |  `'analytics'`  |
+| `app/dashboard/layout.js` | `/dashboard/analytics/monthly` |  `'analytics'`  |
+
+## useSelectedLayoutSegments
+
+`useSelectedLayoutSegments`는 Client Component 훅으로, 호출된 Layout 아래 수준의 활성 경로 세그먼트를 읽을 수 있게 해줍니다.
+
+반환된 세그먼트에는 Route Groups이 포함될 수 있으며, UI에 포함시키지 않으려면 filter() 배열 메서드를 사용하여 괄호로 시작하는 항목을 제거할 수 있습니다.
+
+```tsx
+const segments = useSelectedLayoutSegments(parallelRoutesKey?: string);
+```
+
+|          Layout           |      방문한 URL       |        반환된 세그먼트        |
+| :-----------------------: | :-------------------: | :---------------------------: |
+|      `app/layout.js`      |          `/`          |             `[]`              |
+|      `app/layout.js`      |     `/dashboard `     |        [`'dashboard'`]        |
+|      `app/layout.js`      | `/dashboard/settings` | [`'dashboard'`, `'settings'`] |
+| `app/dashboard/layout.js` |     `/dashboard `     |             `[]`              |
+| `app/dashboard/layout.js` | `/dashboard/settings` |         ['settings']          |
