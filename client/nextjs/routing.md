@@ -13,6 +13,83 @@ export default function Page() {
 }
 ```
 
+### Link가 원하는 대로 이동하지 않을 때 생각해볼 것
+
+`Link` 는 내부적으로 `onClick` 이벤트를 처리하여 Next.js의 라우터(next/router)를 통해 페이지 전환을 수행합니다.\
+따라서 이벤트 버블링의 영향을 받을 수 있습니다.
+
+#### Link를 사용하며 실제 발생한 문제 예시
+
+`Link`의 경로로 가기 위해 이미지 링크를 클릭을 했는데 `/${target.User.id}` 경로로 가지지 않았습니다.\
+대신 `/${post.User.id}/status/${post.postId}`로 이동 되었습니다.
+
+```tsx
+export default function Post({ noImage }: Props) {
+  return (
+    <PostArticle post={target}>
+      <div className={style.postWrapper}>
+        <div className={style.postUserSection}>
+          {/* /${target.User.id}로 이동하기 위해 이미지 링크를 클릭했지만 실패 */}
+          <Link href={`/${target.User.id}`} className={style.postUserImage}>
+            <img src={target.User.image} alt={target.User.nickname} />
+            <div className={style.postShade} />
+          </Link>
+        </div>
+      </div>
+    </PostArticle>
+  );
+}
+```
+
+이유는 이벤트 버블링이 발생해서 `Link`에서 발생한 이벤트가 부모인 `PostArticle`의 `onClick` 이벤트로 전파되었습니다.\
+`onClick`은 버블링 단계에서 실행되는 이벤트입니다.\
+마지막으로 발생한 이벤트가 `PostArticle`의 `onClick` 이벤트이기 때문에 해당 로직(`router.push`)이 실행되는 경로로 이동됩니다.\
+즉 `/${target.User.id}`가 아닌 `/${post.User.id}/status/${post.postId}`로 이동 되었습니다.
+
+```tsx
+export default function PostArticle({ children, post }: Props) {
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push(`/${post.User.id}/status/${post.postId}`);
+  };
+
+  return (
+    {/* /${target.User.id}로 이동하려고 클릭해도 /${post.User.id}/status/${post.postId}로 이동 됨 */}
+    <article onClick={onClick} className={style.post}>
+      {children}
+    </article>
+  );
+}
+```
+
+#### onClickCapture 를 사용하며 문제 예시 해결
+
+`onClickCapture`는 capture 단계에서 이벤트를 실행할 수 있습니다.
+이벤트는 DOM 트리의 상위 요소에서 하위 요소로 전달되며 이걸 capture 단계라고 합니다.(document → PostArticle → Post의 Link)\
+이 과정에서 `onClickCapture` 가 등록된 `PostArticle`에서 이벤트를 먼저 처리합니다.\
+상위 단계에서 이벤트가 처리되므로, `PostArticle`는 버블링 단계로 이벤트가 전달되지 않게됩니다.\
+이후 `Post`의 `Link`가 처리되면서 마지막 발생된 이벤트의 `Link`의 경로인 `/${target.User.id}`로 이동되었습니다.
+
+```tsx
+export default function PostArticle({ children, post }: Props) {
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push(`/${post.User.id}/status/${post.postId}`);
+  };
+
+  return (
+    {/* onClickCapture를 사용하여 버블링에 이벤트가 실행되지 않고 캡처링때 미리 실행됨 */}
+    <article onClickCapture={onClick} className={style.post}>
+      {children}
+    </article>
+  );
+}
+```
+
+자세한 내용은 [단계별 이벤트 캡처](https://ko.react.dev/learn/responding-to-events#capture-phase-events) 참고.
+
 ## 동적 라우트 (`[folderName]`)
 
 ![dynamic-routes](./img/dynamic-routes.png)
