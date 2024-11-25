@@ -50,11 +50,11 @@
     - [Setup And Teardown](library/jest/setup-and-teardown.md)
     - [Testing Asynchronous Code](library/jest/testing-asynchronous-code.md)
   - [Mocking Service Worker](library/mock-service-worker/README.md)
+    - [Migrations](library/mock-service-worker/migrations.md)
 
 ### CLIENT
 
 - [Client](client/README.md)
-
   - [Javascript](client/javascript/README.md)
     - [ArrayBuffer, binary arrays](client/javascript/array-buffer.md)
     - [Blob](client/javascript/blob.md)

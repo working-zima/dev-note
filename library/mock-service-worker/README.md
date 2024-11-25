@@ -5,13 +5,13 @@
 서비스 워커(Service Worker)를 사용하여 네트워크 호출을 가로채는 API 모킹(mocking) 라이브러리입니다.
 
 - Service Worker
-  : 웹 애플리케이션의 백그라운드에서 실행되는 자바스크립트 스크립트로, 네트워크 요청의 중간에서 동작하여 다양한 기능을 수행합니다.
-  주로 어플리케이션과 서버의 중간에서 주고 받는 데이터 요청들을 통제하고 관리할 수 있습니다.
+  : 웹 애플리케이션의 백그라운드에서 실행되는 자바스크립트 스크립트로, 네트워크 요청의 중간에서 동작하여 다양한 기능을 수행합니다.\
+  주로 어플리케이션과 서버의 중간에서 주고 받는 데이터 요청들을 통제하고 관리할 수 있습니다.\
   특정한 네트워크 요청에 한해서 따로 저장하여 사용자가 어플리케이션을 켜자마자 데이터를 보여주거나 오프라인 상태일 때 저장한 데이터를 보여줄 수 있도록 도와줍니다.
 
 ## 사용 목적
 
-- 네트워크 호출을 가로채서 특정 응답을 반환합니다.
+- 실제 네트워크 호출을 가로채서 특정 응답을 반환합니다.
 - 테스트 중에 네트워크 호출을 방지합니다.
 - 서버 응답을 사용하여 테스트 조건 설정합니다.
 
@@ -50,8 +50,8 @@ MSW는 쿠키, 이진 응답(예: 이미지) 등 요청의 정교한 측면을 �
 
 ## handler 함수
 
-요청이 들어왔을 때 임의의 응답을 해주는 `handler` 코드를 작성해야합니다.
-`Express.js` 서버에서 볼 수 있는 코딩 패턴과 상당히 유사한 방식으로 핸들러를 구현할 수 있습니다.
+요청이 들어왔을 때 임의의 응답을 해주는 `handler` 코드를 작성해야합니다.\
+`Express.js` 서버에서 볼 수 있는 코딩 패턴과 상당히 유사한 방식으로 핸들러를 구현할 수 있습니다.\
 모킹 관련 코드는 프로젝트의 `mocks`이라는 디렉토리에 두는 것이 일반적인 관례입니다.
 
 ### http handler 생성
@@ -83,21 +83,23 @@ export const handlers = [
 ];
 ```
 
-#### HttpResponse
+### HttpResponse
 
 HttpResponse 클래스는 Fetch API Response의 대체제로 설계되었으며, 더 편리한 응답 선언과 응답 쿠키 모킹과 같은 특별한 기능을 지원을 목적으로 합니다.
 
-> Response는 Fetch API에서 사용되는 객체로 fetch로 요청을 했을 때 웹서버가 응답한 결과를 담고 있는 데이터 입니다.
-> Response의 주요 속성 (Properties)
-> Response.status: HTTP 상태 코드를 나타냅니다.
-> Response.statusText: HTTP 상태 메시지를 나타냅니다.
-> Response.headers: 응답 헤더를 나타냅니다.
-> Response.url: 응답이 받아진 URL을 나타냅니다.
-> Response의 주요 메소드 (Methods)
-> Response.json(): JSON 형식의 응답을 파싱하여 JavaScript 객체로 반환합니다.
-> Response.text(): 텍스트 형식의 응답을 문자열로 반환합니다.
-> Response.blob(): Blob 형식의 응답을 반환합니다.
-> Response.arrayBuffer(): ArrayBuffer 형식의 응답을 반환합니다.
+- `Response`는 Fetch API에서 사용되는 객체로 fetch로 요청을 했을 때 웹서버가 응답한 결과를 담고 있는 데이터 입니다.
+
+#### `Response`의 주요 속성 (Properties)
+
+- `Response.status`: HTTP 상태 코드를 나타냅니다.
+- `Response.statusText`: HTTP 상태 메시지를 나타냅니다.
+- `Response.headers`: 응답 헤더를 나타냅니다.
+- `Response.url`: 응답이 받아진 URL을 나타냅니다.
+- `Response`의 주요 메소드 (Methods)
+- `Response.json()`: JSON 형식의 응답을 파싱하여 JavaScript 객체로 반환합니다.
+- `Response.text()`: 텍스트 형식의 응답을 문자열로 반환합니다.
+- `Response.blob()`: Blob 형식의 응답을 반환합니다.
+- `Response.arrayBuffer()`: ArrayBuffer 형식의 응답을 반환합니다.
 
 ```tsx
 // HttpResponse 클래스의 생성자
