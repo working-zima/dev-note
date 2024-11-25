@@ -32,28 +32,31 @@ npm i -D msw@0.36.4
 
 ```jsx
 module.exports = {
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
   // Jest 환경 설정 이후에 실행되는 파일
   setupFilesAfterEnv: [
-    '@testing-library/jest-dom/extend-expect',
+    "@testing-library/jest-dom/extend-expect",
     // 추가
-    '<rootDir>/src/setupTests.ts',
+    "<rootDir>/src/setupTests.ts",
   ],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', {
-      jsc: {
-      parser: {
-        syntax: 'typescript',
-        jsx: true,
-        decorators: true,
-      },
-      transform: {
-        react: {
-          runtime: 'automatic',
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            jsx: true,
+            decorators: true,
+          },
+          transform: {
+            react: {
+              runtime: "automatic",
+            },
+          },
         },
       },
-      },
-    }],
+    ],
   },
 };
 ```
@@ -63,11 +66,11 @@ module.exports = {
 `src/setupTests.ts` 파일
 
 ```jsx
-import server from './mocks/server';
+import server from "./mocks/server";
 
 // API 모킹을 하기 위해 제일 먼저 앞서 수행하는 작업
 // { onUnhandledRequest: 'error' }: 혹시 handler가 없다면 error를 발생하도록 함
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 
 // 테스트 간에 핸들러를 리셋하는 코드
 afterAll(() => server.close());
@@ -81,9 +84,9 @@ afterEach(() => server.resetHandlers());
 `src/mocks/server.ts` 파일
 
 ```jsx
-import { setupServer } from 'msw/node';
+import { setupServer } from "msw/node";
 
-import handlers from './handlers';
+import handlers from "./handlers";
 
 const server = setupServer(...handlers);
 
@@ -97,18 +100,18 @@ export default server;
 → Express의 경험을 살려보자!
 
 ```jsx
-import { rest } from 'msw';
+import { rest } from "msw";
 
-const BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
 const handlers = [
   rest.get(`${BASE_URL}/products`, (req, res, ctx) => {
     const products = [
       {
-        category: 'Fruits',
-        price: '$1',
+        category: "Fruits",
+        price: "$1",
         stocked: true,
-        name: 'Apple',
+        name: "Apple",
       },
     ];
 
@@ -128,13 +131,13 @@ export default handlers;
 - Before
 
   ```jsx
-  rest.get('/resource', (req, res, ctx) => {})
+  rest.get("/resource", (req, res, ctx) => {});
   ```
 
 - after
 
   ```jsx
-  http.get('/resource', (info) => {})
+  http.get("/resource", (info) => {});
   ```
 
 이전에는 `res()` 함수를 사용하여 응답을 선언했지만, 2.0 버전에서는 이러한 방식을 떠나서 표준 Fetch API Response 인스턴스를 직접 생성하여 반환하도록 변경되었습니다.
@@ -142,22 +145,22 @@ export default handlers;
 - Before
 
   ```jsx
-  import { rest } from 'msw';
+  import { rest } from "msw";
 
-  rest.get('/resource', (req, res, ctx) => {
-    return res(ctx.json({ id: 'abc-123' }));
+  rest.get("/resource", (req, res, ctx) => {
+    return res(ctx.json({ id: "abc-123" }));
   });
   ```
 
 - After
 
   ```jsx
-  import { http } from 'msw';
+  import { http } from "msw";
 
-  http.get('/resource', () => {
-    return new Response(JSON.stringify({ id: 'abc-123' }), {
+  http.get("/resource", () => {
+    return new Response(JSON.stringify({ id: "abc-123" }), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
   });
@@ -166,13 +169,13 @@ export default handlers;
   Fetch API Response의 대체제로 설계된 `HttpResponse` 클래스를 사용할 수도 있습니다.
 
   ```jsx
-  import { http, HttpResponse } from 'msw'
+  import { http, HttpResponse } from "msw";
 
   export const handlers = [
-    http.get('/resource', () => {
-      return HttpResponse.json({ id: 'abc-123' })
+    http.get("/resource", () => {
+      return HttpResponse.json({ id: "abc-123" });
     }),
-  ]
+  ];
   ```
 
 저의 경우 240228 기준 `Cannot find module ‘msw/node’` 에러가 해결되지 않아 2.0 버전은 사용하지 않고 있습니다.
@@ -184,18 +187,18 @@ export default handlers;
 `App.test.ts` 파일
 
 ```jsx
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from "@testing-library/react";
 
-import App from './App';
+import App from "./App";
 
 // jest.mock 불필요.
 
-test('App', async () => {
+test("App", async () => {
   render(<App />);
 
   // waitFor()을 사용하여 screen.getByText('Apple')가 될 때까지 확인
   await waitFor(() => {
-    screen.getByText('Apple');
+    screen.getByText("Apple");
   });
 });
 ```
@@ -207,7 +210,7 @@ test('App', async () => {
 
 ## polyfill(폴리필)
 
-리필(polyfill)이란 브라우저에서 누락된 기능을 추가해 주는 서드 파티 패키지입니다.\
+폴리필(polyfill)이란 브라우저에서 누락된 기능을 추가해 주는 서드 파티 패키지입니다.\
 브라우저 또는 Node.js와 같은 자바스크립트 실행 환경에서 새로운 기능 또는 표준 API를 지원하지 않을 때, 해당 기능이나 API를 구현하여 지원하도록 하는 코드입니다.\
 예를 들어 프로미스를 지원하지는 않는 오래된 브라우저가 프로미스의 원리를 재구축할 수 있는 다른 기능을 지원하는 경우에는 프로미스 폴리필 등을 활용할 수도 있습니다.
 
@@ -233,11 +236,11 @@ npm i -D whatwg-fetch
 ```jsx
 // setupTests.ts
 
-import 'whatwg-fetch'
+import "whatwg-fetch";
 
-import server from './mocks/server';
+import server from "./mocks/server";
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 
 afterAll(() => server.close());
 
