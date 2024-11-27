@@ -61,7 +61,7 @@
     - [FileReader](client/javascript/file-reader.md)
   - [Next.js](client/nextjs/README.md)
     - [Caching](client/nextjs/caching.md)
-    - [Components](client/nextjs/components.md)
+    - [Optimizing](client/nextjs/optimizing.md)
     - [Data Fetching](client/nextjs/data-fetching.md)
     - [Errors](client/nextjs/errors.md)
     - [File Conventions](client/nextjs/file-conventions.md)

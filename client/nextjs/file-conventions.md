@@ -71,60 +71,6 @@ export default function RootLayout({ children }) {
 }
 ```
 
-#### metadata
-
-`<head>`에 들어가는 모든 내용은 `metadata`에 의해 설정되거나 NextJS로 인해 이면에서 자동으로 설정됩니다.\
-page 또는 layout에서만 사용 가능합니다.
-
-```tsx
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: meal.title,
-  description: meal.summary,
-  openGraph: {
-    title: meal.title,
-    description: meal.summary,
-    images: ["/thumbnail.png"],
-  },
-};
-```
-
-`metadata`는 `generateMetadata`로 현재 페이지 메타 데이터를 동적으로도 생성 가능합니다.\
-`generateMetadata`는 현재 page가 전달 받는 매개변수를 그대로 받을 수 있습니다.
-
-```tsx
-import { Metadata } from "next";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ mealSlug?: string }>;
-}): Promise<Metadata> {
-  const { mealSlug } = await params;
-  const meal = getMeal(mealSlug);
-
-  if (!meal) {
-    // 이 컴포넌트가 실행되는것을 멈추고 제일 가까운 not-found나 오류화면을 보여줌
-    notFound();
-  }
-
-  return {
-    title: meal.title,
-    description: meal.summary,
-    openGraph: {
-      title: meal.title,
-      description: meal.summary,
-      images: ["/thumbnail.png"],
-    },
-  };
-}
-```
-
-> openGraph는 떤 HTML 문서의 메타정보를 쉽게 표시하기 위해서 메타정보에 해당하는 제목, 설명, 문서의 타입, 대표 URL 등 다양한 요소들에 대해서 사람들이 통일해서 쓸 수 있도록 정의해놓은 프로토콜
-
-![opengraph](./img/opengraph2.png)
-
 #### children
 
 현재 활성화된 페이지의 내용입니다.\
