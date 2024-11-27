@@ -249,6 +249,14 @@ import { handlers } from "./handlers";
 export const server = setupServer(...handlers);
 ```
 
+#### setupWorker와 setupServer의 차이점
+
+- Worker: 브라우저 환경에서 네트워크 요청을 모킹합니다. 일반적으로 React 애플리케이션 개발에서 사용됩니다.
+
+- Server: Node.js 환경에서 네트워크 요청을 모킹합니다. 주로 서버 사이드 렌더링 또는 테스트 환경(Jest 등)에서 활용됩니다.
+
+Next.js 애플리케이션의 초기 실행은 Node.js 환경에서 이루어집니다. 이는 window 객체가 없다는 것을 의미하며, 이로 인해 MSW의 Worker를 바로 사용하는 것이 어렵습니다. 반면, 클라이언트 사이드에서는 window 객체가 존재하므로 Worker 초기화가 가능합니다.
+
 ### 설정
 
 테스트 실행 전에 가짜 API 서버를 올렸다가 테스트 실행 후에 내릴 수 있도록 Jest 설정을 해줍니다.
@@ -287,3 +295,4 @@ afterAll(() => server.close());
 
 - [Jest / Vitest 를 활용한 React 테스팅 라이브러리](https://www.udemy.com/course/jest-testing-library/)
 - [MSW로 백엔드 API 모킹하기](https://www.daleseo.com/mock-service-worker/)
+- [next 14: MSW 적용까지 시도해본 방법들 정리하기](https://velog.io/@wns450/msw-next-%EC%9D%B4%EC%8A%88)

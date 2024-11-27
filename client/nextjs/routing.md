@@ -779,7 +779,8 @@ Route Handlers는 기본적으로 캐시되지 않습니다.\
 그러나 `GET` 메서드에 대해 캐시를 선택할 수 있습니다.\
 Route Handler 파일에 `export const dynamic = 'force-static'`과 같은 route config option을 사용합니다.
 
-```ts filename="app/items/route.ts" switcher
+```ts
+// filename="app/items/route.ts" switcher
 export const dynamic = "force-static";
 
 export async function GET() {
@@ -830,7 +831,8 @@ export async function POST(request) {}
 
 `next.revalidate` 옵션을 사용하여 캐시된 데이터를 재검증할 수 있습니다.
 
-```ts filename="app/items/route.ts" switcher
+```ts
+// filename="app/items/route.ts" switcher
 export async function GET() {
   const res = await fetch("https://data.mongodb-api.com/...", {
     next: { revalidate: 60 }, // 60초마다 재검증
@@ -858,7 +860,8 @@ Route Handlers는 Next.js의 `cookies` 및 `headers`와 같은 동적 함수와 
 
 또는 `Set-Cookie`헤더를 사용하여 새 `Response`를 반환할 수 있습니다.
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
@@ -874,7 +877,8 @@ export async function GET(request: Request) {
 
 기본 웹 API를 사용하여 요청에서 쿠키를 읽을 수도 있습니다 (`NextRequest`)
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -890,7 +894,8 @@ export async function GET(request: NextRequest) {
 이 `headers` 인스턴스는 읽기 전용입니다.\
 헤더를 설정하려면 새 `headers`와 함께 새 `Response`를 반환해야 합니다.
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 import { headers } from "next/headers";
 
 export async function GET(request: Request) {
@@ -906,7 +911,8 @@ export async function GET(request: Request) {
 
 기본 웹 API를 사용하여 요청에서 헤더를 읽을 수도 있습니다 (`NextRequest`)
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -916,13 +922,17 @@ export async function GET(request: NextRequest) {
 
 ### Redirects
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   redirect("https://nextjs.org/");
 }
 ```
+
+`redirect`는 `try catch` 안에서 사용할 수 없습니다.
+`redirect`는 `try catch` 블록 밖에서 사용해야 합니다.
 
 ### Dynamic Route Segments
 
@@ -947,7 +957,8 @@ export async function GET(
 
 Route Handler에 전달되는 요청 객체는 `NextRequest` 인스턴스로, 쿼리 매개변수를 보다 쉽게 처리할 수 있는 편리한 추가 메서드를 제공합니다.
 
-```ts filename="app/api/search/route.ts" switcher
+```ts
+// filename="app/api/search/route.ts" switcher
 import { type NextRequest } from "next/server";
 
 export function GET(request: NextRequest) {
@@ -962,7 +973,8 @@ export function GET(request: NextRequest) {
 스트리밍은 OpenAI와 같은 대형 언어 모델(LLM)과 함께 AI 생성 콘텐츠를 위해 일반적으로 사용됩니다.\
 AI SDK에서 자세히 알아보세요.
 
-```ts filename="app/api/chat/route.ts" switcher
+```ts
+// filename="app/api/chat/route.ts" switcher
 import { openai } from "@ai-sdk/openai";
 import { StreamingTextResponse, streamText } from "ai";
 
@@ -980,7 +992,8 @@ export async function POST(req) {
 이러한 추상화는 스트림을 생성하기 위해 웹 API를 사용합니다.\
 기본 웹 API를 직접 사용할 수도 있습니다.
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 // https://developer.mozilla.org/docs/Web/API/ReadableStream#convert_async_iterator_to_stream
 function iteratorToStream(iterator: any) {
   return new ReadableStream({
@@ -1024,7 +1037,8 @@ export async function GET() {
 
 기본 웹 API 메서드를 사용하여 `Request` 본문을 읽을 수 있습니다:
 
-```ts filename="app/items/route.ts" switcher
+```ts
+// filename="app/items/route.ts" switcher
 export async function POST(request: Request) {
   const res = await request.json();
   return Response.json({ res });
@@ -1035,7 +1049,8 @@ export async function POST(request: Request) {
 
 `request.formData()` 함수를 사용하여 `FormData`를 읽을 수 있습니다:
 
-```ts filename="app/items/route.ts" switcher
+```ts
+// filename="app/items/route.ts" switcher
 export async function POST(request: Request) {
   const formData = await request.formData();
   const name = formData.get("name");
@@ -1050,7 +1065,8 @@ export async function POST(request: Request) {
 
 기본 웹 API 메서드를 사용하여 특정 Route Handler에 대한 CORS 헤더를 설정할 수 있습니다:
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 export async function GET(request: Request) {
   return new Response("Hello, Next.js!", {
     status: 200,
@@ -1067,7 +1083,8 @@ export async function GET(request: Request) {
 
 Route Handler를 사용하여 타사 서비스의 웹훅을 수신할 수 있습니다:
 
-```ts filename="app/api/route.ts" switcher
+```ts
+// filename="app/api/route.ts" switcher
 export async function POST(request: Request) {
   try {
     const text = await request.text();
@@ -1091,7 +1108,8 @@ export async function POST(request: Request) {
 Route Handlers를 사용하여 UI가 아닌 콘텐츠를 반환할 수 있습니다.\
 `sitemap.xml`, `robots.txt`, `app icons`, `open graph images` 등은 모두 기본적으로 지원됩니다.
 
-```ts filename="app/rss.xml/route.ts" switcher
+```ts
+// filename="app/rss.xml/route.ts" switcher
 export async function GET() {
   return new Response(
     `<?xml version="1.0" encoding="UTF-8" ?>
@@ -1117,7 +1135,8 @@ export async function GET() {
 
 Route Handlers는 페이지 및 레이아웃과 동일한 route segment configuration을 사용합니다.
 
-```ts filename="app/items/route.ts" switcher
+```ts
+// filename="app/items/route.ts" switcher
 export const dynamic = "auto";
 export const dynamicParams = true;
 export const revalidate = false;

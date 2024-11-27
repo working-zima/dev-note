@@ -632,26 +632,26 @@ export function generateStaticParams() {
 
 ### generateStaticParams 활용 예시
 
-1.  모든 경로를 빌드 시 정적으로 생성
+1. 모든 경로를 빌드 시 정적으로 생성
 
-    ```jsx
-    export async function generateStaticParams() {
-      const posts = await fetch("https://.../posts").then((res) => res.json());
-      return posts.map((post) => ({ slug: post.slug }));
-    }
-    ```
+   ```jsx
+   export async function generateStaticParams() {
+     const posts = await fetch("https://.../posts").then((res) => res.json());
+     return posts.map((post) => ({ slug: post.slug }));
+   }
+   ```
 
-2.  일부 경로만 빌드 시 생성\
-    : 경로의 일부만 반환하여 첫 방문 시 나머지를 동적으로 렌더링할 수 있습니다.
+2. 일부 경로만 빌드 시 생성\
+   : 경로의 일부만 반환하여 첫 방문 시 나머지를 동적으로 렌더링할 수 있습니다.
 
-3.  캐치올 동적 세그먼트\
-    : `slug` 배열을 통해 `/product/[...slug]`와 같은 경로를 설정할 수 있습니다.
+3. 캐치올 동적 세그먼트\
+   : `slug` 배열을 통해 `/product/[...slug]`와 같은 경로를 설정할 수 있습니다.
 
-        ```jsx
-        export function generateStaticParams() {
-          return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }];
-        }
-        ```
+   ```jsx
+   export function generateStaticParams() {
+     return [{ slug: ["a", "1"] }, { slug: ["b", "2"] }, { slug: ["c", "3"] }];
+   }
+   ```
 
 ### generateStaticParams 주의
 

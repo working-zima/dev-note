@@ -56,11 +56,11 @@ SSG 방식으로 생성된 정적 페이지를 일정 시간을 주기로 다시
 
 1. ISR은 시간과 관계없이 사용자의 행동에 따라 데이터가 업데이트 되는 페이지는 적용하기 어렵습니다.
 
-    ![isr05](./img/isr05.png)
+   ![isr05](./img/isr05.png)
 
 2. 불필요한 페이지가 생성될 수 있습니다.
 
-    ![isr06](./img/isr06.png)
+   ![isr06](./img/isr06.png)
 
 #### On-Demand ISR
 
@@ -126,7 +126,7 @@ async 함수의 본문 상단에 `"use server"` 지시어를 추가하여 해당
 export default function Page() {
   // Server Action
   async function create() {
-    'use server'
+    "use server";
     // 데이터 변조
     const name = formData.get("name");
     // 예시) 서버에서만 실행 가능한 sql문으로 데이터 베이스에도 직접 접근 가능
@@ -138,7 +138,7 @@ export default function Page() {
       <input name="name" />
       <button type="submit">제출</button>
     </form>
-  )
+  );
 }
 ```
 
@@ -149,7 +149,7 @@ export default function Page() {
 ```tsx
 // app/actions.js
 
-'use server'
+"use server";
 
 export async function create() {}
 ```
@@ -159,12 +159,12 @@ export async function create() {}
 ```tsx
 // app/ui/button.tsx
 
-'use client'
+"use client";
 
-import { create } from '@/app/actions'
+import { create } from "@/app/actions";
 
 export function Button() {
-  return <Button onClick={create} />
+  return <Button onClick={create} />;
 }
 ```
 
@@ -194,10 +194,10 @@ export default function ClientComponent({
 ### Server Actions 호출 방법
 
 - 폼에서의 사용: Server Actions는 `<form>` 요소의 action 속성을 통해 호출할 수 있습니다.\
-이때, Server Components는 기본적으로 점진적 향상을 지원하여, JavaScript가 로드되지 않았거나 비활성화된 경우에도 폼이 제출될 수 있습니다.
+  이때, Server Components는 기본적으로 점진적 향상을 지원하여, JavaScript가 로드되지 않았거나 비활성화된 경우에도 폼이 제출될 수 있습니다.
 
 - 클라이언트에서의 사용: Client Components에서는 JavaScript가 로드되지 않은 경우 폼 제출이 대기하며, 클라이언트 하이드레이션을 우선시합니다.\
-하이드레이션이 완료된 후에는 폼 제출 시 브라우저가 새로 고침되지 않습니다.
+  하이드레이션이 완료된 후에는 폼 제출 시 브라우저가 새로 고침되지 않습니다.
 
 ### 다양한 호출 방식
 
@@ -214,9 +214,9 @@ export default function ClientComponent({
 ### 직렬화
 
 - 인수와 반환 값: Server Actions의 인수와 반환 값은 React에 의해 직렬화 가능해야 합니다.\
-이는 데이터를 네트워크로 전송하기 위해 변환할 수 있어야 한다는 의미입니다.\
-예를들어 사용자가 폼에 입력한 정보를 Server Action으로 보낼 때, 이 정보는 문자열, 숫자 등의 데이터로 변환되어 서버로 전송됩니다.\
-그리고 서버는 이 정보를 받아서 처리한 후, 다시 직렬화된 결과를 클라이언트에 전달합니다.
+  이는 데이터를 네트워크로 전송하기 위해 변환할 수 있어야 한다는 의미입니다.\
+  예를들어 사용자가 폼에 입력한 정보를 Server Action으로 보낼 때, 이 정보는 문자열, 숫자 등의 데이터로 변환되어 서버로 전송됩니다.\
+  그리고 서버는 이 정보를 받아서 처리한 후, 다시 직렬화된 결과를 클라이언트에 전달합니다.
 
 ### 재사용 가능성
 
@@ -229,8 +229,8 @@ export default function ClientComponent({
 ### Route Segment Config 상속
 
 - 환경 상속: Server Actions는 사용되는 페이지나 레이아웃의 환경(예: 런타임 및 구성)을 상속받습니다.\
-이를 통해 특정 설정이나 제한을 함께 사용할 수 있습니다.\
-예를 들어 만약 페이지가 1초 이상 걸리는 작업을 허용하지 않는 설정이 있다면, 이 규칙은 Server Actions에도 적용됩니다.
+  이를 통해 특정 설정이나 제한을 함께 사용할 수 있습니다.\
+  예를 들어 만약 페이지가 1초 이상 걸리는 작업을 허용하지 않는 설정이 있다면, 이 규칙은 Server Actions에도 적용됩니다.
 
 ### 예시
 
@@ -238,18 +238,17 @@ export default function ClientComponent({
 이 `form`이 제출되면 NextJS가 자동으로 요청을 생성하여 웹사이트를 제공하는 NextJS 서버로 보내게 됩니다.
 
 ```jsx
-"use client"
+"use client";
 
-import classes from './page.module.css';
+import classes from "./page.module.css";
 
 // server action을 import
-import { shareMeal } from '@/lib/actions';
+import { shareMeal } from "@/lib/actions";
 
-import ImagePicker from '@/components/meals/image-picker';
-import MealsFormSubmit from '@/components/meals/meals-form-submit';
+import ImagePicker from "@/components/meals/image-picker";
+import MealsFormSubmit from "@/components/meals/meals-form-submit";
 
 export default function ShareMealPage() {
-
   return (
     <>
       <header className={classes.header}>
@@ -309,17 +308,17 @@ import { saveMeal } from "./meals";
 
 export const shareMeal = async (formData) => {
   const meal = {
-    title: formData.get('title'),
-    summary: formData.get('summary'),
-    instructions: formData.get('instructions'),
-    image: formData.get('image'),
-    creator: formData.get('name'),
-    creator_email: formData.get('email')
-  }
+    title: formData.get("title"),
+    summary: formData.get("summary"),
+    instructions: formData.get("instructions"),
+    image: formData.get("image"),
+    creator: formData.get("name"),
+    creator_email: formData.get("email"),
+  };
 
   await saveMeal(meal);
-  redirect('/meals');
-}
+  redirect("/meals");
+};
 ```
 
 ### Server Action에 Id값 전달하기
@@ -338,6 +337,53 @@ Server Action에서 필요하지만 `form`으로 입력 받기 힘든 경우가 
     <button type="submit">작성하기</button>
   </form>
 </section>
+```
+
+## { cache } from "react"
+
+React가 제공하는 이 cache 함수는 함수가 처음 호출될 때 반환한 데이터를 React가 캐싱합니다.
+`cache`는 `fetch` 함수를 사용하지 않고도 데이터베이스와 같은 다른 데이터 소스를 직접 사용할 때 캐싱을 이용하고 제어할 때 사용합니다.
+
+```tsx
+import { getMessages } from "@/lib/messages";
+
+export default function MessagesLayout({ children }) {
+  const messages = getMessages();
+
+  const totalMessages = messages.length;
+
+  return (
+    <>
+      <h1>Important Messages</h1>
+      <p>{totalMessages} messages found</p>
+      <hr />
+      {children}
+    </>
+  );
+}
+```
+
+```tsx
+import { cache } from "react";
+
+import sql from "better-sqlite3";
+
+const db = new sql("messages.db");
+
+function initDb() {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY,
+      text TEXT
+    )`);
+}
+
+initDb();
+
+// 중복 요청 제거가 발생해야 하는 함수를 감쌓음
+export const getMessages = cache(function getMessages() {
+  return db.prepare("SELECT * FROM messages").all();
+});
 ```
 
 ## 자료
