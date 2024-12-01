@@ -50,6 +50,7 @@
       - [Container](library/tailwind/layout/container.md)
       - [Columns](library/tailwind/layout/columns.md)
   - [Tanstack Query](library/tailwind/README.md)
+    - [queries](library/tanstack-query/queries.md)
   - [Zotai](library/zotai/README.md)
     - [Core](library/zotai/core/atom.md)
     - [Provider](library/zotai/core/provider.md)

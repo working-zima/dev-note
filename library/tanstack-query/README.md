@@ -5,3 +5,23 @@ description: TS/JS, React, Solid, Vue, Svelte 및 Angular를 위한 강력한 �
 # Tanstack Query
 
 React Query는 클라이언트에서 서버 데이터 캐시를 관리합니다.
+
+## 설치
+
+### Tanstack Query 설치
+
+```bash
+npm i @tanstack/react-query
+```
+
+### ESLint Plugin Query 설치
+
+```bash
+npm i -D @tanstack/eslint-plugin-query
+```
+
+### Tanstack Query Devtools 설치
+
+```bash
+npm i @tanstack/react-query-devtools
+```
