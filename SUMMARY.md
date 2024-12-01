@@ -10,6 +10,9 @@
 
 - [라이브러리](library/README.md)
   - [Axios](library/axios.md)
+  - [Husky](library/husky/README.md)
+    - [Get Started](library/husky/get-started.md)
+    - [How To](library/husky/how-to.md)
   - [Jotai](library/zotai/README.md)
     - [Atom](library/zotai/core/atom.md)
     - [Provider](library/zotai/core/provider.md)
