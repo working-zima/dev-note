@@ -347,7 +347,7 @@ export async function GET(request: NextRequest) {
 ## useRouter
 
 Next.js에서 클라이언트 컴포넌트 내에서 프로그래밍 방식으로 라우트를 변경할 수 있도록 도와줍니다.\
-(서버 컴포넌트에서는 `redirect` 사용)\
+(서버 컴포넌트에서는 `redirect` 사용, 외부 URL로 이동할 때는 `window.location.href`와 같은 브라우저 API를 선호)\
 하지만 대부분의 네비게이션 상황에서는 `<Link>` 컴포넌트를 사용하는 것이 권장됩니다.\
 `useRouter`는 특별한 요구 사항이 있을 때 유용합니다.
 
