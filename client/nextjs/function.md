@@ -708,8 +708,8 @@ Client Component 훅으로, 호출된 Layout 바로 아래 수준의 활성 경�
 |          Layout           |           방문한 URL           | 반환된 세그먼트 |
 | :-----------------------: | :----------------------------: | :-------------: |
 |      `app/layout.js`      |              `/`               |     `null`      |
-|      `app/layout.js`      |         `/dashboard `          |  `'dashboard'`  |
-| `app/dashboard/layout.js` |         `/dashboard `          |     `null`      |
+|      `app/layout.js`      |          `/dashboard`          |  `'dashboard'`  |
+| `app/dashboard/layout.js` |          `/dashboard`          |     `null`      |
 | `app/dashboard/layout.js` |     `/dashboard/settings`      |  `'settings'`   |
 | `app/dashboard/layout.js` |     `/dashboard/analytics`     |  `'analytics'`  |
 | `app/dashboard/layout.js` | `/dashboard/analytics/monthly` |  `'analytics'`  |
@@ -727,7 +727,7 @@ const segments = useSelectedLayoutSegments(parallelRoutesKey?: string);
 |          Layout           |      방문한 URL       |        반환된 세그먼트        |
 | :-----------------------: | :-------------------: | :---------------------------: |
 |      `app/layout.js`      |          `/`          |             `[]`              |
-|      `app/layout.js`      |     `/dashboard `     |        [`'dashboard'`]        |
+|      `app/layout.js`      |     `/dashboard`      |        [`'dashboard'`]        |
 |      `app/layout.js`      | `/dashboard/settings` | [`'dashboard'`, `'settings'`] |
-| `app/dashboard/layout.js` |     `/dashboard `     |             `[]`              |
+| `app/dashboard/layout.js` |     `/dashboard`      |             `[]`              |
 | `app/dashboard/layout.js` | `/dashboard/settings` |         ['settings']          |

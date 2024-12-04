@@ -83,11 +83,6 @@
     - [useActionState](client/react/useActionState.md)
   - [Testing](client/testing/README.md)
     - [TDD](client/testing/test-driven-development.md)
-  - [Web API](client/webapi/README.md)
-    - [Element size and scrolling](client/webapi/element-size-and-scrolling.md)
-    - [Intersection Observer](client/webapi/intersection-observer.md)
-    - [Mutation Observer](client/webapi/mutation-observer.md)
-    - [Cookie](client/webapi/cookie.md)
 
 ### SERVER
 
@@ -105,6 +100,16 @@
     - [Cookie와 Session](server/nodejs/cookie-session.md)
   - [Linux](server/linux/README.md)
     - [리눅스](server/linux/linux.md)
+
+### WEB
+
+- [Web](web/README.md)
+  - [Cookie](web/cookie.md)
+  - [Element size and scrolling](web/element-size-and-scrolling.md)
+  - [Intersection Observer](web/intersection-observer.md)
+  - [Mutation Observer](web/mutation-observer.md)
+  - [OAuth](web/oauth/README.md)
+    - [Google](web/oauth/google.md)
 
 ### MEGAPTERA
 
