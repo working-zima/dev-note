@@ -131,6 +131,8 @@
   - [Mutation Observer](web/mutation-observer.md)
   - [OAuth](web/oauth/README.md)
     - [Google](web/oauth/google.md)
+  - [SMTP](web/SMTP/README.md)
+    - [GMAIL](web/SMTP/gmail.md)
 
 ### MEGAPTERA
 
