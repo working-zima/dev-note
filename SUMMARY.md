@@ -46,8 +46,6 @@
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
   - [React Infinite Scroller](library/react-infinite-scroller/README.md)
-  - [Redis](library/redis/README.md)
-    - [node-redis](library/redis/client-api/node-redis.md)
   - [Slugify](library/slugify.md)
   - [Tailwind CSS](library/tailwind/README.md)
     - [Core Concepts](library/tailwind/core-concepts/README.md)
@@ -121,6 +119,8 @@
     - [Cookie와 Session](server/nodejs/cookie-session.md)
   - [Linux](server/linux/README.md)
     - [리눅스](server/linux/linux.md)
+  - [Redis](server/redis/README.md)
+    - [node-redis](server/redis/client-api/node-redis.md)
 
 ### WEB
 
