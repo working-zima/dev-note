@@ -625,7 +625,8 @@ module.exports = {
 ```
 
 `index.html`을 `src` 폴더 내부에 포함하여 동적으로 HTML 코드를 생성합니다.\
-`title`을 동적으로 변경하고 `production` 환경일 때 주석 및 빈칸을 제거합니다.\
+`NODE_ENV=development npm run build`로 `title`을 동적으로 변경합니다.\
+`NODE_ENV=production npm run build`로 주석 및 빈칸을 제거합니다.\
 또한 `output`로 지정된 경로와 이름으로 `script`가 생성됩니다.
 
 ```html
@@ -684,8 +685,8 @@ npm install -D mini-css-extract-plugin
 `production` 환경일 경우만 이 플러그인을 추가합니다.\
 `filename`에 설정한 값으로 아웃풋 경로에 CSS 파일이 생성합니다.
 
-`development` 환경에서는 `css-loader`에 의해 자바스크립트 모듈로 변경된 스타일시트를 적용하기위해 `style-loader`를 사용합니다.\
-`production` 환경에서는 별도의 CSS 파일으로 추출하는 플러그인을 적용했으므로 플러그인에서 제공하는 `MiniCssExtractPlugin.loader` 로더를 사용합니다.
+`NODE_ENV=development npm run build`을 사용한 `development` 환경에서는 `css-loader`에 의해 자바스크립트 모듈로 변경된 스타일시트를 적용하기위해 `style-loader`를 사용합니다.\
+`NODE_ENV=production npm run build`을 사용한 `production` 환경에서는 별도의 CSS 파일으로 추출하는 플러그인을 적용했으므로 플러그인에서 제공하는 `MiniCssExtractPlugin.loader` 로더를 사용합니다.
 
 ```js
 // webpack.config.js
