@@ -20,8 +20,93 @@ npm i @tanstack/react-query
 npm i -D @tanstack/eslint-plugin-query
 ```
 
+```cjs
+// .eslintrc.cjs
+  extends: [
+    // 추가
+    "plugin:@tanstack/eslint-plugin-query/recommended",
+  ]
+```
+
 ### Tanstack Query Devtools 설치
 
 ```bash
 npm i @tanstack/react-query-devtools
 ```
+
+## QueryClient 세팅
+
+### QueryClientProvider
+
+`QueryClientProvider`는 TanStack Query에서 전역적으로 `QueryClient`를 제공하기 위한 컴포넌트입니다.\
+프로젝트 범위를 `QueryClientProvider`로 랩핑하고, 사용할 `queryClient` 인스턴스를 연결합니다.
+
+`QueryClient`는 비동기 데이터 상태 관리를 처리하는 데 필요한 모든 정보를 담고 있는 핵심 객체입니다.
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+// 쿼리를 관리하고 서버 데이터도 저장하는 쿼리 클라이언트 생성
+const queryClient = new QueryClient(
+  // tanstack-query 전역 설정 옵션(선택사항)
+  {
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+        gcTime: Infinity,
+        refetchOnWindowFocus: false,
+      },
+    },
+  }
+);
+
+function App() {
+  return (
+    // 자식 컴포넌트에 캐시 및 클라이언트 구성을 제공할 QueryClient에 접근 가능하도록 공급
+    <QueryClientProvider client={queryClient}>
+      <Todos />
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  );
+}
+```
+
+## isFetching 과 isLoading
+
+|     속성     |                설명                |                              활성화 조건                               |                          주요 사용 사례                          |
+| :----------: | :--------------------------------: | :--------------------------------------------------------------------: | :--------------------------------------------------------------: |
+| `isLoading`  |  쿼리의 "초기 로딩 상태"를 나타냄  |                   데이터가 캐시에 없고, 처음 요청 시                   | 초기 상태에서 로딩 스피너를 표시하거나, 첫 화면을 처리할 때 사용 |
+| `isFetching` | 네트워크 요청이 진행 중임을 나타냄 | 데이터 요청 중이라면 항상 활성화 (`refetch`, `staleTime` 만료 등 포함) |         새 데이터를 가져오는 모든 상태를 처리할 때 사용          |
+
+`isFetching`은 비동기 쿼리가 아직 해결되지 않았다는 것(네트워크 요청 중)을 말합니다.\
+캐시 데이터 유무와 관계없이 초기 요청, 리패치(`refetch`), 백그라운드 요청 등 모든 네트워크 요청 상태를 나타냅니다.\
+쿼리가 새로고침되거나, `staleTime이` 지나 데이터를 다시 가져오는 경우에도 `isFetching: true`가 됩니다.\
+데이터가 이미 화면에 표시되고 있어도 새 데이터를 가져오는 동안 로딩 스피너를 표시하고 싶을 때 유용합니다.
+
+`isLoading`은 `isFetching`의 하위 집합으로, 첫 로딩 상태라는 것을 말합니다.\
+따라서 `isLoading`이 `true`라면 `isFetching`도 `true`일 수 밖에 없습니다.\
+`queryFn`가 아직 미해결이며, 캐시된 데이터도 없습니다.\
+쿼리를 전에 실행한 적이 없어서 데이터를 가져오는 중이고 캐시된 데이터도 없어서 보여줄 수 없습니다.\
+캐시에 데이터가 있으면 `isLoading`은 `false`가 됩니다.\
+첫 로딩 상태를 구분하고 싶을 때, 즉 데이터를 처음 요청할 때만 로딩 스피너를 표시하거나 초기 화면 상태를 처리하고 싶을 때 유용합니다.
+
+### isFetching vs. isLoading
+
+![isloading-isfetching](./img/isloading-isfetching.png)
+
+`isFetching`은 데이터를 아직 가져오고 있는 상태로 비동기 쿼리 함수가 아직 해결되지 않았을 때 `true`입니다.\
+즉, `staleTime`이 만료되고 `gcTime`은 유효할 때입니다.
+
+`isLoading`은 `isFetching`이 `true`면서 해당 쿼리에 대한 캐시된 데이터가 없는 상태입니다.\
+즉, `cache`가 비워진 상태에서 데이터를 `fetching`할 때이며 `isPending`과 `isFetching`이 모두 `true`일 때 설정됩니다.\
+(`isLoading = isPending && isFetching`)
+
+## 데이터를 미리 불러오는 옵션
+
+|       API       |  method to  | data from | 캐시 저장 유무 |
+| :-------------: | :---------: | :-------: | :------------: |
+|  prefetchQuery  | queryClient |  server   |      yes       |
+|  setQueryData   | queryClient |  client   |      yes       |
+| placeholderData |  useQuery   |  client   |       no       |
+|   initialData   |  useQuery   |  client   |      yes       |

@@ -68,6 +68,8 @@
       - [Columns](library/tailwind/layout/columns.md)
   - [Tanstack Query](library/tanstack-query/README.md)
     - [queries](library/tanstack-query/queries.md)
+    - [infinite-queries](library/tanstack-query/infinite-queries.md)
+    - [api-reference](library/tanstack-query/api-reference.md)
   - [Zotai](library/zotai/README.md)
     - [Core](library/zotai/core/atom.md)
     - [Provider](library/zotai/core/provider.md)
