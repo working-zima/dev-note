@@ -34,7 +34,7 @@ npm i -D @tanstack/eslint-plugin-query
 npm i @tanstack/react-query-devtools
 ```
 
-## QueryClient 세팅
+## QueryClient
 
 ### QueryClientProvider
 
@@ -72,6 +72,82 @@ function App() {
 }
 ```
 
+### useQueryClient
+
+현재 사용 중인 `QueryClient` 인스턴스를 가져오는 Tanstack Query의 훅입니다.
+
+```tsx
+import { useQueryClient } from "@tanstack/react-query";
+
+const Todos = () => {
+  const queryClient = useQueryClient(); // 현재 QueryClient 가져오기
+
+  return <div>QueryClient 사용 가능</div>;
+};
+```
+
+## 데이터를 미리 불러오는 옵션
+
+|       API       |  method to  | data from | 캐시 저장 유무 |
+| :-------------: | :---------: | :-------: | :------------: |
+|  prefetchQuery  | queryClient |  server   |      yes       |
+|  setQueryData   | queryClient |  client   |      yes       |
+| placeholderData |  useQuery   |  client   |       no       |
+|   initialData   |  useQuery   |  client   |      yes       |
+
+## prefetchQuery
+
+데이터를 캐시에 추가합니다.\
+추가된 데이터는 기본적으로 `stale`로 간주됩니다.\
+그래서 이후 데이터를 사용해야 할 때, 그 데이터는 여전히 `stale` 상태라서 다시 데이터를 가져와야 합니다.\
+하지만 데이터를 다시 가져오는 동안, 캐시가 만료되지 않으면 새로고침 될 때까지 캐시에 있는 데이터 제공하게 됩니다.
+
+```tsx
+import { useQueryClient } from "@tanstack/react-query";
+
+const queryClient = useQueryClient();
+
+await queryClient.prefetchQuery({ queryKey, queryFn });
+```
+
+프리페치는 일회성 작업입니다.\
+따라서 `refetchOnMount`, `refetchOnWindowFocus`, `refetchOnReconnect` 같은 리페칭 옵션은 프리페치에 적용되지 않습니다.
+
+### setQueryData
+
+캐시에 있는 데이터를 즉시 변경하는 함수입니다.\
+API 요청 없이도 데이터의 상태를 직접 수정할 수 있습니다.\
+`setQueryData`는 캐시만 변경할 뿐, 실제 서버 데이터는 변경되지 않습니다.
+
+```tsx
+import { useQueryClient } from "@tanstack/react-query";
+
+const queryClient = useQueryClient();
+
+queryClient.setQueryData(queryKey, (oldData) => newData);
+```
+
+#### setQueryData 주의
+
+기존 데이터를 직접 수정하면 안됩니다.
+
+```tsx
+// 잘못된 코드
+queryClient.setQueryData(["todos"], (oldData) => {
+  // 기존 배열을 수정하면 안 됨
+  oldData.push({ id: 3, title: "새로운 할 일" });
+  return oldData;
+});
+```
+
+```tsx
+// 올바른 코드
+queryClient.setQueryData(["todos"], (oldData) => {
+  // 새로운 배열을 반환
+  return [...oldData, { id: 3, title: "새로운 할 일" }];
+});
+```
+
 ## isFetching 과 isLoading
 
 |     속성     |                설명                |                              활성화 조건                               |                          주요 사용 사례                          |
@@ -101,12 +177,3 @@ function App() {
 `isLoading`은 `isFetching`이 `true`면서 해당 쿼리에 대한 캐시된 데이터가 없는 상태입니다.\
 즉, `cache`가 비워진 상태에서 데이터를 `fetching`할 때이며 `isPending`과 `isFetching`이 모두 `true`일 때 설정됩니다.\
 (`isLoading = isPending && isFetching`)
-
-## 데이터를 미리 불러오는 옵션
-
-|       API       |  method to  | data from | 캐시 저장 유무 |
-| :-------------: | :---------: | :-------: | :------------: |
-|  prefetchQuery  | queryClient |  server   |      yes       |
-|  setQueryData   | queryClient |  client   |      yes       |
-| placeholderData |  useQuery   |  client   |       no       |
-|   initialData   |  useQuery   |  client   |      yes       |

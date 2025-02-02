@@ -11,7 +11,13 @@ import { useQuery } from "@tanstack/react-query";
 const query = useQuery({
   queryKey: ["todos"],
   queryFn: getTodos,
-  staleTime: 1000 * 2,
+  staleTime: 1000 * 60 * 10, // 10m
+  gcTime: 1000 * 60 * 15, // 15m
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  refetchInterval: 1000 * 60
+  select,
 });
 ```
 
@@ -110,9 +116,126 @@ const { isPending, error, data } = useQuery({
 });
 ```
 
+### refetchOnMount
+
+컴포넌트가 마운트될 때 데이터를 다시 가져올지에 관한 옵션입니다.
+
+|                                              상황                                              |     추천 값     |
+| :--------------------------------------------------------------------------------------------: | :-------------: |
+| 항상 최신 데이터를 가져와야 하는 경우(컴포넌트가 마운트될 때 캐시된 데이터가 있어도 새로 요청) | `true` (기본값) |
+|           캐시된 데이터를 유지하고 싶다면(캐시된 데이터가 있으면 새로 요청하지 않음)           |     `false`     |
+|               항상 새 데이터를 가져와야 하는 경우(`staleTime: Infinity`일 때도)                |   `"always"`    |
+
+### refetchOnWindowFocus
+
+사용자가 다른 탭으로 갔다가 돌아올 때 자동으로 데이터 새로고침 여부에 관한 옵션입니다.
+
+|                       상황                       |     추천 값     |
+| :----------------------------------------------: | :-------------: |
+|      실시간 데이터(예: 금융, 주식, 채팅 등)      | `true` (기본값) |
+| 데이터가 자주 변하지 않는 경우 (예: 설정 페이지) |     `false`     |
+
+### refetchOnReconnect
+
+네트워크가 끊겼다가 다시 연결되면 데이터를 새로 요청할지에 관한 옵션입니다.
+
+|                  상황                  |     추천 값     |
+| :------------------------------------: | :-------------: |
+| 실시간 데이터(예: 주식, 환율, 채팅 등) | `true` (기본값) |
+|        자주 변하지 않는 데이터         |     `false`     |
+
+### refetchInterval
+
+몇 초마다 데이터를 자동으로 새로 가져올지에 관한 옵션입니다.
+
+|                    상황                    |     추천 값      |
+| :----------------------------------------: | :--------------: |
+|       데이터가 자주 변하지 않는 경우       | `false` (기본값) |
+| 실시간 데이터(예: 주식, 환율, 라이브 채팅) |     숫자(ms)     |
+
+### select
+
+Tanstack Query는 컴포넌트가 실제로 필요한 경우에만 다시 렌더링되도록 몇 가지 최적화를 자동으로 적용합니다.
+
+```tsx
+// select 옵션 없을 때
+const { data } = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodos,
+});
+// data: [
+//   { id: 1, title: "운동하기", completed: false },
+//   { id: 2, title: "책 읽기", completed: true },
+//   { id: 3, title: "공부하기", completed: false },
+// ];
+
+// 개수만 가져오기
+const { data: todoCount } = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodos,
+  select: (data) => data.length,
+});
+// data: 3
+
+// 완료된 할 일만 가져오기
+const { data: completedTodos } = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodos,
+  select: (data) => data.filter((todo) => todo.completed),
+});
+// data: [{ id: 2, title: "책 읽기", completed: true }]
+
+// 특정 형식으로 데이터 변환하기
+const { data: todoTitles } = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodos,
+  select: (data) => data.map((todo) => todo.title),
+});
+// data: ["운동하기", "책 읽기", "공부하기"]
+```
+
+#### select 옵션의 동작 방식
+
+1️. `queryFn`이 데이터를 가져옴\
+2️. `select`가 데이터를 가공해서 필요한 부분만 저장\
+3️. 데이터가 변하지 않으면 Tanstack Query가 기존 데이터를 그대로 사용\
+4️. `select` 결과가 변하지 않으면 컴포넌트가 다시 렌더링되지 않음
+
+#### select 주의사항
+
+1. `select` 내부에서 오류를 발생시키면 안 됩니다.\
+   오류를 발생하면 `data`가 `undefined`가 되면서도 `isSuccess` 상태는 `true`가 됩니다.\
+   데이터 검증은 `queryFn` 내부에서 처리하는 것이 좋습니다.
+
+2. `select` 함수를 매번 새로 만들지 않는게 좋습니다.\
+    `select` 함수를 `useQuery` 안에서 직접 정의하면, 컴포넌트가 렌더링될 때마다 새로운 함수가 생성됩니다.
+
+   ```ts
+   const { data: todoCount } = useQuery({
+     queryKey: ["todos"],
+     queryFn: fetchTodos,
+     select: (data) => data.length, // 매번 새로운 함수 생성
+   });
+   ```
+
+   `useCallback`을 사용하여 `select` 함수를 메모이제이션하면 `data`가 바뀔 때만 `select` 함수가 실행됩니다.
+
+   ```ts
+   import { useCallback } from "react";
+
+   const selectTodoCount = useCallback((data) => data.length, []);
+
+   const { data: todoCount } = useQuery({
+     queryKey: ["todos"],
+     queryFn: fetchTodos,
+     select: selectTodoCount, // 기존 함수 재사용
+   });
+   ```
+
 ### isError
 
-`queryFn`를 통해 fetch posts에서 에러가 발생했다면 데이터도 없을 거
+데이터를 가져올 때 에러가 발생했는지 확인하는 속성입니다.\
+`useQuery`나 `useMutation`에서 API 호출 중 문제가 발생하면 `isError`가 `true`가 됩니다.
 
 ### staleTime
 
@@ -128,14 +251,14 @@ useQuery(["todos"], fetchTodos, { staleTime: 1000 * 10 }); // 10초
 
 캐시 메모리 사용량 관리를 위해 사용하는 옵션입니다.\
 특정 queryKey를 사용하는 컴포넌트가 언마운트되거나 더 이상 사용되지 않을 때를 기준으로 설정한 시간 이후 해당 데이터는 캐시에 삭제됩니다.\
-기본값은 `5분`입니다.
+기본값은 5분 입니다.
 
 ```tsx
 useQuery(["todos"], fetchTodos, { cacheTime: 1000 * 30 }); // 30초
 ```
 
 `staleTime`은 데이터를 다시 가져와야 할 때를 알려주고, `gcTime`은 데이터를 캐시에 유지할 시간을 결정합니다.\
-일반적으로 `gcTime`은 `staleTime`보다 길어야 합니다.
+따라서 일반적으로 `gcTime`은 `staleTime`보다 길어야 합니다.
 
 ## 데이터의 신선도
 
@@ -284,19 +407,6 @@ console.log(isLoading); // true (로딩 상태로 전환)
 
 ```tsx
 queryClient.removeQueries(["todos"]);
-```
-
-## prefetchQuery
-
-데이터를 캐시에 추가합니다.\
-추가된 데이터는 기본적으로 `stale`로 간주됩니다.\
-그래서 이후 데이터를 사용해야 할 때, 그 데이터는 여전히 `stale` 상태라서 다시 데이터를 가져와야 합니다.\
-하지만 데이터를 다시 가져오는 동안, 캐시가 만료되지 않으면 새로고침 될 때까지 캐시에 있는 데이터 제공하게 됩니다.
-
-```tsx
-const queryClient = useQueryClient();
-
-await queryClient.prefetchQuery({ queryKey, queryFn });
 ```
 
 ## useMutation

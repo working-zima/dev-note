@@ -36,11 +36,8 @@ const isFetchingPosts = useIsFetching({ queryKey: ["posts"] });
 
   ```tsx
   // 기본 QueryClient가 아닌 특정 QueryClient 사용
-  import {
-    useQueryClient,
-    useIsFetching,
-    QueryClient,
-  } from "@tanstack/react-query";
+  import { useIsFetching, QueryClient } from "@tanstack/react-query";
+
   const customQueryClient = new QueryClient();
   const isFetchingCustom = useIsFetching({}, customQueryClient);
   ```
