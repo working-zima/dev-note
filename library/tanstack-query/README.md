@@ -59,6 +59,20 @@ const queryClient = new QueryClient(
       },
     },
   }
+  // 모든 쿼리의 데이터, 메타 정보 및 상태를 저장하는 역할
+  queryCache: new QueryCache({
+    // 쿼리가 오류를 만나면 호출되는 함수
+    onError: (error) => {
+      console.error(error)
+    },
+  }),
+
+  mutationCache: new MutationCache({
+    // mutation이 오류를 만나면 호출되는 함수
+    onError: (error) => {
+      console.error(error)
+    },
+  }),
 );
 
 function App() {
@@ -117,7 +131,8 @@ await queryClient.prefetchQuery({ queryKey, queryFn });
 
 캐시에 있는 데이터를 즉시 변경하는 함수입니다.\
 API 요청 없이도 데이터의 상태를 직접 수정할 수 있습니다.\
-`setQueryData`는 캐시만 변경할 뿐, 실제 서버 데이터는 변경되지 않습니다.
+`setQueryData`는 캐시만 변경할 뿐, 실제 서버 데이터는 변경되지 않습니다.\
+낙관적 업데이트를 사용할 때 유용합니다.
 
 ```tsx
 import { useQueryClient } from "@tanstack/react-query";
