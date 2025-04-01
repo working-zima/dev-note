@@ -246,7 +246,7 @@ Promise<TData>;
 
 - 기존 데이터 또는 서버에서 새로 받아온 데이터를 반환합니다.
 
-## queryClient.ensureInfiniteQueryData
+## ensureInfiniteQueryData
 
 `ensureInfiniteQueryData`는 비동기 함수로, **무한 쿼리의 캐시 데이터를 반환**합니다.  
 쿼리가 존재하지 않으면 `fetchInfiniteQuery`를 호출하여 데이터를 가져옵니다.
@@ -277,7 +277,7 @@ Promise<InfiniteData<TData, TPageParam>>;
 
 - 기존에 캐시된 무한 쿼리 데이터 또는 새로 받아온 데이터를 반환합니다.
 
-## queryClient.getQueriesData
+## getQueriesData
 
 `getQueriesData`는 동기 함수이며, 여러 개의 쿼리에 대해 **캐시된 데이터를 가져오는 함수**입니다.  
 전달된 `queryKey` 또는 `queryFilter`와 일치하는 쿼리들만 반환합니다.
@@ -308,7 +308,7 @@ const data = queryClient.getQueriesData(filters);
 - 타입스크립트 사용 시 기본적으로 `TData`는 `unknown`으로 처리됩니다.
 - 동일한 타입의 데이터만 반환된다는 확신이 있다면, 제네릭 타입 `TData`를 명시할 수 있습니다.
 
-## queryClient.setQueryData
+## setQueryData
 
 `setQueryData`는 **지정한 쿼리의 캐시 데이터를 즉시 동기적으로 수정**하는 함수입니다.  
 쿼리가 존재하지 않으면 자동으로 생성되며, 사용되지 않을 경우 기본 `gcTime`(5분) 이후 가비지 컬렉션됩니다.
@@ -356,7 +356,7 @@ queryClient.setQueryData(queryKey, (oldData) => {
 - `setQueryData`를 사용할 때는 **불변성(immutability)**을 유지해야 합니다.
 - `getQueryData`로 가져온 데이터를 직접 수정하는 방식은 **절대 사용하지 마세요.**
 
-## queryClient.getQueryState
+## getQueryState
 
 `getQueryState`는 동기 함수로, **쿼리의 현재 상태 객체를 반환**합니다.  
 쿼리가 존재하지 않으면 `undefined`가 반환됩니다.
@@ -379,7 +379,7 @@ console.log(state.dataUpdatedAt);
 
 > 이 메서드는 쿼리의 내부 상태(예: `dataUpdatedAt`, `status`, `fetchStatus` 등)를 확인할 때 유용합니다.
 
-## queryClient.setQueriesData
+## setQueriesData
 
 `setQueriesData`는 **동기 함수**로, 여러 쿼리의 캐시 데이터를 한 번에 수정할 수 있습니다.  
 `queryKey`의 일부 또는 `queryFilter` 조건에 맞는 쿼리만 업데이트되며, **새로운 캐시 엔트리는 생성되지 않습니다.**  
@@ -398,7 +398,7 @@ queryClient.setQueriesData(filters, updater);
 - `updater: TQueryFnData | (oldData: TQueryFnData | undefined) => TQueryFnData`
   - 새로운 데이터 또는 이전 데이터를 기반으로 새로운 값을 반환하는 함수
 
-## queryClient.invalidateQueries
+## invalidateQueries
 
 `invalidateQueries`는 **하나 또는 여러 쿼리를 무효화하고 백그라운드에서 다시 가져오도록(triggers refetch)** 설정할 수 있는 메서드입니다.  
 쿼리 키 또는 쿼리 상태/속성 등을 기준으로 조건을 설정할 수 있습니다.
@@ -447,7 +447,7 @@ await queryClient.invalidateQueries(
   - 현재 진행 중인 요청을 취소하고 새 요청을 실행합니다.
   - `false`로 설정하면 요청 중인 쿼리는 다시 요청하지 않습니다.
 
-## queryClient.refetchQueries
+## refetchQueries
 
 `refetchQueries`는 **지정된 조건에 따라 쿼리를 다시 요청(refetch)** 하는 메서드입니다.
 
@@ -510,7 +510,7 @@ await queryClient.cancelQueries({ queryKey: ["posts"], exact: true });
 
 - 반환값 없음 (`void`)
 
-## queryClient.removeQueries
+## removeQueries
 
 `removeQueries`는 **지정된 조건에 맞는 쿼리를 캐시에서 제거**합니다.  
 쿼리 키 또는 필터로 일치하는 쿼리만 제거되며, **캐시에서 완전히 삭제**됩니다.
@@ -530,7 +530,7 @@ queryClient.removeQueries({ queryKey, exact: true });
 
 - 없음 (`void`)
 
-## queryClient.resetQueries
+## resetQueries
 
 `resetQueries`는 **지정된 쿼리들을 초기 상태로 리셋**하는 메서드입니다.  
 이는 `invalidateQueries`와 달리 **구독자(subscriber)를 유지하며**,  
@@ -565,7 +565,7 @@ Promise<void>;
 
 - 모든 활성 쿼리의 reset과 refetch가 완료되면 resolve됨
 
-## queryClient.isFetching
+## isFetching
 
 `isFetching`은 현재 **fetching 중인 쿼리의 수**를 반환하는 메서드입니다.  
 이는 백그라운드 fetch, 새 페이지 로딩, infinite query의 추가 페이지 로딩 등을 포함합니다.
@@ -593,7 +593,7 @@ number;
 
 > 컴포넌트에서 상태를 구독하고 싶다면, `useIsFetching` 훅을 사용하는 것이 권장됩니다.
 
-## queryClient.isMutating
+## isMutating
 
 `isMutating`은 현재 **fetching 중인 뮤테이션의 수**를 반환하는 메서드입니다.
 
@@ -620,7 +620,7 @@ number;
 
 > 컴포넌트에서 상태를 구독하고 싶다면, `useIsMutating` 훅을 사용하는 것이 유용합니다.
 
-## queryClient.getDefaultOptions
+## getDefaultOptions
 
 `getDefaultOptions`는 `QueryClient` 생성 시 설정한 기본 옵션이나,  
 `setDefaultOptions`를 통해 나중에 설정한 값을 반환합니다.
@@ -631,7 +631,7 @@ number;
 const defaultOptions = queryClient.getDefaultOptions();
 ```
 
-## queryClient.setDefaultOptions
+## setDefaultOptions
 
 `setDefaultOptions`는 `QueryClient`의 **기본 옵션을 동적으로 설정**할 수 있는 메서드입니다.  
 이전에 정의된 값은 덮어쓰기(overwrite)됩니다.
@@ -646,7 +646,7 @@ queryClient.setDefaultOptions({
 });
 ```
 
-## queryClient.getQueryDefaults
+## getQueryDefaults
 
 `getQueryDefaults`는 특정 `queryKey`에 대해 등록된 기본 옵션들을 반환합니다.
 
@@ -659,7 +659,7 @@ const defaultOptions = queryClient.getQueryDefaults(["posts"]);
 > 여러 `queryKey`와 일치하는 기본값이 등록되어 있으면, 등록 순서에 따라 병합됩니다.  
 > 더 구체적인 키를 나중에 등록하는 것이 우선순위를 가지게 됩니다.
 
-## queryClient.setQueryDefaults
+## setQueryDefaults
 
 `setQueryDefaults`는 특정 쿼리 키에 대해 기본 옵션을 설정하는 메서드입니다.  
 `getQueryDefaults`와 연동되며, 등록 순서가 중요합니다.
@@ -687,7 +687,7 @@ function Component() {
 
 > 기본값 등록 시에는 **일반적인 키 → 구체적인 키 순서로 등록**해야 병합 우선순위가 올바르게 동작합니다.
 
-## queryClient.getMutationDefaults
+## getMutationDefaults
 
 `getMutationDefaults`는 특정 `mutationKey`에 대해 설정된 **기본 옵션**을 반환합니다.
 
@@ -699,7 +699,7 @@ const defaultOptions = queryClient.getMutationDefaults(["addPost"]);
 
 - 지정된 `mutationKey`와 일치하는 뮤테이션의 기본 설정값을 반환합니다.
 
-## queryClient.setMutationDefaults
+## setMutationDefaults
 
 `setMutationDefaults`는 특정 `mutationKey`에 대해 **기본 옵션을 등록**하는 데 사용됩니다.
 
@@ -727,7 +727,7 @@ function Component() {
 > `setQueryDefaults`와 마찬가지로, 등록 순서가 중요합니다.  
 > **일반적인 키 → 구체적인 키 순서**로 등록해야 병합 우선순위가 올바르게 작동합니다.
 
-## queryClient.getQueryCache
+## getQueryCache
 
 `getQueryCache`는 현재 `QueryClient`가 연결된 **쿼리 캐시 인스턴스**를 반환합니다.
 
@@ -739,7 +739,7 @@ const queryCache = queryClient.getQueryCache();
 
 - 캐시에 직접 접근하거나, 내부 동작을 커스터마이징할 때 사용됩니다.
 
-## queryClient.getMutationCache
+## getMutationCache
 
 `getMutationCache`는 현재 `QueryClient`가 연결된 **뮤테이션 캐시 인스턴스**를 반환합니다.
 
@@ -749,7 +749,7 @@ const queryCache = queryClient.getQueryCache();
 const mutationCache = queryClient.getMutationCache();
 ```
 
-## queryClient.clear
+## clear
 
 `clear`는 `QueryClient`에 연결된 **모든 캐시 (쿼리 및 뮤테이션)** 를 초기화합니다.
 
@@ -763,7 +763,7 @@ queryClient.clear();
 
 > `resetQueries`는 구독자를 유지하며 데이터를 초기화하지만, `clear`는 구독자까지 제거합니다.
 
-## queryClient.resumePausedMutations
+## resumePausedMutations
 
 `resumePausedMutations`는 **네트워크 연결이 끊겨 중단된 뮤테이션을 다시 재개**할 때 사용됩니다.
 
