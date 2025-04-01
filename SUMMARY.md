@@ -74,6 +74,7 @@
     - [Paginated / Lagged Queries](library/tanstack-query/paginated-lagged-queries.md)
     - [Placeholder Query Data](library/tanstack-query/placeholder-query-data.md)
     - [Queries](library/tanstack-query/queries.md)
+    - [Query Client](library/tanstack-query/query-client.md)
   - [Zotai](library/zotai/README.md)
     - [Core](library/zotai/core/atom.md)
     - [Provider](library/zotai/core/provider.md)
