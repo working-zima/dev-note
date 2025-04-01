@@ -490,7 +490,7 @@ await queryClient.refetchQueries({
 - 모든 쿼리의 refetch가 완료되면 resolve되는 `Promise`
 - 기본적으로 refetch 실패 시에도 에러를 throw하지 않지만, `throwOnError`로 설정 가능
 
-## queryClient.cancelQueries
+## cancelQueries
 
 `cancelQueries`는 **진행 중인 쿼리 요청을 취소**할 때 사용됩니다.  
 주로 **낙관적 업데이트(Optimistic Update)** 수행 시, 기존 요청이 낙관적 데이터와 충돌하지 않도록 할 때 유용합니다.
