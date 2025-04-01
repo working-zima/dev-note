@@ -100,7 +100,7 @@ Promise<TData>;
 
 비동기적으로 동작하며, 데이터가 준비되면 `Promise`를 통해 반환됩니다.
 
-## queryClient.fetchInfiniteQuery
+## fetchInfiniteQuery
 
 `fetchInfiniteQuery`는 `fetchQuery`와 유사하지만, **무한 쿼리(infinite query)**에 사용됩니다.  
 주로 페이지네이션이나 스크롤 기반 로딩에 활용됩니다.
@@ -129,7 +129,7 @@ try {
 Promise<InfiniteData<TData, TPageParam>>;
 ```
 
-## queryClient.prefetchQuery
+## prefetchQuery
 
 `prefetchQuery`는 `useQuery`로 데이터를 실제로 렌더링하기 **전에 미리 데이터를 가져오는** 비동기 메서드입니다.  
 `fetchQuery`와 거의 동일하게 동작하지만, **결과 데이터를 반환하거나 에러를 throw하지 않습니다.**
@@ -165,7 +165,7 @@ Promise<void>;
 - 요청이 필요한 경우, 쿼리가 끝난 후 resolve됩니다.
 - **데이터를 반환하거나 에러를 throw하지 않습니다.**
 
-## queryClient.prefetchInfiniteQuery
+## prefetchInfiniteQuery
 
 `prefetchInfiniteQuery`는 `prefetchQuery`와 유사하지만, **무한 쿼리(infinite query)**에 사용할 수 있습니다.  
 미리 데이터를 가져와 캐시에 저장해두는 데 사용됩니다.
@@ -193,7 +193,7 @@ Promise<void>;
 - 요청이 필요하면 쿼리 실행 이후 resolve됩니다.
 - **데이터를 반환하지 않고, 에러도 발생시키지 않습니다.**
 
-## queryClient.getQueryData
+## getQueryData
 
 `getQueryData`는 동기 함수이며, 지정한 쿼리의 **캐시된 데이터를 즉시 반환**합니다.  
 쿼리가 존재하지 않으면 `undefined`를 반환합니다.
@@ -217,7 +217,7 @@ TQueryFnData | undefined;
 - 캐시된 데이터가 있다면 해당 데이터
 - 쿼리가 존재하지 않으면 `undefined`
 
-## queryClient.ensureQueryData
+## ensureQueryData
 
 `ensureQueryData`는 비동기 함수이며, 쿼리의 **캐시된 데이터를 반환**합니다.  
 쿼리가 존재하지 않으면 내부적으로 `fetchQuery`를 호출하여 데이터를 가져옵니다.
