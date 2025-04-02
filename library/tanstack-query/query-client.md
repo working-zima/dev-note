@@ -102,7 +102,7 @@ Promise<TData>;
 
 ## fetchInfiniteQuery
 
-`fetchInfiniteQuery`는 `fetchQuery`와 유사하지만, **무한 쿼리(infinite query)**에 사용됩니다.  
+`fetchInfiniteQuery`는 `fetchQuery`와 유사하지만, 무한 쿼리(infinite query)에 사용됩니다.  
 주로 페이지네이션이나 스크롤 기반 로딩에 활용됩니다.
 
 ### fetchInfiniteQuery 사용 예시
@@ -131,8 +131,8 @@ Promise<InfiniteData<TData, TPageParam>>;
 
 ## prefetchQuery
 
-`prefetchQuery`는 `useQuery`로 데이터를 실제로 렌더링하기 **전에 미리 데이터를 가져오는** 비동기 메서드입니다.  
-`fetchQuery`와 거의 동일하게 동작하지만, **결과 데이터를 반환하거나 에러를 throw하지 않습니다.**
+`prefetchQuery`는 `useQuery`로 데이터를 실제로 렌더링하기 전에 미리 데이터를 가져오는 비동기 메서드입니다.  
+`fetchQuery`와 거의 동일하게 동작하지만, 결과 데이터를 반환하거나 에러를 throw하지 않습니다.
 
 ### prefetchQuery 사용 예시
 
@@ -163,11 +163,11 @@ Promise<void>;
 
 - 요청이 필요하지 않으면 즉시 resolve됩니다.
 - 요청이 필요한 경우, 쿼리가 끝난 후 resolve됩니다.
-- **데이터를 반환하거나 에러를 throw하지 않습니다.**
+- 데이터를 반환하거나 에러를 throw하지 않습니다.
 
 ## prefetchInfiniteQuery
 
-`prefetchInfiniteQuery`는 `prefetchQuery`와 유사하지만, **무한 쿼리(infinite query)**에 사용할 수 있습니다.  
+`prefetchInfiniteQuery`는 `prefetchQuery`와 유사하지만, 무한 쿼리(infinite query)에 사용할 수 있습니다.  
 미리 데이터를 가져와 캐시에 저장해두는 데 사용됩니다.
 
 ### prefetchInfiniteQuery 사용 예시
@@ -191,11 +191,11 @@ Promise<void>;
 
 - 요청이 필요하지 않으면 즉시 resolve됩니다.
 - 요청이 필요하면 쿼리 실행 이후 resolve됩니다.
-- **데이터를 반환하지 않고, 에러도 발생시키지 않습니다.**
+- 데이터를 반환하지 않고, 에러도 발생시키지 않습니다.
 
 ## getQueryData
 
-`getQueryData`는 동기 함수이며, 지정한 쿼리의 **캐시된 데이터를 즉시 반환**합니다.  
+`getQueryData`는 동기 함수이며, 지정한 쿼리의 캐시된 데이터를 즉시 반환합니다.  
 쿼리가 존재하지 않으면 `undefined`를 반환합니다.
 
 ### getQueryData 사용 예시
@@ -219,7 +219,7 @@ TQueryFnData | undefined;
 
 ## ensureQueryData
 
-`ensureQueryData`는 비동기 함수이며, 쿼리의 **캐시된 데이터를 반환**합니다.  
+`ensureQueryData`는 비동기 함수이며, 쿼리의 캐시된 데이터를 반환합니다.  
 쿼리가 존재하지 않으면 내부적으로 `fetchQuery`를 호출하여 데이터를 가져옵니다.
 
 ### ensureQueryData 사용 예시
@@ -248,7 +248,7 @@ Promise<TData>;
 
 ## ensureInfiniteQueryData
 
-`ensureInfiniteQueryData`는 비동기 함수로, **무한 쿼리의 캐시 데이터를 반환**합니다.  
+`ensureInfiniteQueryData`는 비동기 함수로, 무한 쿼리의 캐시 데이터를 반환합니다.  
 쿼리가 존재하지 않으면 `fetchInfiniteQuery`를 호출하여 데이터를 가져옵니다.
 
 ### ensureInfiniteQueryData 사용 예시
@@ -279,7 +279,7 @@ Promise<InfiniteData<TData, TPageParam>>;
 
 ## getQueriesData
 
-`getQueriesData`는 동기 함수이며, 여러 개의 쿼리에 대해 **캐시된 데이터를 가져오는 함수**입니다.  
+`getQueriesData`는 동기 함수이며, 여러 개의 쿼리에 대해 캐시된 데이터를 가져오는 함수입니다.  
 전달된 `queryKey` 또는 `queryFilter`와 일치하는 쿼리들만 반환합니다.
 
 ### getQueriesData 사용 예시
@@ -310,7 +310,7 @@ const data = queryClient.getQueriesData(filters);
 
 ## setQueryData
 
-`setQueryData`는 **지정한 쿼리의 캐시 데이터를 즉시 동기적으로 수정**하는 함수입니다.  
+`setQueryData`는 지정한 쿼리의 캐시 데이터를 즉시 동기적으로 수정하는 함수입니다.  
 쿼리가 존재하지 않으면 자동으로 생성되며, 사용되지 않을 경우 기본 `gcTime`(5분) 이후 가비지 컬렉션됩니다.
 
 ### setQueryData 사용 예시
@@ -348,17 +348,17 @@ queryClient.setQueryData(queryKey, (oldData) => {
 
 ### 비동기 데이터 갱신과의 차이점
 
-- `setQueryData`는 **데이터가 이미 메모리에 존재할 때 사용하는 동기적 방식**입니다.
+- `setQueryData`는 데이터가 이미 메모리에 존재할 때 사용하는 동기적 방식입니다.
 - 서버에서 새로 데이터를 받아와야 하는 경우, `fetchQuery`나 `refetchQueries`를 사용해야 합니다.
 
 ### 불변성 주의사항
 
-- `setQueryData`를 사용할 때는 **불변성(immutability)**을 유지해야 합니다.
-- `getQueryData`로 가져온 데이터를 직접 수정하는 방식은 **절대 사용하지 마세요.**
+- `setQueryData`를 사용할 때는 불변성(immutability)을 유지해야 합니다.
+- `getQueryData`로 가져온 데이터를 직접 수정하는 방식은 절대 사용하지 마세요.
 
 ## getQueryState
 
-`getQueryState`는 동기 함수로, **쿼리의 현재 상태 객체를 반환**합니다.  
+`getQueryState`는 동기 함수로, 쿼리의 현재 상태 객체를 반환합니다.  
 쿼리가 존재하지 않으면 `undefined`가 반환됩니다.
 
 ### getQueryState 사용 예시
@@ -381,8 +381,8 @@ console.log(state.dataUpdatedAt);
 
 ## setQueriesData
 
-`setQueriesData`는 **동기 함수**로, 여러 쿼리의 캐시 데이터를 한 번에 수정할 수 있습니다.  
-`queryKey`의 일부 또는 `queryFilter` 조건에 맞는 쿼리만 업데이트되며, **새로운 캐시 엔트리는 생성되지 않습니다.**  
+`setQueriesData`는 동기 함수로, 여러 쿼리의 캐시 데이터를 한 번에 수정할 수 있습니다.  
+`queryKey`의 일부 또는 `queryFilter` 조건에 맞는 쿼리만 업데이트되며, 새로운 캐시 엔트리는 생성되지 않습니다.  
 내부적으로는 `setQueryData`가 각 일치하는 쿼리에 대해 호출됩니다.
 
 ### setQueriesData 사용 예시
@@ -400,13 +400,13 @@ queryClient.setQueriesData(filters, updater);
 
 ## invalidateQueries
 
-`invalidateQueries`는 **하나 또는 여러 쿼리를 무효화하고 백그라운드에서 다시 가져오도록(triggers refetch)** 설정할 수 있는 메서드입니다.  
+`invalidateQueries`는 하나 또는 여러 쿼리를 무효화하고 백그라운드에서 다시 가져오도록(triggers refetch) 설정할 수 있는 메서드입니다.  
 쿼리 키 또는 쿼리 상태/속성 등을 기준으로 조건을 설정할 수 있습니다.
 
 ### invalidateQueries 기본 동작
 
-- 기본적으로 조건에 맞는 **모든 쿼리는 즉시 invalid 처리**됩니다.
-- `useQuery` 등으로 현재 사용 중인(active) 쿼리는 **백그라운드에서 자동으로 다시 요청됩니다**.
+- 기본적으로 조건에 맞는 모든 쿼리는 즉시 invalid 처리됩니다.
+- `useQuery` 등으로 현재 사용 중인(active) 쿼리는 백그라운드에서 자동으로 다시 요청됩니다.
 
 ### invalidateQueries 사용 예시
 
@@ -449,7 +449,7 @@ await queryClient.invalidateQueries(
 
 ## refetchQueries
 
-`refetchQueries`는 **지정된 조건에 따라 쿼리를 다시 요청(refetch)** 하는 메서드입니다.
+`refetchQueries`는 지정된 조건에 따라 쿼리를 다시 요청(refetch) 하는 메서드입니다.
 
 ### refetchQueries 사용 예시
 
@@ -492,8 +492,8 @@ await queryClient.refetchQueries({
 
 ## cancelQueries
 
-`cancelQueries`는 **진행 중인 쿼리 요청을 취소**할 때 사용됩니다.  
-주로 **낙관적 업데이트(Optimistic Update)** 수행 시, 기존 요청이 낙관적 데이터와 충돌하지 않도록 할 때 유용합니다.
+`cancelQueries`는 진행 중인 쿼리 요청(`fetchQuery` / `useQuery` / `fetchInfiniteQuery` 같은 읽기용 요청)을 취소할 때 사용됩니다.  
+주로 낙관적 업데이트(Optimistic Update) 수행 시, 기존 요청이 낙관적 데이터와 충돌하지 않도록 할 때 유용합니다.
 
 ### cancelQueries 사용 예시
 
@@ -512,8 +512,8 @@ await queryClient.cancelQueries({ queryKey: ["posts"], exact: true });
 
 ## removeQueries
 
-`removeQueries`는 **지정된 조건에 맞는 쿼리를 캐시에서 제거**합니다.  
-쿼리 키 또는 필터로 일치하는 쿼리만 제거되며, **캐시에서 완전히 삭제**됩니다.
+`removeQueries`는 지정된 조건에 맞는 쿼리를 캐시에서 제거합니다.  
+쿼리 키 또는 필터로 일치하는 쿼리만 제거되며, 캐시에서 완전히 삭제됩니다.
 
 ### removeQueries 사용 예시
 
@@ -532,8 +532,8 @@ queryClient.removeQueries({ queryKey, exact: true });
 
 ## resetQueries
 
-`resetQueries`는 **지정된 쿼리들을 초기 상태로 리셋**하는 메서드입니다.  
-이는 `invalidateQueries`와 달리 **구독자(subscriber)를 유지하며**,  
+`resetQueries`는 지정된 쿼리들을 초기 상태로 리셋하는 메서드입니다.  
+이는 `invalidateQueries`와 달리 구독자(subscriber)를 유지하며,  
 `initialData`가 있다면 해당 값으로 데이터를 되돌립니다.
 
 활성 쿼리인 경우, 자동으로 다시 요청됩니다.
@@ -567,7 +567,7 @@ Promise<void>;
 
 ## isFetching
 
-`isFetching`은 현재 **fetching 중인 쿼리의 수**를 반환하는 메서드입니다.  
+`isFetching`은 현재 fetching 중인 쿼리의 수를 반환하는 메서드입니다.  
 이는 백그라운드 fetch, 새 페이지 로딩, infinite query의 추가 페이지 로딩 등을 포함합니다.
 
 ### isFetching 사용 예시
@@ -595,7 +595,7 @@ number;
 
 ## isMutating
 
-`isMutating`은 현재 **fetching 중인 뮤테이션의 수**를 반환하는 메서드입니다.
+`isMutating`은 현재 fetching 중인 뮤테이션의 수를 반환하는 메서드입니다.
 
 ### isMutating 사용 예시
 
@@ -633,7 +633,7 @@ const defaultOptions = queryClient.getDefaultOptions();
 
 ## setDefaultOptions
 
-`setDefaultOptions`는 `QueryClient`의 **기본 옵션을 동적으로 설정**할 수 있는 메서드입니다.  
+`setDefaultOptions`는 `QueryClient`의 기본 옵션을 동적으로 설정할 수 있는 메서드입니다.  
 이전에 정의된 값은 덮어쓰기(overwrite)됩니다.
 
 ### setDefaultOptions 사용 예시
@@ -685,11 +685,11 @@ function Component() {
 - `options: QueryOptions`
   - 해당 쿼리의 기본 옵션 정의
 
-> 기본값 등록 시에는 **일반적인 키 → 구체적인 키 순서로 등록**해야 병합 우선순위가 올바르게 동작합니다.
+> 기본값 등록 시에는 일반적인 키 → 구체적인 키 순서로 등록해야 병합 우선순위가 올바르게 동작합니다.
 
 ## getMutationDefaults
 
-`getMutationDefaults`는 특정 `mutationKey`에 대해 설정된 **기본 옵션**을 반환합니다.
+`getMutationDefaults`는 특정 `mutationKey`에 대해 설정된 기본 옵션을 반환합니다.
 
 ### getMutationDefaults 사용 예시
 
@@ -701,7 +701,7 @@ const defaultOptions = queryClient.getMutationDefaults(["addPost"]);
 
 ## setMutationDefaults
 
-`setMutationDefaults`는 특정 `mutationKey`에 대해 **기본 옵션을 등록**하는 데 사용됩니다.
+`setMutationDefaults`는 특정 `mutationKey`에 대해 기본 옵션을 등록하는 데 사용됩니다.
 
 ### setMutationDefaults 사용 예시
 
@@ -725,11 +725,11 @@ function Component() {
   - 해당 뮤테이션의 기본 설정값
 
 > `setQueryDefaults`와 마찬가지로, 등록 순서가 중요합니다.  
-> **일반적인 키 → 구체적인 키 순서**로 등록해야 병합 우선순위가 올바르게 작동합니다.
+> 일반적인 키 → 구체적인 키 순서로 등록해야 병합 우선순위가 올바르게 작동합니다.
 
 ## getQueryCache
 
-`getQueryCache`는 현재 `QueryClient`가 연결된 **쿼리 캐시 인스턴스**를 반환합니다.
+`getQueryCache`는 현재 `QueryClient`가 연결된 쿼리 캐시 인스턴스를 반환합니다.
 
 ### getQueryCache 사용 예시
 
@@ -741,7 +741,7 @@ const queryCache = queryClient.getQueryCache();
 
 ## getMutationCache
 
-`getMutationCache`는 현재 `QueryClient`가 연결된 **뮤테이션 캐시 인스턴스**를 반환합니다.
+`getMutationCache`는 현재 `QueryClient`가 연결된 뮤테이션 캐시 인스턴스를 반환합니다.
 
 ### getMutationCache 사용 예시
 
@@ -751,7 +751,7 @@ const mutationCache = queryClient.getMutationCache();
 
 ## clear
 
-`clear`는 `QueryClient`에 연결된 **모든 캐시 (쿼리 및 뮤테이션)** 를 초기화합니다.
+`clear`는 `QueryClient`에 연결된 모든 캐시 (쿼리 및 뮤테이션) 를 초기화합니다.
 
 ### clear 사용 예시
 
@@ -765,7 +765,7 @@ queryClient.clear();
 
 ## resumePausedMutations
 
-`resumePausedMutations`는 **네트워크 연결이 끊겨 중단된 뮤테이션을 다시 재개**할 때 사용됩니다.
+`resumePausedMutations`는 네트워크 연결이 끊겨 중단된 뮤테이션을 다시 재개할 때 사용됩니다.
 
 ### resumePausedMutations 사용 예시
 
