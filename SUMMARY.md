@@ -43,6 +43,7 @@
       - [register](library/react-hook-form/register.md)
       - [formState](library/react-hook-form/formState.md)
       - [handleSubmit](library/react-hook-form/handleSubmit.md)
+      - [setError](library/react-hook-form/set-error.md)
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
     - [useFormContext](library/react-hook-form/use-form-context.md)
