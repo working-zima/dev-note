@@ -16,23 +16,44 @@ React Hook Form은 기본적으로 비제어 컴포넌트 input을 지향하지�
 | `shouldUnregister` | `boolean`                        | ❌   | 언마운트 시 등록 해제 여부                                         |
 | `disabled`         | `boolean`                        | ❌   | 비활성화 처리. 제출 데이터에서도 제외됨                            |
 
-## 필드별 반환값: `field`
+## `Controller`의 반환값 (`render` 함수에 전달되는 객체들)
 
-| 속성       | 설명                               |
-| ---------- | ---------------------------------- |
-| `onChange` | 입력값을 Hook Form에 전달          |
-| `onBlur`   | blur 이벤트를 Hook Form에 전달     |
-| `value`    | 현재 값                            |
-| `ref`      | ref 연결 (에러 포커스 가능하게 함) |
-| `name`     | 필드 이름                          |
-| `disabled` | 비활성화 여부                      |
+### `field` 객체
 
-## 필드 상태값: `fieldState`
+| 이름       | 타입                   | 설명                                                                                     |
+| ---------- | ---------------------- | ---------------------------------------------------------------------------------------- |
+| `onChange` | `(value: any) => void` | input의 값을 React Hook Form으로 전달하는 함수입니다. `value`는 `undefined`면 안 됩니다. |
+| `onBlur`   | `() => void`           | blur 이벤트를 RHF에 전달하는 함수입니다.                                                 |
+| `value`    | `unknown`              | 현재 필드의 값입니다.                                                                    |
+| `disabled` | `boolean`              | 비활성화 여부입니다.                                                                     |
+| `name`     | `string`               | 등록된 필드 이름입니다.                                                                  |
+| `ref`      | `React.Ref`            | 오류 발생 시 포커스를 위해 input에 연결해야 하는 ref입니다.                              |
 
-- `error`: 에러 객체
-- `isTouched`: 포커스를 주거나 잃은 적이 있음
-- `isDirty`: 값이 변경된 상태
-- `invalid`: 유효하지 않은 상태
+### `fieldState` 객체
+
+| 이름        | 타입      | 설명                                         |
+| ----------- | --------- | -------------------------------------------- |
+| `invalid`   | `boolean` | 필드가 유효하지 않으면 true                  |
+| `isTouched` | `boolean` | 한 번이라도 포커스되었다가 블러되었으면 true |
+| `isDirty`   | `boolean` | 기본값에서 변경되었으면 true                 |
+| `error`     | `object`  | 해당 필드의 오류 정보                        |
+
+### `formState` 객체
+
+| 이름                 | 타입      | 설명                                                                                   |
+| -------------------- | --------- | -------------------------------------------------------------------------------------- |
+| `isDirty`            | `boolean` | 하나 이상의 필드가 변경되었으면 true. `defaultValues`를 설정해야 정확히 동작합니다.    |
+| `dirtyFields`        | `object`  | 변경된 필드들의 목록입니다.                                                            |
+| `touchedFields`      | `object`  | 유저가 한 번이라도 포커스한 필드들의 목록입니다.                                       |
+| `defaultValues`      | `object`  | `useForm`의 기본값 또는 `reset()`으로 설정된 값입니다.                                 |
+| `isSubmitted`        | `boolean` | 폼이 제출된 적 있으면 true. `reset()` 시 초기화됩니다.                                 |
+| `isSubmitSuccessful` | `boolean` | 마지막 제출이 성공적으로 완료되었으면 true                                             |
+| `isSubmitting`       | `boolean` | 현재 제출 중이면 true                                                                  |
+| `isLoading`          | `boolean` | 비동기 `defaultValues`를 로딩 중이면 true (`async` 옵션 사용 시 해당)                  |
+| `submitCount`        | `number`  | 폼이 제출된 횟수입니다.                                                                |
+| `isValid`            | `boolean` | 모든 필드가 유효하면 true. `setError`는 이 값에 영향을 주지 않습니다.                  |
+| `isValidating`       | `boolean` | 유효성 검사 중이면 true                                                                |
+| `errors`             | `object`  | 전체 필드의 오류 정보를 담고 있는 객체입니다. `ErrorMessage` 컴포넌트로 쉽게 표시 가능 |
 
 ## 기본 예제 (React + 외부 컴포넌트)
 
