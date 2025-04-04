@@ -49,6 +49,7 @@
       - [Controller](library/react-hook-form/controller.md)
     - [useFormContext](library/react-hook-form/use-form-context.md)
       - [FormProvider](library/react-hook-form/form-provider.md)
+    - [useFieldArray](library/react-hook-form/use-field-array.md)
   - [React Infinite Scroller](library/react-infinite-scroller/README.md)
   - [Slugify](library/slugify.md)
   - [Tailwind CSS](library/tailwind/README.md)
