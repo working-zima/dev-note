@@ -46,6 +46,7 @@
       - [setError](library/react-hook-form/set-error.md)
       - [control](library/react-hook-form/control.md)
     - [useController](library/react-hook-form/use-controller.md)
+      - [Controller](library/react-hook-form/controller.md)
     - [useFormContext](library/react-hook-form/use-form-context.md)
       - [FormProvider](library/react-hook-form/form-provider.md)
   - [React Infinite Scroller](library/react-infinite-scroller/README.md)
