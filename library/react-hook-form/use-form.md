@@ -8,7 +8,7 @@ useForm은 폼 관리를 쉽게 도와주는 커스텀 훅(custom hook)입니다
 이 훅은 선택적 인수로 객체 하나를 받습니다.
 
 ```tsx
-useForm({props})
+useForm({ props });
 ```
 
 ## Generic props
@@ -29,16 +29,16 @@ useForm({props})
 
 ```tsx
 const { register } = useForm<FormInputs>({
-  mode: 'onSubmit',
-  reValidateMode: 'onChange',
+  mode: "onSubmit",
+  reValidateMode: "onChange",
   defaultValues: {},
   resolver: undefined,
   context: undefined,
   criteriaMode: "firstError",
   shouldFocusError: true,
   shouldUnregister: false,
-  delayError: undefined
-})
+  delayError: undefined,
+});
 ```
 
 ## Schema validation props
@@ -53,16 +53,16 @@ const { register } = useForm<FormInputs>({
 form의 유효성 검사를 어느 동작때 시행할지 설정하는 props 입니다.\
 유효성 검사는 handleSubmit 함수를 호출하여 트리거되는 onSubmit 이벤트 중에 발생합니다.
 
-이름 | 타입 | 설명
-:-: | :-: | :-:
-`onSubmit`(default) | string | 유효성 검사가 제출 이벤트에서 트리거되며, 입력란은 자신을 다시 유효성 검사하기 위해 onChange 이벤트 리스너를 연결합니다.
-`onBlur` | string | 유효성 검사가 blur 이벤트에서 트리거됩니다.
-`onChange` | string | 유효성 검사가 각 입력 요소의 change 이벤트에서 트리거되어 다시 렌더링됩니다. 경고: 이는 종종 성능에 상당한 영향을 미칩니다.
-`onTouched` | string | 유효성 검사가 초기 blur 이벤트에서 트리거되며, 그 후에는 모든 change 이벤트에서 트리거됩니다.
-`all` | string | 유효성 검사가 blur 및 change 이벤트에서 모두 트리거됩니다.
+|         이름          |  타입  |                                                            설명                                                             |
+| :-------------------: | :----: | :-------------------------------------------------------------------------------------------------------------------------: |
+| `"onSubmit"`(default) | string |  유효성 검사가 제출 이벤트에서 트리거되며, 입력란은 자신을 다시 유효성 검사하기 위해 onChange 이벤트 리스너를 연결합니다.   |
+|      `"onBlur"`       | string |                                         유효성 검사가 blur 이벤트에서 트리거됩니다.                                         |
+|     `"onChange"`      | string | 유효성 검사가 각 입력 요소의 change 이벤트에서 트리거되어 다시 렌더링됩니다. 경고: 이는 종종 성능에 상당한 영향을 미칩니다. |
+|     `"onTouched"`     | string |                유효성 검사가 초기 blur 이벤트에서 트리거되며, 그 후에는 모든 change 이벤트에서 트리거됩니다.                |
+|        `"all"`        | string |                                 유효성 검사가 blur 및 change 이벤트에서 모두 트리거됩니다.                                  |
 
 ```tsx
-useForm({mode: 'onSubmit'});
+useForm({ mode: "onSubmit" });
 ```
 
 ### reValidateMode: onChange(default) | onBlur | onSubmit = 'onChange'
@@ -73,7 +73,7 @@ useForm({mode: 'onSubmit'});
 Note: Controller와 함께 사용할 때, onBlur를 렌더 프롭(render prop)과 함께 연결하는 것을 확인하세요.
 
 ```tsx
-useForm({reValidateMode: 'onChange'});
+useForm({ reValidateMode: "onChange" });
 ```
 
 ### defaultValues: `FieldValues | () => Promise<FieldValues>`
@@ -105,15 +105,15 @@ useForm({
 - 폼 데이터를 포함하는 다른 옵션도 있습니다:
 
 ```tsx
-<input {...register("hidden", { value: "data" })} type="hidden" />
+<input {...register("hidden", { value: "data" })} type="hidden" />;
 
 // onSubmit에서 데이터 포함
 const onSubmit = (data) => {
   const output = {
     ...data,
     others: "others",
-  }
-}
+  };
+};
 ```
 
 ### values: FieldValues
@@ -127,12 +127,12 @@ values 속성은 변경 사항에 반응하여 폼 값을 업데이트합니다.
 function App({ values }) {
   useForm({
     values, // values props가 업데이트될 때마다 업데이트됩니다.
-  })
+  });
 }
 
 // 비동기적인 기본값 설정
 function App() {
-  const values = useFetch("/api")
+  const values = useFetch("/api");
 
   useForm({
     defaultValues: {
@@ -140,7 +140,7 @@ function App() {
       lastName: "",
     },
     values, // values가 반환될 때마다 업데이트됩니다.
-  })
+  });
 }
 ```
 
@@ -151,11 +151,11 @@ errors 속성은 변경 사항에 반응하여 서버 오류 상태를 업데이
 
 ```tsx
 function App() {
-  const { errors, data } = useFetch("/api")
+  const { errors, data } = useFetch("/api");
 
   useForm({
     errors, // errors가 반환될 때마다 업데이트됩니다.
-  })
+  });
 }
 ```
 
@@ -168,8 +168,8 @@ function App() {
 
 ```tsx
 // 기본적으로 비동기적으로 value 또는 defaultValues가 업데이트되면 폼 값이 재설정됩니다.
-useForm({ values })
-useForm({ defaultValues: async () => await fetch() })
+useForm({ values });
+useForm({ defaultValues: async () => await fetch() });
 
 // 동작 구성을 위한 옵션
 // 예: 사용자 상호작용/더티 값 유지 및 사용자 오류 제거하지 않음
@@ -179,7 +179,7 @@ useForm({
     keepDirtyValues: true, // 사용자 상호작용 입력값이 유지됩니다.
     keepErrors: true, // 값 업데이트와 함께 입력 오류가 유지됩니다.
   },
-})
+});
 ```
 
 ### context: object
@@ -202,14 +202,14 @@ focus는 register를 등록한 순서(위에서 아래로) 진행됩니다.
 #### 참고
 
 - 참조와 함께 등록된 필드에만 작동합니다. 사용자 지정 등록 입력은 적용되지 않습니다.\
-예: register('test') // 작동하지 않음
+  예: register('test') // 작동하지 않음
 - 포커스 순서는 등록 순서에 기반합니다.
 
 ### delayError: number
 
 에러메시지를 표시하기까지 지연시간을 설정하는 props 입니다.\
 이 구성은 지정된 밀리초 단위로 오류 상태를 최종 사용자에게 표시하는 것을 지연시킵니다.\
-사용자가 오류 입력을 수정하면 오류가 즉시 제거되고  바로 사라집니다.
+사용자가 오류 입력을 수정하면 오류가 즉시 제거되고 바로 사라집니다.
 
 ### shouldUnregister: boolean = false
 
@@ -217,7 +217,7 @@ focus는 register를 등록한 순서(위에서 아래로) 진행됩니다.
 그러나 입력이 마운트 해제될 때 입력을 등록 해제하려면 shouldUnregister를 true로 설정할 수 있습니다.
 
 - 이는 하위 수준 구성을 재정의하는 전역 구성입니다.\
-개별 동작을 설정하려면 useForm이 아니라 구성 요소 또는 훅 수준에서 구성을 설정하세요.
+  개별 동작을 설정하려면 useForm이 아니라 구성 요소 또는 훅 수준에서 구성을 설정하세요.
 
 - 기본적으로 shouldUnregister: false는 마운트 해제된 필드가 내장 유효성 검사에 의해 유효성이 검사되지 않음을 의미합니다.
 
@@ -232,20 +232,20 @@ focus는 register를 등록한 순서(위에서 아래로) 진행됩니다.
 
 ```tsx
 const NotWork = () => {
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState(false);
   // ❌ 알림을 받지 않음, unregister를 호출해야 함
-  return show && <input {...register("test")} />
-}
+  return show && <input {...register("test")} />;
+};
 
 const Work = ({ control }) => {
-  const { show } = useWatch({ control })
+  const { show } = useWatch({ control });
   // ✅ useEffect에서 알림 받음
-  return show && <input {...register("test1")} />
-}
+  return show && <input {...register("test1")} />;
+};
 
 const App = () => {
-  const [show, setShow] = React.useState(false)
-  const { control } = useForm({ shouldUnregister: true })
+  const [show, setShow] = React.useState(false);
+  const { control } = useForm({ shouldUnregister: true });
   return (
     <div>
       // ✅ useForm의 useEffect에서 알림 받음
@@ -253,8 +253,8 @@ const App = () => {
       <NotWork />
       <Work control={control} />
     </div>
-  )
-}
+  );
+};
 ```
 
 ### shouldUseNativeValidation: boolean = false
@@ -268,15 +268,15 @@ const App = () => {
 - 이 기능은 실제 DOM 참조와 연결된 register API 및 useController/Controller와 함께만 작동합니다.
 
 ```tsx
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 
 export default function App() {
   const { register, handleSubmit } = useForm({
     shouldUseNativeValidation: true,
-  })
+  });
   const onSubmit = async (data) => {
-    console.log(data)
-  }
+    console.log(data);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -287,24 +287,24 @@ export default function App() {
       />
       <input type="submit" />
     </form>
-  )
+  );
 }
 ```
 
 ### resolver: Resolver
 
-resolver는 유효성 검사 라이브러리를 도와주는 props 입니다.\
+`resolver`는 유효성 검사 라이브러리를 도와주는 `props` 입니다.\
 Yup, Zod, Joi, Vest, Ajv 등과 같은 외부 유효성 검사 라이브러리를 사용할 수 있습니다.\
 목표는 선호하는 유효성 검사 라이브러리를 매끄럽게 통합할 수 있도록 하는 것입니다.\
 라이브러리를 사용하지 않는 경우에도 폼을 유효성 검사하는 데 필요한 로직을 직접 작성할 수 있습니다.
 
-#### Props
+#### resolver Props
 
-Name | Type | Description
-:-: | :-: | :-:
-values | `object` | 전체 폼 값이 들어 있는 객체입니다.
-context | `object` | useForm 구성에 제공할 수 있는 컨텍스트 객체입니다. 각 재랜더링마다 변경될 수 있는 가변 객체입니다.
-options | `{\"criteriaMode": "string", "fields": "object", "names": "string[]"}` | useForm에서 검증된 필드, 이름 및 criteriaMode에 대한 정보를 포함하는 옵션 객체입니다.
+|  Name   |                                  Type                                  |                                            Description                                             |
+| :-----: | :--------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
+| values  |                                `object`                                |                                 전체 폼 값이 들어 있는 객체입니다.                                 |
+| context |                                `object`                                | useForm 구성에 제공할 수 있는 컨텍스트 객체입니다. 각 재랜더링마다 변경될 수 있는 가변 객체입니다. |
+| options | `{\"criteriaMode": "string", "fields": "object", "names": "string[]"}` |       useForm에서 검증된 필드, 이름 및 criteriaMode에 대한 정보를 포함하는 옵션 객체입니다.        |
 
 #### RULES
 
@@ -320,7 +320,7 @@ options | `{\"criteriaMode": "string", "fields": "object", "names": "string[]"}`
 
 - [register](./register.md)
 - [control](./control.md)
-- [handleSubmit]()
+- [handleSubmit](./handleSubmit.md)
 - ...
 
 ```tsx
