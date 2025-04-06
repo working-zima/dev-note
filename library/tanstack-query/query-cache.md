@@ -1,6 +1,6 @@
 # `QueryCache`
 
-`QueryCache`는 TanStack Query에서 **쿼리의 데이터, 상태, 메타 정보**를 저장하는 캐시 저장소입니다.  
+`QueryCache`는 TanStack Query에서 쿼리의 데이터, 상태, 메타 정보를 저장하는 캐시 저장소입니다.  
 일반적으로 직접 사용할 일은 드물고, `QueryClient`를 통해 간접적으로 사용하게 됩니다.  
 하지만, 고급 기능 구현 시 유용하게 활용될 수 있습니다.
 
@@ -28,7 +28,7 @@ const queryCache = new QueryCache({
 
 ### `queryCache.find(queryKey)`
 
-> 특정 queryKey를 가진 **하나의 쿼리 인스턴스**를 반환합니다.
+> 특정 queryKey를 가진 하나의 쿼리 인스턴스를 반환합니다.
 
 ```tsx
 const query = queryCache.find(["posts"]);
@@ -39,7 +39,7 @@ const query = queryCache.find(["posts"]);
 
 ### `queryCache.findAll(queryKey?)`
 
-> 특정 queryKey 또는 패턴을 만족하는 **모든 쿼리 인스턴스 배열**을 반환합니다.
+> 특정 queryKey 또는 패턴을 만족하는 모든 쿼리 인스턴스 배열을 반환합니다.
 
 ```tsx
 const queries = queryCache.findAll(["posts"]);
@@ -50,7 +50,7 @@ const queries = queryCache.findAll(["posts"]);
 
 ### `queryCache.subscribe(callback)`
 
-> 쿼리 캐시에 **변화가 생길 때마다 알림을 받을 수 있는 구독 함수**입니다.
+> 쿼리 캐시에 변화가 생길 때마다 알림을 받을 수 있는 구독 함수입니다.
 
 ```tsx
 const callback = (event) => {
@@ -65,7 +65,7 @@ const unsubscribe = queryCache.subscribe(callback);
 
 ### `queryCache.clear()`
 
-> **전체 캐시 초기화**. 모든 쿼리를 제거하고 새롭게 시작할 수 있습니다.
+> 전체 캐시 초기화. 모든 쿼리를 제거하고 새롭게 시작할 수 있습니다.
 
 ```tsx
 queryCache.clear();
@@ -86,6 +86,8 @@ queryCache.clear();
 
 `queryClient.getQueryCache()`를 통해 얻는 `QueryCache`는 내부적으로 `Query` 인스턴스를 여러 개 저장합니다.\
 아래는 `QueryCache`와 그 내부에 존재하는 `Query` 객체의 실제 구조를 상세히 정리한 것입니다.
+
+![query](./img/query-cache.png)
 
 ### QueryCache에서 쿼리 가져오기
 
