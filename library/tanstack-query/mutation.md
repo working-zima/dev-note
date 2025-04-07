@@ -37,6 +37,12 @@ const {
   },
   queryClient
 );
+
+mutate(variables, {
+  onError,
+  onSettled,
+  onSuccess,
+});
 ```
 
 데이터 변경 작업(생성, 수정, 삭제) 등 변경 작업을 처리하기 위해 사용하는 훅입니다.\
@@ -46,9 +52,11 @@ const {
 따라서 `isLoading`과 `isFetching`은 없고 `isPending`만 있습니다.\
 또한 캐시된 것이 없기 때문에 `queryKey`도 필요하지 않습니다.
 
-### mutationFn
+### Parameter1: mutationFn
 
-서버와의 실제 변경 작업을 수행하는 함수입니다.
+서버와의 실제 변경 작업을 수행하는 함수입니다.\
+`mutate()` 호출 시 전달한 `variables`가 인자로 전달됩니다.\
+기본 `mutationFn`이 없다면 반드시 지정해야 합니다.
 
 ```tsx
 function App() {
@@ -87,12 +95,41 @@ function App() {
 }
 ```
 
+### 선택 옵션
+
+| 옵션           | 타입                                                                         | 설명                                                                                                                                                                 |
+| -------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gcTime`       | `number` \| `Infinity`                                                       | 캐시에서 사용되지 않거나 비활성 상태인 mutation 데이터를 메모리에서 제거하기까지 대기하는 시간(ms). `Infinity`를 주면 GC가 비활성화됩니다. (최대 허용 시간: 약 24일) |
+| `mutationKey`  | `unknown[]`                                                                  | `queryClient.setMutationDefaults`에 설정한 기본값을 상속받을 때 사용됩니다.                                                                                          |
+| `networkMode`  | `'online'` \| `'always'` \| `'offlineFirst'`                                 | 네트워크 모드 설정. 기본값은 `'online'`입니다.                                                                                                                       |
+| `onMutate`     | `(variables: TVariables) => (TContext \| void \| Promise<TContext \| void>)` | mutationFn 실행 전에 호출됩니다. 낙관적 업데이트 시 유용합니다. 반환값은 `onError`나 `onSettled`에서 context로 전달됩니다.                                           |
+| `onSuccess`    | `(data, variables, context) => Promise \| void`                              | mutation이 성공했을 때 실행됩니다. `Promise`를 반환하면 대기 후 다음 단계로 진행됩니다.                                                                              |
+| `onError`      | `(error, variables, context?) => Promise \| void`                            | mutation 실행 중 에러가 발생했을 때 실행됩니다.                                                                                                                      |
+| `onSettled`    | `(data, error, variables, context?) => Promise \| void`                      | 성공 또는 실패 시 무조건 호출됩니다.                                                                                                                                 |
+| `retry`        | `boolean` \| `number` \| `(failureCount, error) => boolean`                  | 기본값: `0`. false → 재시도 없음, true → 무한 재시도, 숫자 → 해당 횟수만큼 재시도.                                                                                   |
+| `retryDelay`   | `number` \| `(attempt, error) => number`                                     | 재시도 전 대기 시간(ms). 지수 백오프: `attempt => Math.min(2 ** attempt * 1000, 30000)`                                                                              |
+| `scope`        | `{ id: string }`                                                             | 같은 scope ID를 가진 mutation은 순차 실행됩니다. 지정하지 않으면 각 mutation은 병렬로 실행됩니다.                                                                    |
+| `throwOnError` | `boolean` \| `(error) => boolean`                                            | true일 경우 에러가 발생하면 렌더링 중 에러를 throw해서 에러 바운더리로 전달합니다.                                                                                   |
+| `meta`         | `Record<string, unknown>`                                                    | mutation 캐시에 저장할 메타 정보. `onError`, `onSuccess` 등에서 접근할 수 있습니다.                                                                                  |
+
+### Parameter2: QueryClient
+
+| 옵션          | 타입          | 설명                                                                                                     |
+| ------------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| `queryClient` | `QueryClient` | 커스텀 `QueryClient`를 지정하고 싶을 때 사용. 지정하지 않으면 가장 가까운 Context의 client가 사용됩니다. |
+
+### useMutation 반환값
+
 ### `.mutate()`
+
+`(variables, { onSuccess, onError, onSettled }) => void`
 
 데이터 변경 작업 실행하여 서버와의 상호작용(예: POST, PUT, DELETE)을 트리거합니다.\
 호출 시 `isPending`이 `true`로 변경되고, 작업 완료 시 성공(`isSuccess`) 또는 실패(`isError`) 상태로 전환됩니다.
 
-`useQuery`에 인수로 전달하는 쿼리 함수와는 달리, 인수로 전달하는 `mutationFn`는 `.mutate()`을 통해 실제로 인수를 가질 수 있습니다.
+`useQuery`에 인수로 전달하는 쿼리 함수와는 달리, 인수로 전달하는 `mutationFn`는 `.mutate()`을 통해 실제로 인수를 가질 수 있습니다.\
+`variables`는 `mutationFn`의 인자로 전달됩니다.\
+콜백도 전달 가능합니다.
 
 ```tsx
 import {
@@ -177,6 +214,23 @@ const CreateTodo = () => {
 };
 ```
 
+## 기타 반환값
+
+| 속성                                          | 타입                                                     | 설명                                                                                        |
+| --------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `mutate`                                      | `(variables, { onSuccess, onError, onSettled }) => void` | mutation을 실행하는 함수. `variables`는 `mutationFn`의 인자로 전달됩니다. 콜백도 전달 가능. |
+| `mutateAsync`                                 | `(variables, { ... }) => Promise<TData>`                 | `mutate`와 같지만 `Promise`를 반환해 `await`가 가능합니다.                                  |
+| `status`                                      | `'idle' \| 'pending' \| 'error' \| 'success'`            | 현재 mutation의 상태                                                                        |
+| `isIdle`, `isPending`, `isError`, `isSuccess` | `boolean`                                                | `status` 값에서 파생된 상태 변수들                                                          |
+| `isPaused`                                    | `boolean`                                                | 네트워크 모드 등으로 인해 mutation이 일시 중단되었는지 여부                                 |
+| `data`                                        | `TData` \| `undefined`                                   | 마지막으로 성공한 mutation의 데이터                                                         |
+| `error`                                       | `TError` \| `null`                                       | mutation에서 발생한 에러 객체                                                               |
+| `reset`                                       | `() => void`                                             | mutation 상태를 초기 상태로 되돌립니다.                                                     |
+| `failureCount`                                | `number`                                                 | mutation 실패 횟수. 성공하면 0으로 초기화됩니다.                                            |
+| `failureReason`                               | `TError` \| `null`                                       | 마지막 실패 이유                                                                            |
+| `submittedAt`                                 | `number`                                                 | mutation이 제출된 시점의 타임스탬프                                                         |
+| `variables`                                   | `TVariables` \| `undefined`                              | 마지막 mutation 실행 시 전달한 변수                                                         |
+
 ## Mutation의 상태
 
 Mutation은 언제든지 다음 중 **한 가지 상태만** 가질 수 있습니다:
@@ -214,7 +268,7 @@ const useAddComment = (id) => {
   return useMutation({
     mutationFn: (newComment) => axios.post(`/posts/${id}/comments`, newComment),
     onSuccess: () => {
-      // ✅ 블로그 포스트의 댓글을 다시 불러옵니다.
+      // 블로그 포스트의 댓글을 다시 불러옵니다.
       queryClient.invalidateQueries({
         queryKey: ["posts", id, "comments"],
       });
