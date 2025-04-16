@@ -74,6 +74,109 @@ app router의 경우 page router와 다르게 서버 컴포넌트를 사용합�
 
 ![app-nextjs-pre-fetching](./img/app-nextjs-pre-fetching.png)
 
-## 자료
+## App Router vs. Page Router
+
+Next.js는 13버전부터 새로운 라우팅 방식인 App Router를 도입했습니다.\
+App Router는 React 18의 최신 기능을 중심으로, 더 유연하고 선언적인 방식으로 진화한 구조입니다.\
+중첩 레이아웃, 서버 컴포넌트, 데이터 스트리밍, 폴더 기반 명확한 라우팅이 큰 장점입니다.
+
+App Router는 Pages Router에 비해 성능이 다소 떨어질 수 있지만, DOM 태그 수가 많아질수록 성능 차이가 줄어드는 경향이 있습니다.\
+따라서 프로젝트의 규모가 커질수록 App Router의 구조적인 이점이 두드러지며, 새로운 기능을 적극 활용하려면 App Router 사용을 추천합니다.
+
+### 페이지 라우팅 설정 방식 변경
+
+#### Pages Router 라우팅 설정 방식
+
+기존 방식은 파일 기반 라우팅으로, `pages` 폴더 하위에 파일을 생성하면 해당 경로가 자동으로 라우팅됩니다.
+
+```plain
+src/
+└── pages
+    ├── about.js
+    ├── index.js
+    └── team.js
+```
+
+#### App Router 라우팅 설정 방식
+
+App Router는 폴더 기반 라우팅입니다.\
+각 폴더 안에 `page.js`, `layout.js`, `loading.js`, `error.js` 등 다양한 UI 역할을 하는 파일을 추가할 수 있어 구조적인 표현이 명확해졌습니다.
+
+```plain
+src/
+└── app
+    ├── about
+    │   └── page.js
+    ├── globals.css
+    ├── layout.js
+    ├── login
+    │   └── page.js
+    ├── page.js
+    └── team
+        └── route.js
+```
+
+### 레이아웃 설정 방식 변경
+
+#### Pages Router 레이아웃 설정 방식
+
+- `_app.js`와 `_document.js`를 사용해 전체 레이아웃과 초기 HTML 구조를 설정합니다.
+- 페이지마다 레이아웃을 재사용하려면 HOC나 `getLayout` 패턴을 사용해야 했습니다.
+
+#### App Router 레이아웃 설정 방식
+
+- `layout.js` 파일로 영역별 중첩 레이아웃이 가능해졌습니다.
+- 각 폴더에 `layout.js`를 두면 해당 경로 이하의 모든 페이지에서 자동으로 해당 레이아웃을 공유합니다.
+
+```plain
+src/
+└── app
+    ├── market
+    │   ├── buy
+    │   │   ├── page.js
+    │   │   └── layout.js
+    │   ├── sell
+    │   │   └── page.js
+    │   ├── layout.js
+```
+
+```jsx
+// app/market/layout.js
+export default function layout({ children }) {
+  return (
+    <section>
+      <h1>About Section</h1>
+      {children}
+    </section>
+  );
+}
+```
+
+### 데이터 페팅 방식 변경
+
+#### Pages Router 데이터 페팅 방식 변경
+
+- `getServerSideProps`, `getStaticProps`, `getInitialProps` 등을 사용.
+
+- 클라이언트와 서버 사이의 구분이 명확하지 않아 혼동되기도 했습니다.
+
+#### App Router 데이터 페팅 방식 변경
+
+- `fetch`, `async`/`await` 기반의 서버 컴포넌트(Server Components) 중심.
+
+- React의 `use`와 같은 새로운 기능으로 서버에서 직접 데이터 fetch 가능.
+
+- 클라이언트 컴포넌트는 `"use client"` 지시어를 통해 명시적으로 선언.
+
+### React 18 신규 기능 추가
+
+- React Server Component (RSC): 클라이언트 번들 크기를 줄이고, 서버에서 렌더링된 HTML을 빠르게 전달.
+
+- Streaming: 일부 UI를 먼저 보여주고, 데이터가 로드되는 대로 나머지를 이어서 보여주는 점진적 렌더링 지원.
+
+- Suspense와 loading.js 파일을 통한 로딩 UI 설정.
+
+## 참고
 
 - [한 입 크기로 잘라먹는 Next.js(15+)](https://www.udemy.com/course/onebite-next/)
+- [[Next.js] App Router에 대해서 (+ Pages Router와 비교)](https://dygreen.tistory.com/entry/Nextjs-App-Router-%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-Pages-Router%EC%99%80-%EB%B9%84%EA%B5%90)

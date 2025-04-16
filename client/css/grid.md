@@ -312,7 +312,7 @@ Grid를 사용할 때 반응형으로 만드는 것이 중요하기 때문에 `p
 반복되는 패턴을 생성하기 위해 사용되는 헬퍼 함수입니다.
 
 ```css
-grid-template-columns: repeat(number_of_times, track_size);
+grid-template-columns: repeat(반복횟수, 크기);
 ```
 
 첫 번째 인수는 얼마나 자주 반복할지를 나타냅니다.\
