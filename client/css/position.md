@@ -15,6 +15,7 @@ position: sticky;
 ### static(기본위치)
 
 `position`의 기본 설정입니다.\
+`top`, `left`, `right`, `bottom` 같은 속성은 적용되지 않습니다.\
 부모 요소의 위치를 기준으로 위에서 아래로, 왼쪽에서 오른쪽으로 순서에 따라 배치됩니다.
 
 ![static](./img/static.gif)
@@ -22,7 +23,7 @@ position: sticky;
 ### relative(상대위치)
 
 원래 있어야 할 자리를 기준으로 표 프로퍼티(`top`, `bottom`, `left`, `right`)를 사용하여 위치를 이동시킵니다.\
-무조건 부모를 기준으로 위치하게 됩니다.
+무조건 `absolute`와 다르게 부모를 기준으로 위치하게 됩니다.
 
 ![relative](./img/relative.gif)
 
@@ -40,8 +41,9 @@ position: sticky;
 
 ### fixed(고정위치)
 
-viewport가 기준입니다.\
+viewport(브라우저 창)가 기준입니다.\
 스크롤이 되더라도 화면에서 사라지지 않고 항상 같은 곳에 위치합니다.
+창을 기준으로 `top`, `left`, `bottom`, `right`으로 위치를 지정합니다.
 
 `fixed` 설정시 요소가 문서 흐름에서 제외됩니다.\
 (부모 요소의 영역을 벗어나 자유롭게 어디든지 위치할 수 있습니다)
@@ -51,7 +53,8 @@ viewport가 기준입니다.\
 ### sticky
 
 원래 있어야 하는 자리가 기준이지만 스크롤 시에도 위치 고정됩니다.\
-요소와 뷰포트 간의 정해진 간격에 도달하면 `fixed` 배치로 바뀝니다.\
+스크롤시 일정 지점까지만 따라오다가 요소와 뷰포트 간의 정해진 간격에 도달하면 `fixed` 배치로 바뀝니다.\
+`top`, `left`, `bottom`, `right`로 "부모 흐름" 안에서 지정힙니다.\
 부모 요소 콘텐츠의 내부 끝 부분에 도달하면 `fixed`가 풀립니다.
 
 아래의 gif 예시로 설명드리겠습니다.
@@ -74,7 +77,7 @@ viewport가 기준입니다.\
    ```css
    .sticky {
      position: sticky;
-     top: 0;
+     top: 0; /* 위치 기준을 설정 */
    }
    ```
 
@@ -84,13 +87,16 @@ viewport가 기준입니다.\
 
    ```css
    .sticky {
-     position: -webkit-sticky;
+     position: -webkit-sticky; /* 옛날 사파리 대응용 */
      position: sticky;
      top: 0;
    }
    ```
 
 3. 부모 또는 조상 노드에 `overflow` 속성이 설정되어 있는지 확인
+
+   `sticky`는 부모나 조상이 `overflow: hidden`, `overflow: auto`, `overflow: scroll`이면 `sticky`가 깨집니다.\
+    부모 요소가 `overflow: visible`이어야 정상 작동합니다.
 
    브라우저의 develop tool에서 아래 코드를 실행시켜, `sticky` 속성의 부모 또는 조상 노드에 `overflow` 설정이 되어 있는지 확인하실 수 있습니다.
 
@@ -109,23 +115,26 @@ viewport가 기준입니다.\
    }
    ```
 
-4. 부모 노드의 `height` 가 설정되어 있는지 확인
-   `sticky` 속성을 갖는 엘리먼트의 부모 노드는 반드시 `height` 가 설정되어 있어야합니다.
-   그렇지 않으면 `sticky` 속성의 엘리먼트는 `stiatc` 속성처럼 동작하게 됩니다.
+4. 부모 노드의 `height`이 설정되어 있는지 확인
+
+   `sticky` 속성을 갖는 엘리먼트의 부모 노드는 `height` 가 설정되어 있어야합니다.\
+   그렇지 않으면 `sticky` 속성의 엘리먼트는 sticky 효과를 체감할 수 없어 `stiatc` 속성처럼 동작하게 됩니다.
+
+   사실 `height`가 무조건 있어야 하는 건 아니지만 부모 요소 자체가 너무 높이가 작거나, 스크롤 영역이 없는 경우 `sticky`가 이상하게 보일 수 있습니다.(스크롤할 여지가 있어야함)
 
    ```css
-   올바른 예
+   /* 올바른 예 */
    height: auto
    height: unset
    height: 100vh
    height: 1000px
    height: 5em
 
-   올바르지 않은 예
-   height: xx%; 같이 퍼센트로 설정한 경우에는 동작하지 않습니다.
+   /* 올바르지 않은 예 */
+   height: xx%; /* 퍼센트로 설정한 경우에는 동작하지 않습니다. */
    ```
 
-### stacking context (`z-index`)
+## stacking context (`z-index`)
 
 - `position` 프로퍼티가 요소에 적용된 경우에만 `z-index` 를 추가하는 것이 효과가 있습니다.
 
@@ -135,7 +144,7 @@ viewport가 기준입니다.\
 
 - `z-index` 가 아무리 높아도 부모 요소끼리의 `z` 가 정해지면 부모 보다 높은 `z` 위에 갈 수 없습니다.
 
-#### position에 대한 이해와 stacking context을 모를 경우 겪게될 사례
+### position에 대한 이해와 stacking context을 모를 경우 겪게될 사례
 
 일반적으로 반 투명한 backdrop을 전체 화면에 씌우고 싶을 때 `z-index`를 사용합니다.
 
@@ -146,7 +155,7 @@ viewport가 기준입니다.\
 
 `position` 을 `fixed` 로 할 경우 html을 기준으로 모든 요소들의 위로 적용할 수 있고 스크롤할 때에도 고정적으로 화면에 적용될 수 있습니다.
 
-##### fixed를 사용한 예시 backdrop
+#### fixed를 사용한 예시 backdrop
 
 ```css
 .backdrop {
