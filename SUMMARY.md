@@ -108,6 +108,7 @@
     - [Text & Font](client/css/text-font.md)
     - [Flexbox](client/css/flexbox.md)
     - [Grid](client/css/grid.md)
+    - [배경 이미지와 인라인 요소 버그](client/css/inline-block-bug.md)
   - [Javascript](client/javascript/README.md)
     - [클린코드 for 자바스크립트](./client/javascript/clean-code/README.md)
       - [클린코드 for 자바스크립트(변수)](./client/javascript/clean-code/variable.md)
