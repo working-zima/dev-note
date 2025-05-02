@@ -923,41 +923,45 @@ SCSS의 중첩 + Mixin 조합은 반응형 스타일을 매우 직관적이고 �
 
 ### Mixin으로 공통화하기
 
+Mixin은 재사용할 수 있는 사용자 지정 함수이라고 할 수 있습니다.\
+Mixin은 `map-get`이나 `lighten` 같이 유용한 기능을 하는 함수를 직접 만드는 함수입니다.\
 매번 같은 조건을 반복하지 않도록 `@mixin`을 사용해 재사용할 수 있습니다.
 
+#### Mixin 사용 예시
+
 ```scss
-// _media.scss
-@mixin mobile {
-  @media (max-width: 480px) {
-    @content;
-  }
+// 만들고
+@mixin display-flex() {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
 }
 
-@mixin tablet {
-  @media (max-width: 768px) {
-    @content;
-  }
-}
-
-@mixin desktop {
-  @media (min-width: 1024px) {
-    @content;
-  }
+// 적용
+.container {
+  @include display-flex();
 }
 ```
 
-#### 사용 예시
+#### @content
+
+`@content`는 외부에서 콘텐츠의 미디어 쿼리도 전달할 수 있도록 하는 지시어입니다.\
+`@mixin`에 다른 값을 사용할 수 있고 동적 콘텐츠를 전달할 수 있습니다.
 
 ```scss
-.card {
-  padding: 24px;
-
-  @include mobile {
-    padding: 12px;
+// _media.scss
+@mixin media-min-width($width) {
+  @media (min-width: $width) {
+    @content; // font-size: 125%;
   }
+}
 
-  @include tablet {
-    padding: 16px;
+html {
+  font-size: 94.75%;
+
+  @include media-min-width(40rem) {
+    font-size: 125%;
   }
 }
 ```
@@ -1173,6 +1177,180 @@ Sass에서는 일반 클래스 대신 `%placeholder` 선택자를 정의해서 `
 
 - Sass의 `@extend`는 코드 중복을 줄이고, 공통 스타일을 재사용하는 강력한 도구입니다.
 - 하지만 복잡한 프로젝트에서는 `@mixin`을 더 유연하게 활용할 수 있으므로, 둘을 적절히 조합해서 사용하는 것이 좋습니다.
+
+## `&`와 중첩 선택자
+
+Sass에서는 중첩 구조를 만들 때 `&`(앰퍼샌드)를 사용하면 현재 셀렉터 자체를 재활용할 수 있습니다.\
+이는 상태 선택자(`:hover`, `:active`)나 BEM 방식에서 매우 유용하게 쓰입니다.
+
+### `&`와 중첩 비교
+
+```scss
+.button {
+  // 일반 충첩
+  // 자식 요소에 클래스
+  .is-loading {
+    font-size: 12px;
+  }
+
+  // & 충첩
+  // 같은 요소에 클래스 2개
+  &.is-loading {
+    opacity: 0.5;
+  }
+}
+```
+
+#### 일반 중첩 컴파일 결과
+
+- `.button` 요소의 하위 자식 요소 중 `.is-loading` 클래스를 가진 요소에 적용
+- 즉, "`.button` 내부에 `.is-loading`이 있을 때" 적용
+
+```css
+.button .is-loading {
+  font-size: 12px;
+}
+```
+
+```html
+<div class="button">
+  <span class="is-loading">로딩중</span>
+</div>
+```
+
+#### `&` 컴파일 결과
+
+- 하나의 요소가 `.button`과 `.is-loading`을 동시에 가지고 있는 경우
+- 즉, "같은 요소에 두 클래스가 붙어있을 때" 적용됩니다.
+
+```css
+.button.is-loading {
+  opacity: 0.5;
+}
+```
+
+```html
+<button class="button is-loading">로딩중</button>
+```
+
+| 구분    | `&` 사용                  | `&` 미사용            |
+| ------- | ------------------------- | --------------------- |
+| 의미    | 현재 셀렉터에 클래스 추가 | 하위 요소를 선택      |
+| 결과    | `.button.is-loading`      | `.button .is-loading` |
+| 주 용도 | 상태 클래스, BEM Modifier | 내부 구조 스타일링    |
+
+### BEM 스타일 조합 예시
+
+```scss
+.card {
+  &__title {
+    font-weight: bold;
+  }
+
+  &--highlighted {
+    background: yellow;
+  }
+}
+```
+
+#### BEM 스타일 결과
+
+```css
+.card__title {
+  font-weight: bold;
+}
+
+.card--highlighted {
+  background: yellow;
+}
+```
+
+### 상태 선택자와 앰퍼센트 `&`
+
+#### 1. `:hover`, `:active`, `:focus`
+
+```scss
+.button {
+  background: blue;
+  color: white;
+
+  &:hover {
+    background: darkblue;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: 2px solid orange;
+  }
+}
+```
+
+#### `:hover`, `:active`, `:focus` 결과
+
+```css
+.button {
+  background: blue;
+  color: white;
+}
+
+.button:hover {
+  background: darkblue;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:focus {
+  outline: 2px solid orange;
+}
+```
+
+#### 2. `.button.is-disabled` 같은 조합도 가능
+
+```scss
+.button {
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &:hover {
+    background: darkblue;
+  }
+}
+```
+
+#### `.button.is-disabled` 같은 조합 결과
+
+```css
+.button.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.button:hover {
+  background: darkblue;
+}
+```
+
+### 요약
+
+| 기능         | 설명                    | 예시                 | 결과        |
+| ------------ | ----------------------- | -------------------- | ----------- |
+| `&:hover`    | 현재 요소에 마우스 오버 | `.button:hover`      | 상태 반응   |
+| `&.modifier` | 상태 클래스 적용        | `.button.is-active`  | Modifier    |
+| `&--mod`     | BEM Modifier            | `.card--highlighted` | 시각적 변형 |
+| `.child`     | 내부 요소               | `.button .child`     | 구조 표현   |
+
+## 결론
+
+- `&`는 현재 셀렉터를 다시 사용할 수 있게 해주는 핵심 기능입니다.
+- `:hover`, `:active`, `.is-disabled` 같은 상태와 조합하면 더욱 직관적이고 확장 가능한 CSS를 작성할 수 있습니다.
+- BEM 스타일이나 UI 컴포넌트 설계에서 매우 강력하게 쓰이며, 가독성과 재사용성을 높여줍니다.
 
 ## 꼭 기억해야 할 점
 
