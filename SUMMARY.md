@@ -128,6 +128,8 @@
     - [Blob](client/javascript/blob.md)
     - [FileReader](client/javascript/file-reader.md)
     - [Intersection Observer-api](client/javascript/intersection-observer-api.md)
+    - [Proxy와 Reflect](client/javascript/proxy-reflect.md)
+    - [This](client/javascript/this.md)
   - [Next.js](client/nextjs/README.md)
     - [Caching](client/nextjs/caching.md)
     - [Optimizing](client/nextjs/optimizing.md)
