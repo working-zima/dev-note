@@ -10,7 +10,7 @@ let proxy = new Proxy(target, handler);
 
 - `target`: 감싸게 될 객체로, 함수를 포함한 모든 객체가 가능합니다.
 
-- `handler`: 동작을 가로채는 메서드인 '트랩(trap)'이 담긴 객체로, 여기서 프락시를 설정합니다.
+- `handler`: 동작을 가로채는 메서드인 '트랩(trap)'이 담긴 객체로, 여기서 프락시를 설정합니다.\
   (예시: `get` 트랩은 `target`의 프로퍼티를 읽을 때, `set` 트랩은 `target`의 프로퍼티를 쓸 때 활성화됨)
 
 ### Proxy Trap
@@ -468,11 +468,14 @@ let user = {
 };
 
 let userProxy = new Proxy(user, {
+  // (user, name, userProxy)
   get(target, prop, receiver) {
+    // 메서드 호출시 this는 호출 주체가 되므로, target인 user가 this
     return target[prop];
   },
 });
 
+// 메서드 호출시 this는 호출 주체가 되므로, userProxy가 this
 alert(userProxy.name); // Guest
 ```
 

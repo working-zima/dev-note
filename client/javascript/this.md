@@ -13,7 +13,7 @@
 
 전역 객체는 host 객체라고 하며 자바스크립트가 실행되는 환경인 런타임에 따라서 전역객체의 정보가 달라집니다.
 
-전역 공간에서 console.log(`this`)를 실행하면 호스트 가 만든 `this` 정보를 제공하며 브라우저에서는 window, node.js에서는 global이 됩니다.
+전역 공간에서 `console.log(this)`를 실행하면 호스트 가 만든 `this` 정보를 제공하며 브라우저에서는 window, node.js에서는 global이 됩니다.
 
 ## 함수 호출
 
@@ -32,13 +32,11 @@ arrow 함수에서 `this`는 바로 위 컨텍스트를 가리킵니다.
 ```javascript
 let a = {
   b: function() {
-      console.log(this)
-      // {b: f}
+      console.log(this) // {b: f}
     }
 }
 
-a.b(); or a[b]();
-// a가 this
+a.b(); or a[b](); // a가 this
 ```
 
 ## callback 호출
@@ -166,7 +164,7 @@ setTimeout(callback.bind(obj), 100);
 
 #### 제어권을 가진 함수가 콜백의 this를 지정한 경우
 
-addEventListerner 라는 함수의 경우에 콜백함수를 처리할 때 `this`는 이벤트가 발생한 그 타겟 대상 엘리먼트로 하도록 정의되어 있습니다.\
+`addEventListerner` 라는 함수의 경우에 콜백함수를 처리할 때 `this`는 이벤트가 발생한 그 타겟 대상 엘리먼트로 하도록 정의되어 있습니다.\
 따라서 `this`는 타겟 html dom 엘리먼트가 됩니다.
 
 ```jsx
@@ -178,7 +176,7 @@ document.getElementById("a").addEventListener("click", function () {
 });
 ```
 
-addEventListerner 라는 함수는 콜백함수를 처리할 때 `this`는 이벤트가 발생한 그 타겟 대상 엘리먼트로 하도록 정의되어 있습니다.\
+`addEventListerner` 라는 함수는 콜백함수를 처리할 때 `this`는 이벤트가 발생한 그 타겟 대상 엘리먼트로 하도록 정의되어 있습니다.\
 그래서 `this`는 타겟 html dom 엘리먼트가 되는데 bind() 메서드로 `this`를 `obj` 설정하면 `this`는 `obj`가 됩니다.
 
 ```jsx
