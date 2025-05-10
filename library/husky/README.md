@@ -160,10 +160,11 @@ chmod +x .husky/commit-msg
 ## prepare-commit-msg
 
 ```bash
-echo '#!/bin/sh
+#!/bin/sh
 
 GREEN=$(tput setaf 2)
 BLUE=$(tput setaf 4)
+RED=$(tput setaf 1)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
@@ -177,6 +178,13 @@ ${GREEN}예시${RESET}:
   ${BLUE}fix${RESET}: 로그인 오류 수정 #123
   ${BLUE}docs${RESET}: README 업데이트
 
+  ${BOLD}✅ commitlint 검사 규칙 요약:${RESET}
+  - ${BOLD}<type>${RESET}은 반드시 있어야 하며, ${BLUE}feat, fix, docs${RESET} 등으로 시작해야 합니다.
+  - ${BOLD}<message(subject)>${RESET}는 소문자로 시작해야 하며, 마침표(.)로 끝나면 안 됩니다.
+  - 예시 비교:
+    ${GREEN}fix: login 오류 수정${RESET} ← O
+    ${RED}Fix: Login 오류 수정.${RESET} ← X
+
 사용 가능한 type 목록:
   ${BLUE}feat${RESET}      새로운 기능
   ${BLUE}fix${RESET}       버그 수정
@@ -188,7 +196,6 @@ ${GREEN}예시${RESET}:
 
 ${GREEN}TIP:${RESET} 관련된 이슈가 있다면 메시지 끝에 ${BOLD}#123${RESET} 형태로 적어주세요.
 "
-' > .husky/prepare-commit-msg
 ```
 
 ### prepare-commit-msg 실행 권한 부여
