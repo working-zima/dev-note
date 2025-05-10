@@ -44,7 +44,7 @@ prettier $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') -
 git update-index --again
 ```
 
-이는 기본적으로 작동하는 예제이며, 더 강력한 기능이 필요하다면 lint-staged를 확인하세요.
+이는 기본적으로 작동하는 예제이며, 더 강력한 기능이 필요하다면 [lint-staged](https://github.com/lint-staged/lint-staged)를 확인하세요.
 
 ### 훅 비활성화(Disabling hooks)
 

@@ -1,7 +1,13 @@
 # loadAsync(data [, options])
 
-기존 zip 파일을 읽어 현재 JSZip 인스턴스의 현재 폴더 수준에 병합합니다.
+기존 zip 파일을 읽어 현재 JSZip 인스턴스의 현재 폴더 수준에 병합합니다.\
 이미 해당 이름을 가진 항목이 존재할 경우, 불러온 파일이 기존 파일을 덮어씁니다.
+
+즉, zip 파일을 파싱하여 JSZip이 이해할 수 있는 파일 객체로 변환해주는 함수입니다.
+
+JSZip은 이 File 객체를 내부적으로 압축을 해제(decompress) 해야 합니다.\
+압축 해제는 시간이 걸릴 수 있으므로, 동기(synchronous) 로 하면 브라우저가 멈춥니다.\
+그래서 JSZip은 `loadAsync()`라는 비동기 API를 제공합니다.
 
 **Returns** : 업데이트된 JSZip 객체의 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)를 반환합니다.  
 유효하지 않은 zip 데이터이거나, 지원되지 않는 기능(멀티볼륨, 암호화 등)을 포함할 경우 실패합니다.
