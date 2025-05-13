@@ -2,7 +2,8 @@
 
 ## Proxy
 
-특정 객체를 감싸 프로퍼티 읽기, 쓰기와 같은 객체에 가해지는 작업을 중간에서 가로채는 객체입니다.
+특정 객체를 감싸 프로퍼티 읽기, 쓰기와 같은 객체에 가해지는 작업을 중간에서 가로채는 객체입니다.\
+저는 쉽게 기억하기 위 Proxy는 객체에 대한 미들웨어 역할을 한다고 이해하고 있습니다.
 
 ```js
 let proxy = new Proxy(target, handler);
@@ -80,7 +81,7 @@ let numbers = [0, 1, 2];
 const numbersHandler = {
   get(target, property) {
     if (property in target) {
-      return target[property];
+      return target[property]; // numbers[1]
     } else {
       return 0; // 기본값을 0으로 설정
     }
@@ -106,7 +107,7 @@ dictionary = new Proxy(dictionary, {
     // 프로퍼티를 읽기를 가로챕니다.
     if (property in target) {
       // 조건: 사전에 구절이 있는 경우
-      return target[property]; // 번역문을 반환합니다
+      return target[property]; // dictionary["Hello"]
     } else {
       // 구절이 없는 경우엔 구절 그대로를 반환합니다.
       return property;
@@ -504,7 +505,7 @@ let admin = {
 alert(admin.name); // 결과: "Guest" (?!?)
 ```
 
-- `dmin.name`을 읽으려 할 때, `admin` 객체에는 `name`이라는 속성이 없으므로 프로토타입 체인을 따라 검색합니다.
+- `admin.name`을 읽으려 할 때, `admin` 객체에는 `name`이라는 속성이 없으므로 프로토타입 체인을 따라 검색합니다.
 
 - `admin.__proto__`는 `userProxy`이므로, `userProxy`의 `get` 트랩이 실행됩니다.
 
@@ -512,6 +513,278 @@ alert(admin.name); // 결과: "Guest" (?!?)
 
 문제는 여기서 getter는 `this._name`을 참조하는데, `this`가 `user`로 고정되어 있다는 점입니다.\
 그래서 `user._name` = "Guest"를 반환하게 된 것입니다.
+
+#### 해결 방법: Reflect.get과 receiver
+
+이러한 상황을 해결하려면 정확한 `this` 값을 유지해줄 수 있는 방법이 필요합니다.\
+getter는 `call()`이나 `apply()`로 호출되지 않기 때문에, `this`를 직접 줄 수는 없습니다.
+
+대신, `Reflect.get(target, prop, receiver)`를 사용하면, 이 `receiver`를 `this`로 넘겨줍니다.
+
+```js
+let user = {
+  _name: "Guest",
+  get name() {
+    return this._name;
+  },
+};
+
+let userProxy = new Proxy(user, {
+  get(target, prop, receiver) {
+    // receiver = admin
+    return Reflect.get(target, prop, receiver); // (*)
+  },
+});
+
+let admin = {
+  __proto__: userProxy,
+  _name: "Admin",
+};
+
+alert(admin.name); // 결과: "Admin"
+```
+
+이제 `receiver`가 getter의 `this`로 전달되고, 결과는 `admin._name = "Admin"`이 되어 제대로 작동합니다.
+
+##### 더 짧게 쓰는 팁
+
+```js
+get(target, prop, receiver) {
+  return Reflect.get(...arguments);
+}
+```
+
+`Reflect`의 메서드는 트랩과 이름도, 인자도 완전히 동일하게 설계되어 있습니다.\
+따라서 `Reflect.get(...arguments)`는 가장 안전하고, 실수 없이 원래 동작을 전달할 수 있는 방법입니다.
+
+## Proxy의 제약 사항
+
+Proxy는 기존 객체의 동작을 가장 낮은 수준에서 변경하거나 조작할 수 있는 독특한 방법을 제공합니다.\
+하지만 완벽하진 않으며, 몇 가지 중요한 제약이 존재합니다.
+
+### 내장 객체(Built-in objects): 내부 슬롯(Internal Slots)
+
+많은 내장 객체들—예: `Map`, `Set`, `Date`, `Promise` 등은 ‘내부 슬롯(internal slots)’이라 불리는 메커니즘을 사용합니다.
+
+- 내부 슬롯은 일반 속성처럼 보일 수 있지만, 실제로는 명세에서만 정의된 내부 전용 프로퍼티입니다.
+
+- 예를 들어, `Map` 객체는 데이터를 `[[MapData]]`라는 내부 슬롯에 저장합니다.
+
+- 이 내부 슬롯은 내장 메서드에서 직접 접근하며, `[[Get]]`이나 `[[Set]]`을 통해 접근하지 않습니다.
+
+그래서 Proxy는 이런 슬롯에 접근할 수 없습니다.
+
+문제는 내장 객체를 Proxy로 감싸면 해당 Proxy 객체는 이러한 내부 슬롯을 가지지 못한다는 것입니다.\
+그러면 내장 메서드들이 내부 슬롯에 접근하려고 하다가 실패하게 됩니다.
+
+### 예시: Map을 Proxy로 감쌌을 때
+
+```js
+let map = new Map();
+
+let proxy = new Proxy(map, {});
+
+proxy.set("test", 1); // Error 발생
+```
+
+- `Map`은 데이터를 [[MapData]]에 저장합니다.
+
+- `proxy.set()`이 실행되면 내부적으로 `this.[[MapData]]`에 접근하려고 하는데,
+
+`this`는 Proxy이고 내부 슬롯을 갖고 있지 않기 때문에 에러가 발생합니다.
+
+#### 해결 방법: 메서드 바인딩
+
+```js
+let map = new Map();
+
+let proxy = new Proxy(map, {
+  get(target, prop, receiver) {
+    let value = Reflect.get(...arguments);
+    return typeof value === "function" ? value.bind(target) : value;
+  },
+});
+
+proxy.set("test", 1);
+alert(proxy.get("test")); // 1 (정상 작동)
+```
+
+이렇게 하면 `proxy.set(...)`을 호출할 때 내부의 `this`는 `map` 객체 자체가 되어, 내부 슬롯을 정상적으로 사용할 수 있습니다.
+
+#### 예외: Array는 내부 슬롯을 사용하지 않음
+
+역사적인 이유로 `Array`는 내부 슬롯을 사용하지 않습니다.\
+따라서 배열을 `Proxy`로 감쌀 때는 위와 같은 문제가 발생하지 않습니다.
+
+### 클래스의 private 필드도 마찬가지
+
+프라이빗 필드도 내부 슬롯을 사용하여 구현됩니다.\
+그래서 다음 예제를 보면 `Proxy`가 문제를 일으킵니다.
+
+```js
+class User {
+  #name = "Guest";
+
+  getName() {
+    return this.#name;
+  }
+}
+
+let user = new User();
+
+user = new Proxy(user, {});
+
+alert(user.getName()); // Error
+```
+
+- `getName()`에서 접근하는 `this.#name`은 내부 슬롯을 통해 처리됩니다.
+
+- `Proxy` 객체는 그 슬롯을 가지지 않으므로 에러가 납니다.
+
+#### 다시 해결: 메서드 바인딩
+
+```js
+class User {
+  #name = "Guest";
+
+  getName() {
+    return this.#name;
+  }
+}
+
+let user = new User();
+
+user = new Proxy(user, {
+  get(target, prop, receiver) {
+    let value = Reflect.get(...arguments);
+    return typeof value === "function" ? value.bind(target) : value;
+  },
+});
+
+alert(user.getName()); // Guest
+```
+
+이렇게 하면 `getName()` 내부의 `this`가 `Proxy`가 아니라 원본 객체가 되어, 프라이빗 필드도 정상적으로 작동합니다.
+
+단점: 이 방법은 `Proxy`의 존재를 무력화할 수 있습니다.\
+즉, 원래 객체를 외부에 노출시켜 `Proxy`로 가로채던 기능이 깨질 수 있습니다.
+
+### Proxy는 원래 객체와 다른 객체입니다
+
+```js
+let allUsers = new Set();
+
+class User {
+  constructor(name) {
+    this.name = name;
+    allUsers.add(this);
+  }
+}
+
+let user = new User("John");
+
+alert(allUsers.has(user)); // true
+
+user = new Proxy(user, {});
+
+alert(allUsers.has(user)); // false
+```
+
+- `user`를 `Proxy`로 감싸면, `Proxy`는 완전히 새로운 객체가 됩니다.
+
+- 그래서 `Set`에서 기존 객체를 찾을 수 없게 됩니다.
+
+### Proxy는 === 비교를 가로챌 수 없음
+
+Proxy는 다양한 연산자를 가로챌 수 있습니다.
+
+- new → construct
+
+- in → has
+
+- delete → deleteProperty
+
+- 등등...
+
+하지만 엄격한 동일성 비교(`===`)는 가로챌 수 없습니다.
+
+```js
+proxy === target; // 항상 false
+```
+
+- 어떤 객체든 자기 자신과만 `===`으로 같기 때문에,
+
+- `Proxy`는 절대로 `target`과 `===`이 될 수 없습니다.
+
+- 따라서 완벽하게 투명한 대체(`proxy`)를 만드는 것은 불가능합니다.
+
+## Revocable Proxy – 접근을 취소할 수 있는 프록시
+
+`revocable` proxy(취소 가능한 프록시)는 나중에 사용할 수 없도록 비활성화할 수 있는 Proxy입니다.\
+예를 들어, 어떤 중요한 리소스에 대한 접근을 나중에 차단하고 싶다고 가정해봅시다.\
+이 경우, 그 리소스를 Proxy로 감싸되, 트랩 없이 원래 객체로 연산을 전달하고,필요한 순간에 해당 Proxy를 "끊어버릴" 수 있습니다.
+
+### Revocable Proxy 구문
+
+```js
+let { proxy, revoke } = Proxy.revocable(target, handler);
+```
+
+이 호출은 두 가지 속성을 가진 객체를 반환합니다.
+
+- `proxy`: 실제 프록시 객체
+
+- `revoke`: 프록시의 기능을 끊는 함수
+
+### Revocable Proxy 예시
+
+```js
+let object = {
+  data: "중요한 데이터",
+};
+
+let { proxy, revoke } = Proxy.revocable(object, {});
+
+// Proxy를 외부에 전달했다고 가정합시다
+alert(proxy.data); // "중요한 데이터"
+
+// 나중에 접근을 끊고 싶을 때
+revoke();
+
+// 이제 프록시는 더 이상 작동하지 않습니다
+alert(proxy.data); // 에러 발생
+```
+
+`revoke()`를 호출하면 프록시는 더 이상 `target` 객체와 연결되어 있지 않게 됩니다.\
+이로 인해 원본 객체는 가비지 컬렉션의 대상이 될 수 있습니다.
+
+### WeakMap과 함께 revoke 저장하기
+
+우리는 `revoke` 함수를 직접 들고 다니지 않고, Proxy를 키로 하여 `revoke`를 `WeakMap`에 저장해둘 수도 있습니다.
+
+```js
+let revokes = new WeakMap();
+
+let object = {
+  data: "중요한 데이터",
+};
+
+let { proxy, revoke } = Proxy.revocable(object, {});
+
+revokes.set(proxy, revoke);
+
+// 나중에 필요할 때:
+revoke = revokes.get(proxy);
+revoke();
+
+alert(proxy.data); // 에러 (이미 끊김)
+```
+
+#### 왜 WeakMap을 사용할까?
+
+`WeakMap`은 가비지 컬렉션을 막지 않기 때문입니다.\
+Proxy 객체가 더 이상 사용되지 않고 참조도 없으면, 해당 `revoke`도 자동으로 함께 정리됩니다.\
+반면, 일반 `Map`은 키를 강하게 참조하기 때문에 메모리가 해제되지 않을 수 있습니다.
 
 ## 참고
 
