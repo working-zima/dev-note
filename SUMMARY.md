@@ -164,6 +164,8 @@
     - [Proxy와 Reflect](client/javascript/proxy-reflect.md)
     - [프로토타입](client/javascript/prototype.md)
     - [This](client/javascript/this.md)
+    - [Maps와 Sets](client/javascript/map-set.md)
+    - [순수 함수](client/javascript/pure-function.md)
   - [Next.js](client/nextjs/README.md)
     - [Caching](client/nextjs/caching.md)
     - [Optimizing](client/nextjs/optimizing.md)
