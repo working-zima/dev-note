@@ -20,99 +20,6 @@ src/
     └── index.js
 ```
 
-### store/index.js
-
-Redux `store`를 생성하고, `reducer`를 연결하며 상태 구독을 설정합니다.
-
-`store.subscribe()`는 상태가 변경될 때마다 실행되는 함수로, UI를 자동 리렌더링하지 않기 때문에
-보통 디버깅, 콘솔 출력, 외부 저장소 동기화 등에 사용됩니다.
-
-```js
-import { createStore } from "redux";
-
-import { rootReducer } from "../reducer"; // 모든 리듀서를 합친 루트 리듀서
-
-const store = createStore(rootReducer); // 스토어 생성 (애플리케이션 상태 저장소)
-
-store.subscribe(() => {
-  console.log(store.getState()); // 상태 변경 시마다 현재 상태를 콘솔에 출력
-});
-
-export default store;
-```
-
-### reducer/index.js
-
-여러 개의 `reducer`를 하나의 `rootReducer`로 병합하여 `state.modal.isShow`로 접근 가능하게 만듭니다.
-
-```js
-import { combineReducers } from "redux";
-
-import modalReducer from "./modal";
-
-const rootReducer = combineReducers({
-  modal: modalReducer, // 모달 관련 리듀서를 modal 상태로 등록
-});
-
-export default rootReducer;
-```
-
-### reducer/modal.js
-
-액션의 타입에 따라 상태를 업데이트합니다.
-
-```js
-export const TOGGLE_MODAL = "TOGGLE_MODAL";
-export const OPEN_MODAL = "TOGGLE_MODAL";
-export const CLOSE_MODAL = "TOGGLE_MODAL";
-
-const initialState = {
-  isShow: false,
-};
-
-/**
- * 모달 리듀서
- * @param {*} state : 현재 상태
- * @param {*} action : 액션 객체
- * @returns
- */
-const modalReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case TOGGLE_MODAL:
-      return { ...state, isShow: !state.modal.isShow };
-    case OPEN_MODAL:
-      return { ...state, isShow: true  };
-    case CLOSE_MODAL:
-      return { ...state, isShow: false };
-    default:
-      return state;
-  }
-};
-
-export modalReducer;
-```
-
-### index.js
-
-하위 컴포넌트들이 `useSelector`, `useDispatch` 사용 가능하도록 Redux의 `Provider`를 사용해 앱 전체에 store를 연결합니다.
-
-```js
-import React from "react";
-import ReactDOM from "react-dom/client";
-
-import { Provider } from "react-redux";
-
-import App from "./App";
-import store from "./store";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
-```
-
 ### components/OpenModalButton.jsx
 
 리듀서가 이 액션을 처리해 모달이 열리도록 합니다.
@@ -169,6 +76,108 @@ export default function OpenModalButton() {
 }
 ```
 
+### reducer/index.js
+
+여러 개의 `reducer`를 하나의 `rootReducer`로 병합하여 `state.modal.isShow`로 접근 가능하게 만듭니다.
+
+```js
+import { combineReducers } from "redux";
+
+import modalReducer from "./modal";
+
+const rootReducer = combineReducers({
+  modal: modalReducer, // 모달 관련 리듀서를 modal 상태로 등록
+});
+
+export default rootReducer;
+```
+
+`combineReducers` 매개변수 객체의 키 값은 `state`의 키 값이 됩니다.
+
+```js
+{
+  modal: {
+    isShow: false;
+  }
+}
+```
+
+### reducer/modal.js
+
+액션의 타입에 따라 상태를 업데이트합니다.
+
+```js
+export const TOGGLE_MODAL = "TOGGLE_MODAL";
+export const OPEN_MODAL = "TOGGLE_MODAL";
+export const CLOSE_MODAL = "TOGGLE_MODAL";
+
+const initialState = {
+  isShow: false,
+};
+
+/**
+ * 모달 리듀서
+ * @param {*} state : 현재 상태
+ * @param {*} action : 액션 객체
+ * @returns
+ */
+const modalReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case TOGGLE_MODAL:
+      return { ...state, isShow: !state.modal.isShow };
+    case OPEN_MODAL:
+      return { ...state, isShow: true  };
+    case CLOSE_MODAL:
+      return { ...state, isShow: false };
+    default:
+      return state;
+  }
+};
+
+export modalReducer;
+```
+
+### store/index.js
+
+Redux `store`를 생성하고, `reducer`를 연결하며 상태 구독을 설정합니다.
+
+`store.subscribe()`는 상태가 변경될 때마다 실행되는 함수로, UI를 자동 리렌더링하지 않기 때문에
+보통 디버깅, 콘솔 출력, 외부 저장소 동기화 등에 사용됩니다.
+
+```js
+import { createStore } from "redux";
+
+import { rootReducer } from "../reducer"; // 모든 리듀서를 합친 루트 리듀서
+
+const store = createStore(rootReducer); // 스토어 생성 (애플리케이션 상태 저장소)
+
+store.subscribe(() => {
+  console.log(store.getState()); // 상태 변경 시마다 현재 상태를 콘솔에 출력
+});
+
+export default store;
+```
+
+### index.js
+
+하위 컴포넌트들이 `useSelector`, `useDispatch` 사용 가능하도록 Redux의 `Provider`를 사용해 앱 전체에 store를 연결합니다.
+
+```js
+import ReactDOM from "react-dom/client";
+
+import { Provider } from "react-redux";
+
+import App from "./App";
+import store from "./store";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
 ### App.jsx
 
 ```js
@@ -186,5 +195,3 @@ function App() {
 
 export default App;
 ```
-
-## Redux Toolkit
