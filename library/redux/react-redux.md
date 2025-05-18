@@ -1,19 +1,44 @@
 # React Redux
 
+## useDispatch
+
+React에서 Redux 스토어에 상태를 변경하기 위해 액션을 전달하는 역할을 합니다.
+
+```js
+import { useDispatch } from "react-redux";
+
+import { CLOSE_MODAL } from "../reducer";
+
+const dispatch = useDispatch();
+
+dispatch({ type: CLOSE_MODAL });
+```
+
+## useSelector
+
+Redux 스토어에 저장된 상태를 가져오는 데 사용합니다.\
+내부적으로 얕은 비교(`===`)를 사용해 변경 여부 확인하며 상태가 바뀌면 컴포넌트도 자동으로 리렌더링합니다.
+
+```js
+import { useSelector } from "react-redux";
+
+const isShow = useSelector((state) => state.modal.isShow);
+```
+
 ## React Redux 모달 관리 기본 예시
 
 ```plain
 src/
-└── app
-    ├── components
+└── app/
+    ├── components/
     │   ├── Modal.jsx
     │   └── OpenModalButton.jsx
     │
-    ├── reducer
+    ├── reducer/
     │   ├── modal.js
     │   └── index.js
     │
-    ├── store
+    ├── store/
     │   └── index.js
     │
     ├── App.js
