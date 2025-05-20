@@ -21,7 +21,11 @@ JSZip의 인스턴스는 파일들의 집합을 나타냅니다.\
 ### Node.js에서 사용 시
 
 ```js
-var JSZip = require("jszip");
+const JSZip = require("jszip");
+```
+
+```js
+import JSZip from "jszip";
 ```
 
 ## 기본 조작
@@ -29,7 +33,7 @@ var JSZip = require("jszip");
 먼저 JSZip의 인스턴스를 생성합니다:
 
 ```js
-var zip = new JSZip();
+const zip = new JSZip();
 ```
 
 파일과 폴더를 추가하거나 갱신할 수 있습니다:  
@@ -45,20 +49,20 @@ zip.file("hello.txt", "Hello World\n");
 // 하위 폴더에 파일 생성
 zip.file("nested/hello.txt", "Hello World\n");
 
-// 동일한 결과
+// 동일한 결과 (하위 폴더에 파일 생성)
 zip.folder("nested").file("hello.txt", "Hello World\n");
 ```
 
 `.folder(name)`을 사용하면 해당 폴더에 상대적으로 파일을 추가할 수 있습니다.
 
 ```js
-var photoZip = zip.folder("photos");
+const photoZip = zip.folder("photos");
 
 // photos/README 파일 생성
 photoZip.file("README", "a folder with photos");
 ```
 
-## 📄 파일 내용 읽기
+## 파일 내용 읽기
 
 ```js
 zip
@@ -67,6 +71,15 @@ zip
   .then(function (data) {
     // data는 "Hello World\n"
   });
+```
+
+```js
+const file = zip.file("hello.txt");
+
+if (file) {
+  const data = await file.async("string");
+  console.log(data); // "Hello World\n"
+}
 ```
 
 `Uint8Array`로 읽을 수도 있습니다:
@@ -82,6 +95,17 @@ if (JSZip.support.uint8array) {
 }
 ```
 
+```js
+if (JSZip.support.uint8array) {
+  const file = zip.file("hello.txt");
+
+  if (file) {
+    const data = await file.async("uint8array");
+    console.log(data); // Uint8Array { 0: 72, 1: 101, 2: 108, ... }
+  }
+}
+```
+
 ## 파일 또는 폴더 제거
 
 ```js
@@ -92,7 +116,7 @@ zip.remove("photos"); // 폴더를 제거하면 내부 내용도 함께 제거�
 ## zip 파일 생성하기
 
 ```js
-var promise = null;
+const promise = null;
 
 if (JSZip.support.uint8array) {
   promise = zip.generateAsync({ type: "uint8array" });
@@ -106,12 +130,27 @@ if (JSZip.support.uint8array) {
 ## zip 파일 읽기
 
 ```js
-var new_zip = new JSZip();
+const new_zip = new JSZip();
 
 new_zip.loadAsync(content).then(function (zip) {
   // zip 안의 파일 읽기
   zip.file("hello.txt").async("string").then(console.log);
 });
+```
+
+```js
+const new_zip = new JSZip();
+
+// 1. zip 파일 비동기 로드
+const zip = await new_zip.loadAsync(content);
+
+// 2. 파일 추출
+const file = zip.file("hello.txt");
+
+if (file) {
+  const contentStr = await file.async("string");
+  console.log(contentStr);
+}
 ```
 
 > zip 읽기는 간단해 보이지만, 자세한 설명은 [이 문서](https://stuk.github.io/jszip/documentation/howto/read_zip.html)를 참고하세요.

@@ -4,201 +4,175 @@
 
 ## 브라우저에서
 
-### AJAX 요청으로 zip 파일 읽기
+### zip 파일 다운로드 후 읽기 (`fetch` 사용 – 권장 방식)
 
-AJAX로 바이너리 데이터를 가져오는 것은 (특히 IE 9 이하에서) 까다롭습니다.\
-가장 쉬운 방법은 `JSZipUtils.getBinaryContent`를 사용하는 것입니다.
-
-#### 콜백 방식 예시
+`fetch()`와 `arrayBuffer()`를 사용하면 외부 zip 파일을 간단하고 안전하게 읽을 수 있습니다.  
+별도 라이브러리 없이 modern 브라우저에서 작동합니다.
 
 ```js
-JSZipUtils.getBinaryContent("path/to/content.zip", function (err, data) {
-  if (err) {
-    throw err; // 또는 에러 처리
-  }
+const response = await fetch("path/to/content.zip");
+const arrayBuffer = await response.arrayBuffer();
 
-  JSZip.loadAsync(data).then(function () {
-    // zip 파일 읽기 성공
-  });
-});
+const zip = await JSZip.loadAsync(arrayBuffer);
+const text = await zip.file("readme.txt")?.async("string");
+console.log(text);
 ```
 
-#### Promise 방식 예시
-
-```js
-new JSZip.external.Promise(function (resolve, reject) {
-    JSZipUtils.getBinaryContent('path/to/content.zip', function(err, data) {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(data);
-        }
-    });
-})
-.then(function (data) {
-    return JSZip.loadAsync(data);
-})
-.then(...);
-```
-
-#### 참고: getBinaryContent 없이 직접 AJAX로 할 경우
-
-기본 `XMLHttpRequest`에서 `responseType`을 지정하지 않으면 브라우저가 응답을 문자열로 해석하고 문자셋 디코딩을 시도합니다.\
-이것을 피하려면 다음과 같이 처리합니다:
-
-- Firefox / Chrome / Opera:  
-  `xhr.overrideMimeType("text/plain; charset=x-user-defined");`
-- IE 9 이하는 비표준 방식(vbscript 등) 필요
-- IE 10 이상은 `xhr.responseType = "arraybuffer"` 사용 가능
+- `fetch()`로 zip 파일 다운로드
+- `arrayBuffer()`로 바이너리 데이터 추출
+- `JSZip.loadAsync()`로 zip 파싱
 
 ### 로컬 파일 읽기 (FileReader API)
 
-브라우저가 `FileReader` API를 지원하면, zip 파일을 로컬에서 직접 읽을 수 있습니다.\
+사용자가 zip 파일을 업로드할 경우, `FileReader`로 읽어들일 수 있습니다.  
 JSZip은 `ArrayBuffer`를 읽을 수 있기 때문에 다음과 같이 사용합니다:
 
 ```js
 const reader = new FileReader();
-reader.onload = function (e) {
-  JSZip.loadAsync(e.target.result).then(function (zip) {
-    // zip 처리
-  });
+
+reader.onload = async (e) => {
+  const zip = await JSZip.loadAsync(e.target.result);
+  const text = await zip.file("readme.txt")?.async("string");
+  console.log(text);
 };
-reader.readAsArrayBuffer(file);
+
+reader.readAsArrayBuffer(input.files[0]);
 ```
+
+- `input` 요소의 파일을 읽고
+- zip 파일을 메모리에서 파싱
+- 개별 파일은 `.file().async()`로 읽음
 
 ## Node.js에서
 
-JSZip은 `Buffer`를 읽을 수 있기 때문에 매우 간단하게 사용 가능합니다.
+JSZip은 `Buffer`를 읽을 수 있기 때문에 매우 간단하게 사용할 수 있습니다.  
+최신 Node.js에서는 `fs/promises`와 `async/await`을 사용하는 방식이 권장됩니다.
 
 ### 로컬 zip 파일 읽기
 
 ```js
-const fs = require("fs");
-const JSZip = require("jszip");
+import { readFile } from "fs/promises";
+import JSZip from "jszip";
 
-fs.readFile("test.zip", function (err, data) {
-  if (err) throw err;
-  JSZip.loadAsync(data).then(function (zip) {
-    // zip 처리
-  });
-});
+const buffer = await readFile("test.zip");
+const zip = await JSZip.loadAsync(buffer);
+
+const file = await zip.file("hello.txt")?.async("string");
+console.log(file);
 ```
 
-또는 Promise 방식:
-
-```js
-new JSZip.external.Promise(function (resolve, reject) {
-    fs.readFile("test.zip", function(err, data) {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(data);
-        }
-    });
-})
-.then(JSZip.loadAsync)
-.then(...);
-```
+- `readFile()`로 zip 파일을 `Buffer` 형태로 읽고
+- `JSZip.loadAsync()`로 zip 구조를 파싱
+- `.file().async()`로 원하는 파일 내용 추출
 
 ### 기존 파일을 zip에 추가하기
 
 ```js
-fs.readFile("picture.png", function (err, data) {
-  if (err) throw err;
-  const zip = new JSZip();
-  zip.file("picture.png", data);
-});
+import { readFile } from "fs/promises";
+import JSZip from "jszip";
+
+const zip = new JSZip();
+const data = await readFile("picture.png");
+
+zip.file("picture.png", data);
 ```
 
-Promise 방식:
-
-```js
-const contentPromise = new JSZip.external.Promise(function (resolve, reject) {
-  fs.readFile("picture.png", function (err, data) {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(data);
-    }
-  });
-});
-zip.file("picture.png", contentPromise);
-```
+- 기존 파일을 zip 인스턴스에 직접 추가할 수 있음
+- Buffer를 그대로 전달하면 압축 대상에 포함됨
 
 ### 파일 스트림으로 추가하기
 
 ```js
+import fs from "fs";
+import JSZip from "jszip";
+
+const zip = new JSZip();
 const stream = fs.createReadStream("picture.png");
+
 zip.file("picture.png", stream);
 ```
 
+- 대용량 파일을 메모리에 올리지 않고 zip에 추가 가능
+- 내부적으로 스트리밍 처리됨
+
+> 참고: Node.js에서 zip 파일로 저장하려면 `generateAsync({ type: "nodebuffer" })`를 사용해야 합니다.
+
 ## 원격 파일 읽기
 
-Node.js에서는 다양한 HTTP 라이브러리를 사용할 수 있습니다.\
-(zip 파일은 가능한 한 **Buffer**로 다운로드하는 것이 성능에 좋습니다.)
+Node.js에서는 다양한 HTTP 라이브러리를 사용할 수 있습니다.  
+(zip 파일은 가능한 한 **Buffer 또는 ArrayBuffer**로 다운로드하는 것이 성능에 좋습니다.)
 
-### http 모듈 사용
+### Node.js v18+ `fetch` 사용
+
+Node.js v18 이상에서는 브라우저처럼 `fetch()`를 사용할 수 있습니다.  
+zip 파일을 다운로드한 후 `arrayBuffer()`로 읽고, JSZip으로 파싱합니다.
 
 ```js
-const http = require("http");
-const url = require("url");
-const JSZip = require("jszip");
+import JSZip from "jszip";
 
-const req = http.get(
-  url.parse("http://localhost/.../file.zip"),
-  function (res) {
-    if (res.statusCode !== 200) {
-      console.log(res.statusCode);
-      return;
-    }
+const response = await fetch("http://localhost/.../file.zip");
+const arrayBuffer = await response.arrayBuffer(); // 바이너리 데이터를 추출
 
-    const data = [];
-    let dataLen = 0;
+const zip = await JSZip.loadAsync(arrayBuffer); // zip 내용을 비동기적으로 파싱
+const text = await zip.file("content.txt")?.async("string"); // 원하는 파일 내용을 읽기
 
-    res.on("data", function (chunk) {
-      data.push(chunk);
-      dataLen += chunk.length;
-    });
+console.log(text);
+```
 
-    res.on("end", function () {
-      const buf = Buffer.concat(data);
-      JSZip.loadAsync(buf)
-        .then(function (zip) {
-          return zip.file("content.txt").async("string");
-        })
-        .then(console.log);
-    });
-  }
-);
+### axios 사용
 
-req.on("error", function (err) {
-  // 에러 처리
+```js
+import axios from "axios";
+import JSZip from "jszip";
+
+const { data } = await axios.get("http://localhost/.../file.zip", {
+  responseType: "arraybuffer", // 중요!
 });
+
+const zip = await JSZip.loadAsync(data);
+const text = await zip.file("content.txt")?.async("string");
+
+console.log(text);
 ```
 
-### request 모듈 사용
+- `responseType: "arraybuffer"` 설정이 **반드시 필요**
+- `Buffer` 대신 `Uint8Array`/`ArrayBuffer`도 JSZip에서 처리 가능
+
+### http 모듈 사용 (ESM + async/await)
 
 ```js
-const request = require("request");
-const JSZip = require("jszip");
+import http from "http";
+import JSZip from "jszip";
 
-request(
-  {
-    method: "GET",
-    url: "http://localhost/.../file.zip",
-    encoding: null, // 중요! 바이너리로 받기
-  },
-  function (error, response, body) {
-    if (error || response.statusCode !== 200) {
-      // 에러 처리
-      return;
-    }
+const getZipBuffer = (url) =>
+  new Promise((resolve, reject) => {
+    http
+      .get(url, (res) => {
+        if (res.statusCode !== 200) {
+          return reject(new Error("HTTP error: " + res.statusCode));
+        }
 
-    JSZip.loadAsync(body)
-      .then(function (zip) {
-        return zip.file("content.txt").async("string");
+        const chunks = [];
+        res.on("data", (chunk) => chunks.push(chunk));
+        res.on("end", () => resolve(Buffer.concat(chunks)));
       })
-      .then(console.log);
-  }
-);
+      .on("error", reject);
+  });
+
+const buffer = await getZipBuffer("http://localhost/.../file.zip");
+const zip = await JSZip.loadAsync(buffer);
+const text = await zip.file("content.txt")?.async("string");
+
+console.log(text);
 ```
+
+- 기본 내장 모듈만 사용하고 싶을 때
+- 옛 코드 리팩토링에도 활용 가능
+
+### 더 이상 추천되지 않는 방식: `request` 모듈 (deprecated)
+
+```js
+// 사용 비추천: request는 deprecated 상태입니다.
+```
+
+> 대신 `axios`, `node-fetch`, 또는 `http` 내장 모듈을 사용하는 것이 안전합니다.
