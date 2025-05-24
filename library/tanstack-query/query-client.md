@@ -310,7 +310,7 @@ const data = queryClient.getQueriesData(filters);
 
 ## setQueryData
 
-`setQueryData`는 지정한 쿼리의 캐시 데이터를 즉시 동기적으로 수정하는 함수입니다.  
+`setQueryData`는 지정한 queryKey의 쿼리 캐시 데이터를 즉시 동기적으로 수정하는 함수입니다.  
 쿼리가 존재하지 않으면 자동으로 생성되며, 사용되지 않을 경우 기본 `gcTime`(5분) 이후 가비지 컬렉션됩니다.
 
 ### setQueryData 사용 예시
@@ -492,8 +492,9 @@ await queryClient.refetchQueries({
 
 ## cancelQueries
 
-`cancelQueries`는 진행 중인 쿼리 요청(`fetchQuery` / `useQuery` / `fetchInfiniteQuery` 같은 읽기용 요청)을 취소할 때 사용됩니다.  
-주로 낙관적 업데이트(Optimistic Update) 수행 시, 기존 요청이 낙관적 데이터와 충돌하지 않도록 할 때 유용합니다.
+`cancelQueries`는 진행 중인 쿼리 요청(`fetchQuery` / `useQuery` / `fetchInfiniteQuery` 같은 읽기용 요청)을 취소할 때 사용됩니다.\
+수정용 요청은 취소하지 않기 때문에 주로 낙관적 업데이트(Optimistic Update) 수행 시, 기존 조회 요청이 낙관적 데이터와 충돌하지 않도록 할 때 유용합니다.\
+(이미 낙관적으로 수정된 데이터인데, 수정 후 재조회하여 다시 수정할 필요 없음)
 
 ### cancelQueries 사용 예시
 

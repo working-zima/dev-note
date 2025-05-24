@@ -146,67 +146,73 @@ module.exports = {
     jest: true,
   },
   extends: [
-    'airbnb',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
-  plugins: [
-    'react',
-    'react-hooks',
-    '@typescript-eslint',
-  ],
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
   settings: {
-    'import/resolver': {
+    "import/resolver": {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
   },
   rules: {
-    indent: ['error', 2],
-    'no-trailing-spaces': 'error',
-    curly: 'error',
-    'brace-style': 'error',
-    'no-multi-spaces': 'error',
-    'space-infix-ops': 'error',
-    'space-unary-ops': 'error',
-    'no-whitespace-before-property': 'error',
-    'func-call-spacing': 'error',
-    'space-before-blocks': 'error',
-    'keyword-spacing': ['error', { before: true, after: true }],
-    'comma-spacing': ['error', { before: false, after: true }],
-    'comma-style': ['error', 'last'],
-    'comma-dangle': ['error', 'always-multiline'],
-    'space-in-parens': ['error', 'never'],
-    'block-spacing': 'error',
-    'array-bracket-spacing': ['error', 'never'],
-    'object-curly-spacing': ['error', 'always'],
-    'key-spacing': ['error', { mode: 'strict' }],
-    'arrow-spacing': ['error', { before: true, after: true }],
-    'import/no-extraneous-dependencies': ['error', {
-      devDependencies: [
-        '**/*.test.js',
-        '**/*.test.jsx',
-        '**/*.test.ts',
-        '**/*.test.tsx',
-      ],
-    }],
-    'import/extensions': ['error', 'ignorePackages', {
-      js: 'never',
-      jsx: 'never',
-      ts: 'never',
-      tsx: 'never',
-    }],
-    'react/jsx-filename-extension': [2, {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    }],
-    'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
+    indent: ["error", 2],
+    "no-trailing-spaces": "error",
+    curly: "error",
+    "brace-style": "error",
+    "no-multi-spaces": "error",
+    "space-infix-ops": "error",
+    "space-unary-ops": "error",
+    "no-whitespace-before-property": "error",
+    "func-call-spacing": "error",
+    "space-before-blocks": "error",
+    "keyword-spacing": ["error", { before: true, after: true }],
+    "comma-spacing": ["error", { before: false, after: true }],
+    "comma-style": ["error", "last"],
+    "comma-dangle": ["error", "always-multiline"],
+    "space-in-parens": ["error", "never"],
+    "block-spacing": "error",
+    "array-bracket-spacing": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "key-spacing": ["error", { mode: "strict" }],
+    "arrow-spacing": ["error", { before: true, after: true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        devDependencies: [
+          "**/*.test.js",
+          "**/*.test.jsx",
+          "**/*.test.ts",
+          "**/*.test.tsx",
+        ],
+      },
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
+    ],
+    "react/jsx-filename-extension": [
+      2,
+      {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    ],
+    "jsx-a11y/label-has-associated-control": ["error", { assert: "either" }],
   },
 };
 ```
@@ -265,74 +271,80 @@ module.exports = {
     jest: true,
   },
   extends: [
-    'airbnb',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
-
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-  ],
+  plugins: ["react", "@typescript-eslint"],
   settings: {
-    'import/resolver': {
+    "import/resolver": {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
   },
   rules: {
-    indent: ['error', 2],
-    'no-trailing-spaces': 'error',
-    curly: 'error',
-    'brace-style': 'error',
-    'no-multi-spaces': 'error',
-    'space-infix-ops': 'error',
-    'space-unary-ops': 'error',
-    'no-whitespace-before-property': 'error',
-    'func-call-spacing': 'error',
-    'space-before-blocks': 'error',
-    'keyword-spacing': ['error', { before: true, after: true }],
-    'comma-spacing': ['error', { before: false, after: true }],
-    'comma-style': ['error', 'last'],
-    'comma-dangle': ['error', 'always-multiline'],
-    'space-in-parens': ['error', 'never'],
-    'block-spacing': 'error',
-    'array-bracket-spacing': ['error', 'never'],
-    'object-curly-spacing': ['error', 'always'],
-    'key-spacing': ['error', { mode: 'strict' }],
-    'arrow-spacing': ['error', { before: true, after: true }],
-    'import/no-extraneous-dependencies': ['error', {
-      devDependencies: [
-        '**/*.test.js',
-        '**/*.test.jsx',
-        '**/*.test.ts',
-        '**/*.test.tsx',
-      ],
-    }],
-    'import/extensions': ['error', 'ignorePackages', {
-      js: 'never',
-      jsx: 'never',
-      ts: 'never',
-      tsx: 'never',
-    }],
-    'react/jsx-filename-extension': [2, {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    }],
-    'react/prop-types': [2, { skipUndeclared: true }],
-    'react/require-default-props': 'off',
-    'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
+    indent: ["error", 2],
+    "no-trailing-spaces": "error",
+    curly: "error",
+    "brace-style": "error",
+    "no-multi-spaces": "error",
+    "space-infix-ops": "error",
+    "space-unary-ops": "error",
+    "no-whitespace-before-property": "error",
+    "func-call-spacing": "error",
+    "space-before-blocks": "error",
+    "keyword-spacing": ["error", { before: true, after: true }],
+    "comma-spacing": ["error", { before: false, after: true }],
+    "comma-style": ["error", "last"],
+    "comma-dangle": ["error", "always-multiline"],
+    "space-in-parens": ["error", "never"],
+    "block-spacing": "error",
+    "array-bracket-spacing": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "key-spacing": ["error", { mode: "strict" }],
+    "arrow-spacing": ["error", { before: true, after: true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        devDependencies: [
+          "**/*.test.js",
+          "**/*.test.jsx",
+          "**/*.test.ts",
+          "**/*.test.tsx",
+        ],
+      },
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        js: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
+    ],
+    "react/jsx-filename-extension": [
+      2,
+      {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    ],
+    "react/prop-types": [2, { skipUndeclared: true }],
+    "react/require-default-props": "off",
+    "jsx-a11y/label-has-associated-control": ["error", { assert: "either" }],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": "warn",
   },
 };
 ```
@@ -369,7 +381,7 @@ touch index.html src/main.tsx src/App.tsx
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>React Demo App</title>
   </head>
   <body>
@@ -382,12 +394,12 @@ touch index.html src/main.tsx src/App.tsx
 #### main.tsx
 
 ```tsx
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 
-import App from './App';
+import App from "./App";
 
 function main() {
-  const container = document.getElementById('root');
+  const container = document.getElementById("root");
   if (!container) {
     return;
   }
@@ -448,30 +460,28 @@ touch jest.config.js
 
 ```javascript
 module.exports = {
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: [
-    '@testing-library/jest-dom/extend-expect',
-  ],
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', {
-      jsc: {
-        parser: {
-          syntax: 'typescript',
-          jsx: true,
-          decorators: true,
-        },
-        transform: {
-          react: {
-            runtime: 'automatic',
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            jsx: true,
+            decorators: true,
+          },
+          transform: {
+            react: {
+              runtime: "automatic",
+            },
           },
         },
       },
-    }],
+    ],
   },
-  testPathIgnorePatterns: [
-    '<rootDir>/node_modules/',
-    '<rootDir>/dist/',
-  ],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/dist/"],
 };
 ```
 
@@ -524,17 +534,15 @@ touch src/routes.tsx
 #### App.tsx
 
 ```typescript
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import routes from './routes';
+import routes from "./routes";
 
 // router 객체 생성
 const router = createBrowserRouter(routes);
 
 export default function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 ```
 
@@ -559,7 +567,7 @@ npm i styled-reset
 #### App 컴포넌트에서 styled-reset 사용
 
 ```typescript
-import { Reset } from 'styled-reset';
+import { Reset } from "styled-reset";
 ```
 
 ### swc 세팅
@@ -603,10 +611,10 @@ touch src/styles/defaultTheme.ts src/styles/styeld.d.ts src/styles/Theme.ts
 ```typescript
 const defaultTheme = {
   colors: {
-    background: '#FFFFFF',
-    text: '#000000',
-    primary: '#F00000',
-    secondary: '#00FFFF',
+    background: "#FFFFFF",
+    text: "#000000",
+    primary: "#F00000",
+    secondary: "#00FFFF",
   },
 };
 
@@ -618,20 +626,19 @@ export default defaultTheme;
 `styeld.d.ts`
 
 ```typescript
-import 'styled-components';
+import "styled-components";
 
-import Theme from './Theme';
+import Theme from "./Theme";
 
-declare module 'styled-components' {
-  export interface DefaultTheme extends Theme {
-  }
+declare module "styled-components" {
+  export interface DefaultTheme extends Theme {}
 }
 ```
 
 `Theme.ts`
 
 ```typescript
-import defaultTheme from './defaultTheme';
+import defaultTheme from "./defaultTheme";
 
 type Theme = typeof defaultTheme;
 
@@ -647,7 +654,7 @@ touch src/styles/GlobalStyle.ts
 `GlobalStyle.ts`에 스타일에 관련된 편의를 위한 세팅을 전역 스타일로 지정
 
 ```typescript
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -667,7 +674,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-size: 1.6rem;
     background: ${(props) => props.theme.colors.background};
-    color: ${(props) => props.theme.colors.text}
+    color: ${(props) => props.theme.colors.text};
   }
 
   :lang(ko) {
@@ -685,16 +692,16 @@ export default GlobalStyle;
 `App.tsx`
 
 ```typescript
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from "styled-components";
 
-import { Reset } from 'styled-reset';
+import { Reset } from "styled-reset";
 
-import routes from './routes';
+import routes from "./routes";
 
-import GlobalStyle from './styles/GlobalStyle';
-import DefaultTheme from './styles/defaultTheme';
+import GlobalStyle from "./styles/GlobalStyle";
+import DefaultTheme from "./styles/defaultTheme";
 
 const router = createBrowserRouter(routes);
 
@@ -714,7 +721,7 @@ export default function App() {
 `setupTests.ts`에 아래의 코드 추가
 
 ```typescript
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
     matches: false,
@@ -733,31 +740,31 @@ Object.defineProperty(window, 'matchMedia', {
 
 ```typescript
 module.exports = {
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
   setupFilesAfterEnv: [
-    '@testing-library/jest-dom/extend-expect',
-    '<rootDir>/src/setupTests.ts',
+    "@testing-library/jest-dom/extend-expect",
+    "<rootDir>/src/setupTests.ts",
   ],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', {
-      jsc: {
-        parser: {
-          syntax: 'typescript',
-          jsx: true,
-          decorators: true,
-        },
-        transform: {
-          react: {
-            runtime: 'automatic',
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            jsx: true,
+            decorators: true,
+          },
+          transform: {
+            react: {
+              runtime: "automatic",
+            },
           },
         },
       },
-    }],
+    ],
   },
-  testPathIgnorePatterns: [
-    '<rootDir>/node_modules/',
-    '<rootDir>/dist/',
-  ],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/dist/"],
 };
 ```
 
