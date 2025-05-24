@@ -95,22 +95,27 @@ function App() {
 }
 ```
 
-### 선택 옵션
+### useMutation 옵션 상세 설명표
 
-| 옵션           | 타입                                                                         | 설명                                                                                                                                                                 |
-| -------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gcTime`       | `number` \| `Infinity`                                                       | 캐시에서 사용되지 않거나 비활성 상태인 mutation 데이터를 메모리에서 제거하기까지 대기하는 시간(ms). `Infinity`를 주면 GC가 비활성화됩니다. (최대 허용 시간: 약 24일) |
-| `mutationKey`  | `unknown[]`                                                                  | `queryClient.setMutationDefaults`에 설정한 기본값을 상속받을 때 사용됩니다.                                                                                          |
-| `networkMode`  | `'online'` \| `'always'` \| `'offlineFirst'`                                 | 네트워크 모드 설정. 기본값은 `'online'`입니다.                                                                                                                       |
-| `onMutate`     | `(variables: TVariables) => (TContext \| void \| Promise<TContext \| void>)` | mutationFn 실행 전에 호출됩니다. 낙관적 업데이트 시 유용합니다. 반환값은 `onError`나 `onSettled`에서 context로 전달됩니다.                                           |
-| `onSuccess`    | `(data, variables, context) => Promise \| void`                              | mutation이 성공했을 때 실행됩니다. `Promise`를 반환하면 대기 후 다음 단계로 진행됩니다.                                                                              |
-| `onError`      | `(error, variables, context?) => Promise \| void`                            | mutation 실행 중 에러가 발생했을 때 실행됩니다.                                                                                                                      |
-| `onSettled`    | `(data, error, variables, context?) => Promise \| void`                      | 성공 또는 실패 시 무조건 호출됩니다.                                                                                                                                 |
-| `retry`        | `boolean` \| `number` \| `(failureCount, error) => boolean`                  | 기본값: `0`. false → 재시도 없음, true → 무한 재시도, 숫자 → 해당 횟수만큼 재시도.                                                                                   |
-| `retryDelay`   | `number` \| `(attempt, error) => number`                                     | 재시도 전 대기 시간(ms). 지수 백오프: `attempt => Math.min(2 ** attempt * 1000, 30000)`                                                                              |
-| `scope`        | `{ id: string }`                                                             | 같은 scope ID를 가진 mutation은 순차 실행됩니다. 지정하지 않으면 각 mutation은 병렬로 실행됩니다.                                                                    |
-| `throwOnError` | `boolean` \| `(error) => boolean`                                            | true일 경우 에러가 발생하면 렌더링 중 에러를 throw해서 에러 바운더리로 전달합니다.                                                                                   |
-| `meta`         | `Record<string, unknown>`                                                    | mutation 캐시에 저장할 메타 정보. `onError`, `onSuccess` 등에서 접근할 수 있습니다.                                                                                  |
+| 옵션           | 타입                                                        | 설명                                                                                                                                                                      |
+| -------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gcTime`       | `number` \| `Infinity`                                      | 캐시에서 사용되지 않거나 비활성 상태인 mutation 데이터를 메모리에서 제거하기까지 대기하는 시간(ms). <br> `Infinity`를 주면 GC가 비활성화됩니다. (최대 허용 시간: 약 24일) |
+| `mutationKey`  | `unknown[]`                                                 | `queryClient.setMutationDefaults`에 설정한 기본값을 상속받을 때 사용됩니다.                                                                                               |
+| `networkMode`  | `'online'` \| `'always'` \| `'offlineFirst'`                | 네트워크 모드 설정. 기본값은 `'online'`입니다.                                                                                                                            |
+| `retry`        | `boolean` \| `number` \| `(failureCount, error) => boolean` | 기본값: `0`. <br> `false` → 재시도 없음, `true` → 무한 재시도, 숫자 → 해당 횟수만큼 재시도.                                                                               |
+| `retryDelay`   | `number` \| `(attempt, error) => number`                    | 재시도 전 대기 시간(ms). <br> 지수 백오프: `attempt => Math.min(2 ** attempt * 1000, 30000)`                                                                              |
+| `scope`        | `{ id: string }`                                            | 같은 scope ID를 가진 mutation은 순차 실행됩니다. <br> 지정하지 않으면 각 mutation은 병렬로 실행됩니다.                                                                    |
+| `throwOnError` | `boolean` \| `(error) => boolean`                           | `true`일 경우 에러가 발생하면 렌더링 중 에러를 `throw`해서 에러 바운더리로 전달합니다.                                                                                    |
+| `meta`         | `Record<string, unknown>`                                   | mutation 캐시에 저장할 메타 정보. `onError`, `onSuccess` 등에서 접근할 수 있습니다.                                                                                       |
+
+### useMutation 콜백 옵션 상세 설명표
+
+| 옵션        | 타입                                                                                                              | 설명                                                                            | 매개변수 출처 설명                                                                                                                                                          |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onMutate`  | `(variables: TVariables) => TContext \| void \| Promise<TContext \| void>`                                        | mutationFn 실행 전에 호출됨. 낙관적 업데이트 수행 및 context 생성 용도로 사용됨 | `variables`: `mutate(arg)` 또는 `mutateAsync(arg)`에 전달한 인자<br>반환값: 이후 콜백(`onError`, `onSettled`)의 `context`로 전달됨                                          |
+| `onSuccess` | `(data: TData, variables: TVariables, context: TContext) => Promise \| void`                                      | mutation이 성공했을 때 호출됨. `data`는 mutationFn의 리턴 값                    | `data`: `mutationFn(variables)`의 반환 값<br>`variables`: `mutate(arg)`의 인자<br>`context`: `onMutate`의 반환 값                                                           |
+| `onError`   | `(error: TError, variables: TVariables, context?: TContext) => Promise \| void`                                   | mutation이 실패했을 때 호출됨. 낙관적 업데이트를 롤백할 때 사용됨               | `error`: `mutationFn()`에서 발생한 에러<br>`variables`: `mutate(arg)`의 인자<br>`context`: `onMutate`의 반환 값                                                             |
+| `onSettled` | `(data: TData \| undefined, error: TError \| null, variables: TVariables, context?: TContext) => Promise \| void` | mutation이 성공이든 실패든 무조건 마지막에 호출됨                               | `data`: 성공 시 `mutationFn`의 반환값, 실패 시 `undefined`<br>`error`: 실패 시 에러, 성공 시 `null`<br>`variables`: `mutate(arg)`의 인자<br>`context`: `onMutate`의 반환 값 |
 
 ### Parameter2: QueryClient
 
