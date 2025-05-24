@@ -21,6 +21,114 @@ React Hook Form 설치는 명령어 한 줄이면 완료되며, 바로 사용할
 npm install react-hook-form
 ```
 
+## React Hook Form 함수 사용법 요약
+
+### `register("name")`
+
+"name"이라는 이름으로 이 input을 등록해서 값 추적하고 검증
+
+#### register 사용 예시
+
+```tsx
+<input {...register("name")} />
+```
+
+### `watch("email")`
+
+"email" 입력값이 지금 뭔지 실시간으로 확인
+
+#### watch 사용 예시
+
+```ts
+const currentEmail = watch("email");
+```
+
+### `handleSubmit(onSubmit)`
+
+폼을 제출할 때 유효성 검사를 먼저 하고, 통과하면 onSubmit을 실행
+
+#### handleSubmit 사용 예시
+
+```tsx
+<form onSubmit={handleSubmit(onSubmit)} />
+```
+
+### `formState.errors["age"]`
+
+"age" 필드에 오류 확인
+
+#### formState.errors 사용 예시
+
+```tsx
+{
+  errors.age && <span>나이는 필수입니다</span>;
+}
+```
+
+### `setValue("username", "kim123")`
+
+"username" 값을 직접 "kim123"으로 바꿔줌
+
+#### setValue 사용 예시
+
+```ts
+setValue("username", "kim123");
+```
+
+### `control`
+
+Controller 컴포넌트를 쓸 때 폼 상태를 연결해주는 핵심 객체
+
+#### control 사용 예시
+
+```tsx
+<Controller control={control} name="category" ... />
+```
+
+### `useController({ name: "nickname", control })`
+
+nickname이라는 필드를 제어할 수 있는 Hook 버전의 Controller
+
+#### useController 사용 예시
+
+```ts
+const { field } = useController({ name: "nickname", control });
+```
+
+### `errors["fieldName"]?.message`
+
+유효성 검사 실패 시 사용자에게 보여줄 에러 메시지를 꺼냄
+
+#### errors["fieldName"]?.message 사용 예시
+
+```tsx
+{
+  errors.email?.message && <p>{errors.email.message}</p>;
+}
+```
+
+### `defaultValues`
+
+useForm 훅에서 각 필드의 기본값을 지정해주는 옵션
+
+#### defaultValues 사용 예시
+
+```ts
+useForm({ defaultValues: { name: "kim" } });
+```
+
+### `resolver`
+
+yup이나 zod 같은 스키마 기반 유효성 검사기를 연결
+
+#### resolver 사용 예시
+
+```ts
+useForm({ resolver: yupResolver(schema) });
+```
+
+> 이 문서는 React Hook Form을 처음 배우는 사람이 "이 함수는 이렇게 쓰는 거구나"를 직관적으로 이해하도록 돕기 위한 치트시트
+
 ## 예제
 
 다음 코드는 React Hook Form의 기본적인 사용법을 보여줍니다.
@@ -65,8 +173,8 @@ export default function App() {
 
 ## 필드 등록 (Register fields)
 
-React Hook Form의 핵심 개념 중 하나는 **컴포넌트를 hook에 등록(register)** 하는 것입니다.\
-이를 통해 해당 input의 값이 **유효성 검사와 제출 처리에 사용될 수 있게** 됩니다.
+React Hook Form의 핵심 개념 중 하나는 컴포넌트를 hook에 등록(register) 하는 것입니다.\
+이를 통해 해당 input의 값이 유효성 검사와 제출 처리에 사용될 수 있게 됩니다.
 
 > 참고: 모든 필드는 `name` 속성을 가져야 하며, 이것이 key로 사용됩니다.
 
@@ -109,7 +217,7 @@ export default function App() {
 
 ## 유효성 검사 적용 (Apply validation)
 
-React Hook Form은 **기존 HTML의 유효성 검사 방식**과 잘 맞도록 설계되어 있어서, 폼 유효성 검사를 매우 쉽게 구현할 수 있습니다.
+React Hook Form은 기존 HTML의 유효성 검사 방식과 잘 맞도록 설계되어 있어서, 폼 유효성 검사를 매우 쉽게 구현할 수 있습니다.
 
 지원하는 유효성 검사 규칙은 다음과 같습니다:
 
@@ -153,8 +261,8 @@ export default function App() {
 
 ## 기존 폼 통합 (Integrating an existing form)
 
-React Hook Form은 **기존에 작성된 폼과 쉽게 통합**할 수 있습니다.\
-중요한 점은 **input의 `ref`를 등록하고**, 관련 props를 넘겨주는 것입니다.
+React Hook Form은 기존에 작성된 폼과 쉽게 통합할 수 있습니다.\
+중요한 점은 input의 `ref`를 등록하고, 관련 props를 넘겨주는 것입니다.
 
 ```tsx
 import { Path, useForm, UseFormRegister, SubmitHandler } from "react-hook-form";
@@ -271,8 +379,8 @@ const App = () => {
 
 ## Controlled Input 통합 (Integrating Controlled Inputs)
 
-React Hook Form은 기본적으로 **uncontrolled 컴포넌트**와 네이티브 HTML input을 선호합니다.\
-하지만 현실적으로는 **shadcn/ui, React-Select, Ant Design, MUI** 같은 **controlled 컴포넌트**도 많이 사용되죠.
+React Hook Form은 기본적으로 uncontrolled 컴포넌트와 네이티브 HTML input을 선호합니다.\
+하지만 현실적으로는 shadcn/ui, React-Select, Ant Design, MUI 같은 controlled 컴포넌트도 많이 사용되죠.
 
 이럴 때는 `Controller` 컴포넌트를 사용하면 쉽게 통합할 수 있습니다.
 
@@ -352,7 +460,7 @@ export default function App() {
 
 ## 글로벌 상태 통합 (Integrating with global state)
 
-React Hook Form은 **상태 관리 라이브러리 없이도** 작동하지만, 필요한 경우 쉽게 연동할 수 있습니다.\
+React Hook Form은 상태 관리 라이브러리 없이도 작동하지만, 필요한 경우 쉽게 연동할 수 있습니다.\
 예를 들어 Redux와도 통합이 가능합니다.
 
 ```tsx
@@ -540,7 +648,7 @@ export default function App() {
 
 ## TypeScript
 
-React Hook Form은 TypeScript로 작성되어 있으며, `useForm<FormData>()`와 같은 방식으로 폼 필드의 타입을 정의하면 **자동 타입 추론**과 **빌드 타임 오류 탐지**가 가능합니다.
+React Hook Form은 TypeScript로 작성되어 있으며, `useForm<FormData>()`와 같은 방식으로 폼 필드의 타입을 정의하면 자동 타입 추론과 빌드 타임 오류 탐지가 가능합니다.
 
 ```tsx
 import * as React from "react";
@@ -573,7 +681,7 @@ export default function App() {
       <button
         type="button"
         onClick={() => {
-          setValue("lastName", "luo"); // ✅ 올바른 사용
+          setValue("lastName", "luo"); // 올바른 사용
           setValue("firstName", true); // ❌ 오류: boolean은 string 아님
           errors.bill; // ❌ 오류: 'bill' 속성 없음
         }}
@@ -587,20 +695,20 @@ export default function App() {
 
 ## 디자인 철학 (Design and philosophy)
 
-React Hook Form은 사용자와 개발자 모두에게 **우수한 사용 경험**을 제공하기 위해 설계되었습니다.
+React Hook Form은 사용자와 개발자 모두에게 우수한 사용 경험을 제공하기 위해 설계되었습니다.
 
 ### 사용자 경험 측면
 
-- Proxy 기반의 **폼 상태 구독 모델** 도입
+- Proxy 기반의 폼 상태 구독 모델 도입
 - 불필요한 연산 제거
-- 컴포넌트 **렌더링 분리 최적화**
+- 컴포넌트 렌더링 분리 최적화
 
-→ 폼과 상호작용할 때 더 빠르고 부드러운 UX 제공
+폼과 상호작용할 때 더 빠르고 부드러운 UX 제공
 
 ### 개발자 경험 측면
 
-- HTML 표준에 부합하는 **내장 유효성 검사 지원**
-- Yup, Zod 등의 **스키마 유효성 검사와 자연스럽게 통합**
-- TypeScript 기반의 강력한 **정적 타입 검사** 제공
+- HTML 표준에 부합하는 내장 유효성 검사 지원
+- Yup, Zod 등의 스키마 유효성 검사와 자연스럽게 통합
+- TypeScript 기반의 강력한 정적 타입 검사 제공
 
-→ 개발 도중 오류를 빠르게 발견하고, 견고한 폼을 설계할 수 있도록 도움
+개발 도중 오류를 빠르게 발견하고, 견고한 폼을 설계할 수 있도록 도움
