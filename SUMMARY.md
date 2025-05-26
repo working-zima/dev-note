@@ -185,6 +185,7 @@
     - [useRef](client/react/useref.md)
     - [portals](client/react/portals.md)
     - [react-router](client/react/react-router.md)
+    - [react-testing-library](client/react/react-testing-library.md)
     - [useFormStatus](client/react/useFormStatus.md)
     - [useActionState](client/react/useActionState.md)
   - [Testing](client/testing/README.md)
