@@ -126,6 +126,7 @@
   - [XSS](library/xss.md)
   - [Zustand](library/zustand/README.md)
     - [Zustand](library/zustand/zustand.md)
+    - [Persisting Store Data](library/zustand/persisting-store-data.md)
 
 ### CLIENT
 
