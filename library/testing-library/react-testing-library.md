@@ -831,6 +831,141 @@ import "@testing-library/react/cleanup-after-each";
 import "@testing-library/jest-dom/extend-expect";
 ```
 
+## @testing-library/preact – 렌더링 도구 설명
+
+간단하면서도 완전한 테스트 유틸리티로, **좋은 테스트 관행을 장려**합니다.
+
+### `render`
+
+```ts
+import { render } from "@testing-library/preact";
+
+const { results } = render(<YourComponent />, { options });
+```
+
+#### render 옵션 (Options)
+
+| 옵션 이름     | 설명                                                                    | 기본값          |
+| ------------- | ----------------------------------------------------------------------- | --------------- |
+| `container`   | 컴포넌트가 마운트되는 HTML 요소                                         | `baseElement`   |
+| `baseElement` | `container`가 첨부되는 루트 HTML 요소                                   | `document.body` |
+| `queries`     | `baseElement`에 바인딩되는 쿼리들 (`within` 참조)                       | `null`          |
+| `hydrate`     | 컴포넌트가 이미 마운트된 경우 재렌더링에 사용 (대부분의 경우 필요 없음) | `false`         |
+| `wrapper`     | 테스트할 컴포넌트를 감싸는 부모 컴포넌트                                | `null`          |
+
+### render 반환값 (Results)
+
+| 결과값         | 설명                                                  |
+| -------------- | ----------------------------------------------------- |
+| `container`    | 컴포넌트가 마운트된 HTML 요소                         |
+| `baseElement`  | `container`가 첨부된 루트 HTML 요소                   |
+| `debug()`      | `baseElement`를 콘솔에 예쁘게 출력 (`prettyDom` 사용) |
+| `unmount()`    | 컴포넌트를 DOM에서 제거함                             |
+| `rerender()`   | 컴포넌트를 다시 렌더링하며 `hydrate: true`로 설정함   |
+| `asFragment()` | `container`의 innerHTML을 반환                        |
+| `...queries`   | `baseElement`를 기준으로 하는 모든 쿼리 함수들을 반환 |
+
+### `cleanup`
+
+```ts
+import { render, cleanup } from "@testing-library/preact";
+
+afterEach(() => {
+  cleanup();
+});
+```
+
+- `container`에서 컴포넌트를 제거하고 DOM 정리함
+- 대부분의 테스트 프레임워크(Jest, Mocha, Jasmine 등)에서는 `afterEach()`를 자동으로 실행하므로 `cleanup()`도 자동 실행됨
+- 수동으로 제어하려면 테스트 마지막에 `cleanup()`을 직접 호출할 수 있음
+
+#### 자동 정리 비활성화
+
+테스트 실행 시 환경 변수 설정:
+
+```bash
+process.env.PTL_SKIP_AUTO_CLEANUP = true
+```
+
+### `act`
+
+- `preact/test-utils/act`를 래핑한 편의 함수
+- 모든 렌더링과 이벤트는 기본적으로 `act()` 안에서 실행되므로, 대부분 사용하지 않아도 됨
+- `effect`나 렌더링 처리를 **즉시 실행하도록 보장**함
+
+[React용 act 설명 문서](https://reactjs.org/docs/test-utils.html#act)를 참고하면 필요성과 동작 방식을 이해하는 데 도움이 됩니다.
+
+### `fireEvent`
+
+- `@testing-library/dom`의 `fireEvent`를 전달받아 export
+- 내부적으로 `act()`로 감싸져 있으므로 별도 감쌀 필요 없음
+
+⚠️ 주의:  
+React는 `SyntheticEvent`를 사용하지만 Preact는 브라우저의 `addEventListener`를 직접 사용합니다.  
+따라서 `onChange` → `onInput`, `onDoubleClick` → `onDblClick` 등 차이가 있음.
+
+### fireEvent 예제
+
+#### 예제 1: `click` 이벤트 테스트
+
+```ts
+const cb = jest.fn();
+
+function Counter() {
+  useEffect(cb);
+  const [count, setCount] = useState(0);
+
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+
+const {
+  container: { firstChild: buttonNode },
+} = render(<Counter />);
+
+cb.mockClear(); // 초기 useEffect 호출 제거
+
+fireEvent.click(buttonNode); // 방법 1
+fireEvent(
+  buttonNode,
+  new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 })
+); // 방법 2
+
+expect(buttonNode).toHaveTextContent("1");
+expect(cb).toHaveBeenCalledTimes(1);
+```
+
+#### 예제 2: `input` 이벤트 테스트
+
+```ts
+const handler = jest.fn();
+
+const {
+  container: { firstChild: input },
+} = render(<input type="text" onInput={handler} />);
+
+fireEvent.input(input, { target: { value: "a" } });
+
+expect(handler).toHaveBeenCalledTimes(1);
+```
+
+#### 예제 3: `onDblClick` 이벤트 테스트
+
+```ts
+const ref = createRef();
+const spy = jest.fn();
+
+render(
+  h(elementType, {
+    onDblClick: spy,
+    ref,
+  })
+);
+
+fireEvent["onDblClick"](ref.current);
+
+expect(spy).toHaveBeenCalledTimes(1);
+```
+
 ## 참고 자료
 
 [제련소](https://inblog.ai/myplace/userevent-keyboard-4942)

@@ -249,15 +249,20 @@ test("타입 일부만 맞는 값을 반환", async () => {
 모듈을 가져오되, 모킹 여부와 상관없이 **원본 구현 그대로** import합니다. 모듈의 일부만 모킹하고 싶은 경우에 유용합니다.
 
 ```ts
+// "./example.js" 모듈 전체를 모킹
 vi.mock("./example.js", async () => {
+  // 원래 "./example.js" 모듈의 실제 구현을 불러옴
   const originalModule = await vi.importActual("./example.js");
 
+  // 원본 모듈 전체를 복사하고, get 함수만 Vitest의 vi.fn()으로 대체
   return {
     ...originalModule,
     get: vi.fn(),
   };
 });
 ```
+
+example.js에 `get`, `post`, `delete` 함수가 있다고 가정하면, `get`만 모킹되고 `post`, `delete`는 원래 구현 그대로 유지됩니다.
 
 ### vi.importMock
 
