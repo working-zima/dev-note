@@ -831,140 +831,226 @@ import "@testing-library/react/cleanup-after-each";
 import "@testing-library/jest-dom/extend-expect";
 ```
 
-## @testing-library/preact – 렌더링 도구 설명
-
-간단하면서도 완전한 테스트 유틸리티로, **좋은 테스트 관행을 장려**합니다.
-
-### `render`
+## `render`
 
 ```ts
-import { render } from "@testing-library/preact";
-
-const { results } = render(<YourComponent />, { options });
+function render(
+  ui: React.ReactElement<any>,
+  options?: {
+    /* 옵션에 대한 자세한 설명은 아래 참고 */
+  }
+): RenderResult;
 ```
 
-#### render 옵션 (Options)
+`render()`는 컴포넌트를 `document.body`에 추가된 `container`에 렌더링합니다.
 
-| 옵션 이름     | 설명                                                                    | 기본값          |
-| ------------- | ----------------------------------------------------------------------- | --------------- |
-| `container`   | 컴포넌트가 마운트되는 HTML 요소                                         | `baseElement`   |
-| `baseElement` | `container`가 첨부되는 루트 HTML 요소                                   | `document.body` |
-| `queries`     | `baseElement`에 바인딩되는 쿼리들 (`within` 참조)                       | `null`          |
-| `hydrate`     | 컴포넌트가 이미 마운트된 경우 재렌더링에 사용 (대부분의 경우 필요 없음) | `false`         |
-| `wrapper`     | 테스트할 컴포넌트를 감싸는 부모 컴포넌트                                | `null`          |
-
-### render 반환값 (Results)
-
-| 결과값         | 설명                                                  |
-| -------------- | ----------------------------------------------------- |
-| `container`    | 컴포넌트가 마운트된 HTML 요소                         |
-| `baseElement`  | `container`가 첨부된 루트 HTML 요소                   |
-| `debug()`      | `baseElement`를 콘솔에 예쁘게 출력 (`prettyDom` 사용) |
-| `unmount()`    | 컴포넌트를 DOM에서 제거함                             |
-| `rerender()`   | 컴포넌트를 다시 렌더링하며 `hydrate: true`로 설정함   |
-| `asFragment()` | `container`의 innerHTML을 반환                        |
-| `...queries`   | `baseElement`를 기준으로 하는 모든 쿼리 함수들을 반환 |
-
-### `cleanup`
+### 사용 예
 
 ```ts
-import { render, cleanup } from "@testing-library/preact";
+import { render } from "@testing-library/react";
 
-afterEach(() => {
-  cleanup();
+render(<div />);
+```
+
+```ts
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+test("메시지를 렌더링한다", () => {
+  const { asFragment, getByText } = render(<Greeting />);
+
+  expect(getByText("Hello, world!")).toBeInTheDocument();
+  expect(asFragment()).toMatchInlineSnapshot(`
+    <h1>Hello, World!</h1>
+  `);
 });
 ```
 
-- `container`에서 컴포넌트를 제거하고 DOM 정리함
-- 대부분의 테스트 프레임워크(Jest, Mocha, Jasmine 등)에서는 `afterEach()`를 자동으로 실행하므로 `cleanup()`도 자동 실행됨
-- 수동으로 제어하려면 테스트 마지막에 `cleanup()`을 직접 호출할 수 있음
+## `render` 옵션 설명
 
-#### 자동 정리 비활성화
+> 대부분의 경우 옵션을 지정할 필요는 없지만, 필요할 경우 아래와 같은 옵션들을 사용할 수 있습니다.
 
-테스트 실행 시 환경 변수 설정:
+| 옵션 이름            | 설명                                                                                                                                                           | 기본값          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `container`          | 기본적으로 React Testing Library는 div를 생성해 `document.body`에 추가하여 렌더링합니다. <br> 직접 `HTMLElement`를 지정하면 자동으로 body에 추가되지 않습니다. | `document.body` |
+| `baseElement`        | 쿼리와 디버그 출력의 기준이 되는 루트 요소입니다. container가 지정되면 이를 따릅니다.                                                                          | `document.body` |
+| `hydrate`            | `true`로 설정하면 `ReactDOM.hydrate`로 렌더링합니다. 서버사이드 렌더링과 함께 사용할 수 있습니다.                                                              | `false`         |
+| `legacyRoot`         | React 18 이상에서만 사용 가능합니다. Concurrent 모드 대신 React 17 방식으로 렌더링하려면 사용합니다.                                                           | `false`         |
+| `onCaughtError`      | React가 Error Boundary에서 에러를 잡았을 때 호출되는 콜백 함수입니다.                                                                                          | 없음            |
+| `onRecoverableError` | React가 자동으로 복구 가능한 에러를 처리할 때 호출됩니다.                                                                                                      | 없음            |
+| `wrapper`            | 테스트 대상 컴포넌트를 감싸는 컴포넌트입니다. <br>공통 Provider를 넣을 때 유용합니다.                                                                          | `null`          |
+| `queries`            | 기본 쿼리를 커스터마이징할 수 있습니다. 예: 테이블 전용 쿼리 추가 등                                                                                           | DOM 쿼리 기본값 |
+| `reactStrictMode`    | `<StrictMode>`로 감쌀지 여부를 지정합니다. `configure`로 지정된 값을 덮어쓸 수 있습니다.                                                                       | `false`         |
 
-```bash
-process.env.PTL_SKIP_AUTO_CLEANUP = true
-```
-
-### `act`
-
-- `preact/test-utils/act`를 래핑한 편의 함수
-- 모든 렌더링과 이벤트는 기본적으로 `act()` 안에서 실행되므로, 대부분 사용하지 않아도 됨
-- `effect`나 렌더링 처리를 **즉시 실행하도록 보장**함
-
-[React용 act 설명 문서](https://reactjs.org/docs/test-utils.html#act)를 참고하면 필요성과 동작 방식을 이해하는 데 도움이 됩니다.
-
-### `fireEvent`
-
-- `@testing-library/dom`의 `fireEvent`를 전달받아 export
-- 내부적으로 `act()`로 감싸져 있으므로 별도 감쌀 필요 없음
-
-⚠️ 주의:  
-React는 `SyntheticEvent`를 사용하지만 Preact는 브라우저의 `addEventListener`를 직접 사용합니다.  
-따라서 `onChange` → `onInput`, `onDoubleClick` → `onDblClick` 등 차이가 있음.
-
-### fireEvent 예제
-
-#### 예제 1: `click` 이벤트 테스트
+예시:
 
 ```ts
-const cb = jest.fn();
+const table = document.createElement("table");
 
-function Counter() {
-  useEffect(cb);
-  const [count, setCount] = useState(0);
+const { container } = render(<TableBody {...props} />, {
+  container: document.body.appendChild(table),
+});
+```
 
-  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+## `render` 반환값 (Render Result)
+
+- `render()`는 다음과 같은 속성들을 가진 객체를 반환합니다.
+
+### ...queries
+
+DOM Testing Library의 쿼리 함수들을 기본적으로 제공합니다. `baseElement`를 기준으로 작동합니다.
+
+```ts
+const { getByLabelText, queryAllByTestId } = render(<Component />);
+```
+
+### container
+
+컴포넌트가 렌더링된 HTML 요소 (`ReactDOM.render` 기준). 일반적으로 `<div>`이며, `querySelector()` 등으로 탐색할 수 있습니다.
+
+> ⚠️ 너무 자주 container를 직접 탐색하는 대신, 쿼리 API를 사용하는 것이 좋습니다.
+
+### baseElement
+
+`render()`로 렌더링된 루트 요소의 기준입니다. 기본은 `document.body`이며, 쿼리와 `debug()`의 기준이 됩니다.
+
+### debug
+
+`console.log(prettyDOM(baseElement))`를 실행하는 편의 함수입니다.
+
+```ts
+const HelloWorld = () => <h1>Hello World</h1>;
+const { debug } = render(<HelloWorld />);
+debug(); // <div><h1>Hello World</h1></div>
+```
+
+### rerender
+
+다른 props로 같은 컴포넌트를 다시 렌더링할 수 있습니다.
+
+```ts
+const { rerender } = render(<NumberDisplay number={1} />);
+rerender(<NumberDisplay number={2} />);
+```
+
+### unmount
+
+컴포넌트를 언마운트하여 DOM에서 제거합니다. 메모리 누수 방지나 언마운트 후 상태 확인에 유용합니다.
+
+```ts
+const { unmount } = render(<Login />);
+unmount(); // container.innerHTML === ''
+```
+
+### asFragment
+
+렌더링된 결과를 DocumentFragment로 반환합니다. snapshot-diff 등과 함께 유용하게 사용됩니다.
+
+```ts
+const { asFragment, getByText } = render(<TestComponent />);
+const firstRender = asFragment();
+fireEvent.click(getByText(/Click/));
+expect(firstRender).toMatchDiffSnapshot(asFragment());
+```
+
+## `cleanup`
+
+- `render()`로 마운트된 React 트리를 해제합니다.
+- 대부분의 프레임워크(Jest, Mocha 등)는 `afterEach()`로 자동 호출해줍니다.
+- 그렇지 않은 프레임워크(예: ava)에서는 수동으로 호출해야 합니다.
+
+```ts
+import { cleanup, render } from "@testing-library/react";
+import test from "ava";
+
+test.afterEach(cleanup);
+
+test("DOM에 렌더링된다", () => {
+  render(<div />);
+});
+```
+
+> 호출하지 않으면 메모리 누수나 테스트 간 간섭이 발생할 수 있습니다.
+
+## `act`
+
+- React의 `act()` 함수를 감싼 얇은 래퍼입니다.
+- 모든 `render`, 이벤트는 내부적으로 이미 `act()`로 감싸져 있으므로 직접 사용할 필요는 거의 없습니다.
+
+## `renderHook`
+
+- 사용자 정의 훅을 테스트할 수 있도록 도와주는 도구입니다.
+- 훅 자체를 테스트하는 라이브러리나 유틸 구현에 적합합니다.
+
+```ts
+const { result } = renderHook(() => useLoggedInUser());
+expect(result.current).toEqual({ name: "Alice" });
+```
+
+### 옵션: `initialProps`
+
+- 초기 props를 `render` 콜백에 전달할 수 있습니다.
+
+```ts
+const { result, rerender } = renderHook((props = {}) => props, {
+  initialProps: { name: "Alice" },
+});
+expect(result.current).toEqual({ name: "Alice" });
+
+rerender();
+expect(result.current).toEqual({ name: undefined });
+```
+
+### wrapper에 props 전달하는 방법:
+
+```ts
+const createWrapper = (Wrapper, props) => {
+  return function CreatedWrapper({ children }) {
+    return <Wrapper {...props}>{children}</Wrapper>;
+  };
+};
+
+{
+  wrapper: createWrapper(Wrapper, { value: "foo" });
 }
-
-const {
-  container: { firstChild: buttonNode },
-} = render(<Counter />);
-
-cb.mockClear(); // 초기 useEffect 호출 제거
-
-fireEvent.click(buttonNode); // 방법 1
-fireEvent(
-  buttonNode,
-  new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 })
-); // 방법 2
-
-expect(buttonNode).toHaveTextContent("1");
-expect(cb).toHaveBeenCalledTimes(1);
 ```
 
-#### 예제 2: `input` 이벤트 테스트
+### 기타 옵션
+
+- `wrapper`: `render`와 동일
+- `reactStrictMode`: `render`와 동일
+
+### 반환값
+
+| 속성       | 설명                                               |
+| ---------- | -------------------------------------------------- |
+| `result`   | 현재 렌더링된 훅의 반환값. `result.current`로 접근 |
+| `rerender` | 새로운 props로 다시 호출                           |
+| `unmount`  | 훅 제거                                            |
+
+## `configure`
+
+- 테스트 전역 설정을 변경합니다.
 
 ```ts
-const handler = jest.fn();
+import { configure } from "@testing-library/react";
 
-const {
-  container: { firstChild: input },
-} = render(<input type="text" onInput={handler} />);
-
-fireEvent.input(input, { target: { value: "a" } });
-
-expect(handler).toHaveBeenCalledTimes(1);
+configure({ reactStrictMode: true });
 ```
 
-#### 예제 3: `onDblClick` 이벤트 테스트
+| 옵션 이름         | 설명                                         |
+| ----------------- | -------------------------------------------- |
+| `reactStrictMode` | `<StrictMode>`로 감쌀지 여부 (기본값: false) |
 
-```ts
-const ref = createRef();
-const spy = jest.fn();
+## ✅ 정리
 
-render(
-  h(elementType, {
-    onDblClick: spy,
-    ref,
-  })
-);
-
-fireEvent["onDblClick"](ref.current);
-
-expect(spy).toHaveBeenCalledTimes(1);
-```
+| 항목           | 설명                                          |
+| -------------- | --------------------------------------------- |
+| `render()`     | 컴포넌트를 DOM에 렌더링하고 쿼리 API를 제공함 |
+| `renderHook()` | 커스텀 훅을 테스트하기 위한 도구              |
+| `cleanup()`    | DOM 정리 (자동 호출되지만 수동 호출도 가능)   |
+| `act()`        | React의 상태 업데이트 등을 안전하게 실행      |
+| `configure()`  | 전역 설정 (예: StrictMode 활성화)             |
 
 ## 참고 자료
 
