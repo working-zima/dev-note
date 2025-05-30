@@ -2,8 +2,8 @@
 
 ## RTL(React Testing Library)
 
-Testing Library의 일부로 테스트를 위한 가상 DOM을 생성하고 DOM과 상호 작용하기 위한 유틸리티도 제공합니다.
-예를 들어, 브라우저 없이 테스트를 진행하면 DOM에서 요소를 찾을 수 있거나 클릭 요소와 같은 상호 작용 할 때 가상 DOM이 필요합니다.
+Testing Library의 일부로 테스트를 위한 가상 DOM을 생성하고 DOM과 상호 작용하기 위한 유틸리티도 제공합니다.\
+예를 들어, 브라우저 없이 테스트를 진행하면 DOM에서 요소를 찾을 수 있거나 클릭 요소와 같은 상호 작용 할 때 가상 DOM이 필요합니다.\
 그럴 때 가상 DOM이 원하는 대로 작동하는지 확인할 수도 있습니다.
 
 ## Jest, Vitest
@@ -79,18 +79,18 @@ import App from "./App";
 
 test("renders learn react link", () => {
   // RTL
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
+  render(<App />); // App 컴포넌트 렌더링
+  const linkElement = screen.getByText(/learn react/i); // 텍스트와 일치하는 요소를 찾기
 
   // Jest
   expect(linkElement).toBeInTheDocument();
 });
 ```
 
-테스트 함수에서, 첫 번째로 `react-testing-library`를 이용해서 `render` 메서드를 실행합니다.
-`render` 메서드는 인수로 제공하는 JSX에 관한 가상 DOM을 생성하며, 생성된 가상 DOM에는 `screen` global 객체로 접근합니다.
+테스트 함수에서, 첫 번째로 `react-testing-library`를 이용해서 `render` 메서드를 실행합니다.\
+`render()` 메서드는 인수로 제공하는 JSX에 관한 가상 DOM을 생성하며, 생성된 가상 DOM에는 `screen` global 객체로 접근합니다.
 
-`react-testing-library`를 이용해서 `screen`객체의 특정 Query 메서드를 사용해서 요소에 접근할 수 있습니다.
+`react-testing-library`를 이용해서 `screen`객체의 특정 Query 메서드를 사용해서 요소에 접근할 수 있습니다.\
 예제에서는 `getByText` 메서드는 인수를 DOM에서 표시되는 모든 텍스트를 기반으로 요소를 찾습니다.
 
 `expect` 부분은 `jest`를 이용하는 것이며 자세한 설명은 아래에 나올 단언 부분에 있습니다.
@@ -178,7 +178,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 ### Queries
 
-DOM 요소에 접근하고 상호작용하기 위한 함수 집합을 나타냅니다.
+DOM 요소에 접근하고 상호작용하기 위한 함수 집합을 나타냅니다.\
 테스트 코드에서 특정 DOM 요소를 선택하거나 확인하는 데 사용됩니다.
 
 ```jsx
@@ -399,7 +399,7 @@ const button = screen.getByTestId("submit-button");
 특정 라이브러리나 프레임워크에서 제공하거나 사용자가 직접 만들어 추가할 수 있는 매처들입니다.
 특정 도메인이나 컴포넌트 라이브러리에 특화된 검증을 수행하는 데 사용됩니다.
 
-#### React Testing Library에서 제공하는 Custom Matchers
+#### React Testing Library와 함께 사용하는 jest-dom 패키지가 제공하는 custom matchers
 
 - `toBeDisabled`
   : 대상 요소가 비활성화(disabled)되었는지 확인합니다.
@@ -487,7 +487,8 @@ fireEvent는 DOM 이벤트를 발생시키는데 `user-event`는 인터랙션 �
 
 #### userEvent.setup()
 
-`userEvent.setup()`의 도입은 v.14 에서 제공되는 새로운 기능 중 하나입니다.
+`userEvent.setup()`의 도입은 v.14 에서 제공되는 새로운 기능 중 하나입니다.\
+`userEvent`는 클릭, 키보드 이벤트 등의 다양한 이벤트를 실제 브라우저에서의 동작과 유사하게 시뮬레이션 할 수 있는 라이브러리입니다.\
 초기 설정 및 설정된 사용자 상호 작용에 대한 인스턴스를 반환하여 여러 테스트 간에 상태가 공유되지 않고 독립적으로 실행될 수 있으며, 보다 표현적이고 가독성 있게 테스트 코드를 작성할 수 있도록 도와줍니다.
 
 ```jsx
