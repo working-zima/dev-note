@@ -401,46 +401,28 @@ it("버튼을 누르면 모달을 띄운다", () => {
 
 ### spy 함수
 
-스트 코드에서 특정 함수가 호출되되었는지, 함수의 인자로 어떤 것이 넘어왔는지 어떤 값을 반환하는지 감시합니다.
+테스트 코드에서 특정 함수가 호출되되었는지, 함수의 인자로 어떤 것이 넘어왔는지 어떤 값을 반환하는지 감시합니다.
+(함수의 호출 여부를 확인할 때 사용)
 
 #### spy 함수 예시
-
-```jsx
-// render.jsx
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-
-export default async (component) => {
-  const user = userEvent.setup();
-
-  return {
-    user,
-    ...render(component),
-  };
-};
-```
 
 ```ts
 import render from "@/utils/test/render";
 
 it("텍스트를 입력하면 onChange prop으로 등록한 함수가 호출된다.", async () => {
-  // 스파이 함수 생성
-  const spy = vi.fn();
+  const spy = vi.fn(); // 스파이 함수 생성
 
-  // 스파이 함수로 onChange에 입력되는 이벤트 감시
-  const { user } = await render(<TextField onChange={spy} />);
+  const { user } = await render(<TextField onChange={spy} />); // 스파이 함수로 onChange에 입력되는 이벤트 감시
 
   const textInput = screen.getByPlaceholderText("텍스트를 입력해 주세요.");
 
-  // onChange에 "test" 입력
-  await user.type(textInput, "test");
+  await user.type(textInput, "test"); // onChange에 "test" 입력
 
-  // spy에서 입력된 인자를 확인
-  expect(spy).toHaveBeenCalledWith("test");
+  expect(spy).toHaveBeenCalledWith("test"); // spy에서 입력된 인자를 확인
 });
 
 it("포커스가 활성화되면 onFocus prop으로 등록한 함수가 호출된다.", async () => {
-  // 포커스 활성화
+  // 포커스 활성화하는 여러가지 방법
   // 1. 탭 키로 인풋 요소를 포커스 이동
   // 2. 인풋 요소를 클릭
   // 3. textInput.focus()로 직접 발생
@@ -456,6 +438,21 @@ it("포커스가 활성화되면 onFocus prop으로 등록한 함수가 호출�
   // spy 함수가 호출되었는지 검증
   expect(spy).toHaveBeenCalled();
 });
+```
+
+```jsx
+// render.jsx
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+export default async (component) => {
+  const user = userEvent.setup();
+
+  return {
+    user,
+    ...render(component),
+  };
+};
 ```
 
 ### React Testing Library와 컴포넌트 테스트 정리
@@ -538,3 +535,133 @@ Spy 함수는
 - 각 테스트의 독립성과 안정성을 보장하기 위해 teardown에서 모킹을 초기화 하자
 
 - vitest의 resetAllMocks, clearAllMocks, restoreAllMocks를 활용해
+
+## 리액트 훅 테스트
+
+### 1. 리액트 훅
+
+- 리액트 훅은 리액트의 렌더링 메커니즘을 따르는 **단순 함수**이기 때문에 **독립적인 단위 테스트** 작성이 적합함
+- React Testing Library의 `renderHook` API를 사용해 간편하게 테스트 가능
+
+### 2. act()
+
+- 상호 작용(렌더링, 이펙트 등)을 그룹화하여 실제 앱처럼 상태 업데이트 반영을 보장함
+- 테스트 환경(jsdom)에서 상태 변화가 UI에 제대로 반영되도록 도와줌
+- `render`, `user-event`는 내부적으로 `act()`를 사용하므로 일반적인 상호작용은 자동 처리됨
+- 단, `render`, `user-event`의 모듈을 사용하지 않고 별도로 상태 업데이트 후 바로 검증할 경우엔 명시적으로 `act()` 호출 필요
+
+## 타이머 테스트
+
+### 1. 타이머 모킹
+
+- 테스트에서 시간 흐름을 제어하려면 타이머 모킹 필요
+- `vi.useFakeTimers()`를 통해 타이머를 가짜로 만들 수 있음
+- `vi.advanceTimersByTime(ms)`로 시간이 흐른 것처럼 시뮬레이션 가능
+- `vi.setSystemTime(date)`로 현재 시간을 임의로 설정할 수 있음
+
+### 2. 복원 처리
+
+- 테스트 이후에는 다른 테스트에 영향을 주지 않기 위해 반드시 `vi.useRealTimers()`로 복원해야 함
+
+```tsx
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2023-12-25"));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+```
+
+## 사용자 상호작용 테스트
+
+### 1. fireEvent
+
+- 특정 DOM 이벤트를 직접 디스패치할 수 있음
+- 단순 클릭 등 테스트가 가능한 기본 이벤트 시뮬레이션 도구
+
+```tsx
+import { fireEvent } from "@testing-library/react";
+fireEvent.click(getByText(container, "Submit"));
+```
+
+- 실제 클릭과 다르게 `click` 이벤트만 발생시키며 연쇄 이벤트(pointerdown 등)는 발생시키지 않음
+
+### 2. userEvent
+
+- 실제 사용자 행동처럼 **여러 이벤트를 순차적으로 발생**시킴
+- `disabled`, `visibility` 등 UI 상태도 고려함
+- **더 현실적이고 신뢰성 있는 테스트**가 가능함
+
+```tsx
+import userEvent from "@testing-library/user-event";
+const user = userEvent.setup();
+user.click(screen.getByText("구매하기"));
+```
+
+### 3. 언제 fireEvent를 써야 하나?
+
+- `userEvent`로 불가능한 이벤트 (예: `scroll`)을 테스트할 경우 사용
+
+```tsx
+fireEvent.scroll(container, { target: { scrollTop: 10000 } });
+```
+
+## 테스트 전략
+
+### 1. 단위 테스트(Unit Test)
+
+- 공통 컴포넌트, 커스텀 훅, 유틸 함수 등 **의존성이 적은 모듈** 테스트에 적합
+
+#### 단위 테스트의 한계
+
+- **모듈 간 조합**, **앱 전체 흐름**을 검증할 수 없음
+
+### 2. 통합 테스트(Integration Test)
+
+- 여러 모듈이 조합되어 동작할 때의 **비즈니스 로직 중심 검증**
+- 상태 관리, API 호출, 렌더링 결과까지 종합적으로 검증함
+
+#### 장점
+
+- 모듈 간 상호작용 검증 가능
+- 실제 앱과 유사한 환경에서 테스트
+- 불필요한 단위 테스트 중복 제거
+
+#### 조건
+
+- 상태/데이터를 어디서 관리하는지 명확한 설계가 필요
+- 상위 컴포넌트에 로직을 응집해 테스트 작성 용이성 확보
+
+## 통합 테스트 대상 선정 및 분리
+
+### ✅ 테스트 대상
+
+- **로그인 여부에 따라 다른 UI**가 나타나는 네비게이션 바
+- **필터 변경**에 따라 동작하는 검색 영역
+- **API 응답**에 따라 렌더링되는 상품 리스트
+
+### ✅ 테스트 구조 예시 (메인 페이지)
+
+1. 네비게이션 바: 로그인/로그아웃 버튼 상태
+2. 상품 검색 필터: 카테고리, 가격 조건 수정 시 UI 반영
+3. 상품 리스트: 상품 정보, 구매/장바구니 버튼 동작
+
+### ✅ 테스트 구조 예시 (장바구니 페이지)
+
+1. 상품 리스트: 수량 변경, 삭제 버튼 상호작용
+2. 가격 계산 영역: 수량 \* 가격 계산 정확성
+
+## 통합 테스트 전략 정리
+
+- 통합 테스트는 **비즈니스 로직 단위로 쪼개서 검증**해야 함
+- 상태 관리, API 로직은 **상위 컴포넌트로 응집**해서 테스트하기 쉽게 구성
+- **지나친 모킹은 테스트 신뢰성을 낮춤** → 필요한 부분만 모킹
+- **테스트 자체가 명세서처럼 동작**할 수 있도록 설계하면 이해도와 유지보수성이 향상됨
+
+## 비즈니스 로직이란?
+
+- 서비스의 정책, 규칙, 절차를 코드로 표현한 핵심 기능
+- 사용자가 의도한 목적(로그인, 구매, 필터 등)을 달성하기 위한 처리 로직
+- 이 로직을 기준으로 테스트를 설계하면 **불필요한 단위 테스트 없이도 효과적인 품질 확보 가능**
