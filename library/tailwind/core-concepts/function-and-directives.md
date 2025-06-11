@@ -125,11 +125,11 @@ Tailwind은 `@layer` 지시어 안의 CSS를 자동으로 해당 `@tailwind` 규
 /* Output */
 .btn {
   font-weight: 700 !important;
-  padding-top: .5rem !important;
-  padding-bottom: .5rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
   padding-right: 1rem !important;
   padding-left: 1rem !important;
-  border-radius: .25rem !important;
+  border-radius: 0.25rem !important;
 }
 ```
 
@@ -185,23 +185,23 @@ Vue와 Svelte와 같은 컴포넌트 프레임워크는 각 컴포넌트 파일 
 
 ```js
 /* tailwind.config.js */
-const plugin = require('tailwindcss/plugin')
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   // ...
   plugins: [
     plugin(function ({ addComponents, theme }) {
       addComponents({
-        '.card': {
-          backgroundColor: theme('colors.white'),
-          borderRadius: theme('borderRadius.lg'),
-          padding: theme('spacing.6'),
-          boxShadow: theme('boxShadow.xl'),
-        }
-      })
-    })
-  ]
-}
+        ".card": {
+          backgroundColor: theme("colors.white"),
+          borderRadius: theme("borderRadius.lg"),
+          padding: theme("spacing.6"),
+          boxShadow: theme("boxShadow.xl"),
+        },
+      });
+    }),
+  ],
+};
 ```
 
 이렇게 하면, 이 설정 파일을 사용하는 Tailwind가 처리하는 모든 파일에서 해당 스타일에 접근할 수 있습니다.
