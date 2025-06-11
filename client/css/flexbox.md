@@ -350,10 +350,10 @@ flex-basis가 `auto`일 경우 기본 축이 왼쪽에서 오른쪽(`row`)이면
 }
 ```
 
-![flex-basis: auto](./img/flex-basis-auto.png)
-
 기본값 `auto`는 해당 아이템의 `width`값을 사용합니다.\
 아이템의 `width`를 따로 설정하지 않으면 그냥 컨텐츠의 크기와 같습니다.
+
+![flex-basis: auto](./img/flex-basis-auto.png)
 
 ```css
 .item {
@@ -361,9 +361,9 @@ flex-basis가 `auto`일 경우 기본 축이 왼쪽에서 오른쪽(`row`)이면
 }
 ```
 
-![flex-basis: 100px](./img/flex-basis-100px.png)
-
 원래의 `width`가 `100px`이 안되는 AAA와 CCC는 `100px`로 늘어났고, 원래 `100px`이 넘는 BBB는 그대로 유지됩니다.
+
+![flex-basis: 100px](./img/flex-basis-100px.png)
 
 ```css
 .item {
@@ -371,9 +371,9 @@ flex-basis가 `auto`일 경우 기본 축이 왼쪽에서 오른쪽(`row`)이면
 }
 ```
 
-![flex-basis-width](./img/flex-basis-width.png)
-
 반면 `width`를 설정하면, 원래 `100px`을 넘는 BBB도 `100px`로 맞춰집니다.
+
+![flex-basis-width](./img/flex-basis-width.png)
 
 `flex-basis`가 0인 경우 `flex-grow`, `flex-shrink` 설정 비율대로 아이템 너비(높이)를 배분합니다.
 
