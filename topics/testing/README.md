@@ -406,6 +406,10 @@ it("버튼을 누르면 모달을 띄운다", () => {
 
 #### spy 함수 예시
 
+spy 함수는 `vi.fn()`로 반환되며 `undefined`를 반환합니다.\
+`mockResolvedValue()`로 spy 함수의 반환 값을 정할 수 있습니다.\
+`mockImplementation(callback)`으로 spy 함수를 재구현할 수 있습니다.
+
 ```ts
 import render from "@/utils/test/render";
 
@@ -653,15 +657,146 @@ fireEvent.scroll(container, { target: { scrollTop: 10000 } });
 1. 상품 리스트: 수량 변경, 삭제 버튼 상호작용
 2. 가격 계산 영역: 수량 \* 가격 계산 정확성
 
-## 통합 테스트 전략 정리
+### 통합 테스트 전략 정리
 
 - 통합 테스트는 **비즈니스 로직 단위로 쪼개서 검증**해야 함
 - 상태 관리, API 로직은 **상위 컴포넌트로 응집**해서 테스트하기 쉽게 구성
 - **지나친 모킹은 테스트 신뢰성을 낮춤** → 필요한 부분만 모킹
 - **테스트 자체가 명세서처럼 동작**할 수 있도록 설계하면 이해도와 유지보수성이 향상됨
 
-## 비즈니스 로직이란?
+#### 통합 테스트는 비즈니스 로직 단위로 쪼개서 검증해야 하는 이유
+
+- UI와 비즈니스 로직이 섞이면 테스트가 느리고 불안정해집니다.
+
+- 내부 로직에 변경이 생겨도, UI 출력이 같으면 테스트가 통과할 수 있어 버그를 놓치기 쉽습니다.
+
+- 비즈니스 로직을 별도 함수로 분리하면 계산이 명확해지고, UI 변경의 영향도 줄어듭니다.
+
+- 단위 테스트는 빠르고 재사용 가능하며, 유지보수가 쉬워집니다.
+
+##### 예시: 할인된 총 금액을 보여주는 UI 컴포넌트
+
+사용자에게 할인 적용된 결제 금액을 보여주는 UI가 있다고 가정합니다.
+
+```ts
+// DiscountPrice.tsx
+export const DiscountPrice = ({ price, discountRate }: { price: number; discountRate: number }) => {
+  const discountedPrice = price - Math.floor(price \* (discountRate / 100));
+
+  return <p>총 금액: {discountedPrice.toLocaleString()}원</p>;
+};
+```
+
+❌ 이렇게 통합 테스트만 하면 어떤 문제가 있을까요?
+
+```ts
+it("10% 할인 시, 총 금액이 올바르게 표시된다", () => {
+  render(<DiscountPrice price={10000} discountRate={10} />);
+  expect(screen.getByText("총 금액: 9,000원")).toBeInTheDocument();
+});
+```
+
+이 테스트는 표면적인 출력값(UI 렌더링)만 확인합니다.\
+하지만 다음과 같은 문제가 있습니다:
+
+`Math.floor()`를 빼먹었어도 9,000원이 출력되면 테스트는 통과합니다.\
+UI 구조가 바뀌면 테스트가 깨질 수 있어 유지보수가 어려워집니다.\
+로직 자체가 정확한지 검증할 수 없습니다.
+
+✅ 비즈니스 로직을 함수로 쪼개보자
+
+```ts
+// utils/price.ts
+export const getDiscountedPrice = (price: number, discountRate: number) => {
+  return price - Math.floor(price * (discountRate / 100));
+};
+```
+
+```ts
+// DiscountPrice.tsx
+import { getDiscountedPrice } from "./utils/price";
+
+export const DiscountPrice = ({
+  price,
+  discountRate,
+}: {
+  price: number;
+  discountRate: number;
+}) => {
+  const discountedPrice = getDiscountedPrice(price, discountRate);
+  return <p>총 금액: {discountedPrice.toLocaleString()}원</p>;
+};
+```
+
+분리한 함수만 테스트하면?
+
+```ts
+it("할인된 금액을 올바르게 계산한다", () => {
+  expect(getDiscountedPrice(10000, 10)).toBe(9000);
+  expect(getDiscountedPrice(12345, 5)).toBe(11729); // 소수점 버림 확인
+});
+
+it("10% 할인 시, 총 금액이 올바르게 표시된다", () => {
+  render(<DiscountPrice price={10000} discountRate={10} />);
+  expect(screen.getByText("총 금액: 9,000원")).toBeInTheDocument();
+});
+```
+
+이런 테스트 구조의 장점
+
+| 항목            | 설명                                                           |
+| --------------- | -------------------------------------------------------------- |
+| **명확한 대상** | 계산 로직만 테스트하여 실수나 변경에 민감하게 반응합니다.      |
+| **빠른 실행**   | 렌더링 없이 실행되므로 테스트가 빠릅니다.                      |
+| **UI와 독립적** | UI 구조 변경 시에도 로직 테스트는 영향을 받지 않습니다.        |
+| **재사용 가능** | 다른 컴포넌트나 API에서도 이 로직을 그대로 활용할 수 있습니다. |
+
+### 비즈니스 로직이란?
 
 - 서비스의 정책, 규칙, 절차를 코드로 표현한 핵심 기능
 - 사용자가 의도한 목적(로그인, 구매, 필터 등)을 달성하기 위한 처리 로직
 - 이 로직을 기준으로 테스트를 설계하면 **불필요한 단위 테스트 없이도 효과적인 품질 확보 가능**
+
+## 상태 관리 모킹하기
+
+### 상태 관리와 통합 테스트
+
+- 예제에서는 zustand를 사용하여 앱의 상태를 관리
+- 원하는 상태로 통합 테스트를 하기 위해 zustand 모킹 필요
+  - ex) 장바구니에 상품이 담긴 상태
+
+### 앱의 전역 상태를 모킹해 테스트 전·후에 값을 변경하고 초기화해야 한다
+
+- `__mocks__/zustand.js`를 통해 자동 모킹을 적용해 스토어를 초기화하자
+- mockZustandStore의 유틸 함수를 통한 zustand 스토어의 상태 변경
+- React Redux나 Recoil과 같은 상태 관리 라이브러리도 모킹 가이드를 제공
+
+## msw로 API 모킹하기
+
+통합 테스트에서 API를 호출하는 컴포넌트를 시뮬레이션 하기 위해서는 프로젝트에서 사용하는 탠스택 쿼리 설정과 API에 대한 모킹이 필요
+
+### TanStack Query
+
+API 호출에 따른 로딩, 에러 상태 처리 및 페이지네이션, 캐싱 등의 기능 활용
+
+### Mock Service Worker (MSW)
+
+- Node.js 및 브라우저 환경을 위한 API 모킹 라이브러리
+- 브라우저에서는 서비스 워커를 사용하여 모킹
+- Node.js 환경에서는 내부적으로 XHR, fetch 등의 모듈의 요청을 가로채는 인터셉트를 사용하여 모킹
+- setup과 teardown을 사용해 테스트 실행 전, 후에 API를 모킹하고 해제
+
+## RTL 비동기 유틸 함수를 활용한 테스트 작성
+
+handlers.js에서 모킹 데이터 기준으로 상품 목록 API의 페이징 응답 결과를 반환\
+request, response를 사용해 원하는 시나리오를 만들어 테스트에 활용
+
+### findBy 쿼리
+
+- API 호출과 같은 비동기 처리로 인한 변화를 감지해야 할 때 사용하기 좋음
+
+- 쿼리가 통과하거나 시간 초과될 때 까지 재시도 (1초 동안 50ms간격으로)
+
+- waitFor를 사용해도 작성 가능하며, findBy- 쿼리 역시 내부적으로 waitFor를 사용
+
+- RTL에서는 findBy같은 비동기 메서드의 반환값은 Promise이기에, 해당 요소를 사용하려면 await이나 then을 사용해야 함
