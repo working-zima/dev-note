@@ -379,16 +379,16 @@ Vitest는 [함수 모킹](/api/mock) 및 글로벌/환경 객체의 재정의도
 스파이 함수(mock 함수)를 생성합니다. 함수가 호출될 때마다 인자, 반환값, 호출 횟수 등을 기록합니다.
 
 ```ts
-const getApples = vi.fn(() => 0);
+const getApples = vi.fn(() => 0); // 0을 반환하는 mock 함수
 
-getApples();
+getApples(); // 호출 1
 
-expect(getApples).toHaveBeenCalled();
-expect(getApples).toHaveReturnedWith(0);
+expect(getApples).toHaveBeenCalled(); // 호출되었는가
+expect(getApples).toHaveReturnedWith(0); // 반환값이 0이었는가
 
-getApples.mockReturnValueOnce(5);
+getApples.mockReturnValueOnce(5); // 다음 한 번의 호출에 대해서만 5를 반환 (이후 호출부터는 다시 기본값 0)
 
-const res = getApples();
+const res = getApples(); // 호출 2
 expect(res).toBe(5);
 expect(getApples).toHaveNthReturnedWith(2, 5);
 ```
@@ -447,21 +447,27 @@ expect(mocked.nested.method()).toBe("mocked nested");
 - **타입**: `<T, K extends keyof T>(object: T, method: K, accessType?: 'get' | 'set') => MockInstance`
 
 객체의 메서드 또는 getter/setter에 대해 스파이를 생성합니다.\
-`vi.fn()`과 유사하며, 원본 메서드를 감싸서 추적 가능합니다.
+`vi.fn()`과 유사하며, 원본 메서드를 감싸서 추적 가능합니다.\
+
+객체의 특정 함수에 스파이를 심어, 해당 함수가 어떻게 호출되는지 염탐할 수 있습니다. (기존 객체의 메서드를 가로채서 추적 가능한 mock 함수로 대체)\
+굳이 함수의 구현을 가짜로 대체할 필요까지는 없고 호출 여부와 어떻게 호출되었는지만 알아내면 될 때 유용합니다.
 
 ```ts
 let apples = 0;
+
 const cart = {
   getApples: () => 42,
 };
 
+// cart의 getApples 매서드는 apples를 반환
 const spy = vi.spyOn(cart, "getApples").mockImplementation(() => apples);
+
 apples = 1;
 
-expect(cart.getApples()).toBe(1);
+expect(cart.getApples()).toBe(1); // 통과
 
-expect(spy).toHaveBeenCalled();
-expect(spy).toHaveReturnedWith(1);
+expect(spy).toHaveBeenCalled(); // 통과
+expect(spy).toHaveReturnedWith(1); // 통과
 ```
 
 > 💡 `using` 키워드(Explicit Resource Management proposal)를 사용하는 환경에서는
@@ -469,6 +475,7 @@ expect(spy).toHaveReturnedWith(1);
 
 ```ts
 it('console.log 호출 여부 테스트', () => {
+  // console의 log메서드를 감시
   using spy = vi.spyOn(console, 'log').mockImplementation(() => {})
   console.log('message')
   expect(spy).toHaveBeenCalled()
