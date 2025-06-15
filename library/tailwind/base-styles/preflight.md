@@ -1,50 +1,109 @@
 # Preflight
 
-Preflight는 Tailwind CSS에서 기본 제공하는 스타일 초기화 또는 리셋(reset) 도구입니다.
+## Preflight란?
 
-Preflight는 Tailwind 프로젝트를 위한 기본 스타일 세트로, 현대의 normalize를 기반으로 하여 브라우저 간 불일치를 줄이고 디자인 시스템의 제약 내에서 더 쉽게 작업할 수 있도록 설계되었습니다.
+Tailwind에서 기본으로 제공하는 **Opinionated한 Reset 스타일**입니다.
 
-Tailwind는 CSS에 `@tailwind base`를 포함하면 이러한 스타일을 자동으로 주입합니다:
+[modern-normalize](https://github.com/sindresorhus/modern-normalize)를 기반으로 만들어졌으며,
+
+**브라우저 간의 스타일 차이를 없애고**, **디자인 시스템 기반 작업을 쉽게** 할 수 있도록 도와줍니다.
+
+Tailwind v4에서는 `@import "tailwindcss";` 한 줄만 사용하면 자동으로 포함됩니다.
 
 ```css
-@tailwind base; /* 여기서 Preflight가 주입됩니다 */
+@layer theme, base, components, utilities;
 
-@tailwind components;
-
-@tailwind utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base); /* 자동 포함 */
+@import "tailwindcss/utilities.css" layer(utilities);
 ```
 
-## 기본 여백이 제거됩니다
+## Preflight이 수행하는 일
 
-Preflight는 제목, 인용구, 단락 등과 같은 요소에서 모든 기본 여백을 제거합니다.
+### 1. 기본 마진 제거
 
 ```css
-코드 복사
-blockquote,
-dl,
-dd,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-hr,
-figure,
-p,
-pre {
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
   margin: 0;
+  padding: 0;
 }
 ```
 
-이를 통해 사용자 에이전트 스타일시트가 적용한 여백 값에 의존하지 않고, 여러분의 간격 스케일에서 설정한 값을 유지할 수 있습니다.
+- 모든 요소의 기본 마진 제거 (`<h1>`, `<p>`, `<blockquote>` 등)
+- 사용자 에이전트(User-Agent) 스타일에 의존하지 않고, Tailwind spacing scale을 사용하게 유도
 
-## 제목 스타일이 제거됩니다
-
-모든 제목 요소는 기본적으로 완전히 스타일이 제거되어 일반 텍스트와 동일한 글꼴 크기와 글꼴 두께를 갖습니다.
+### 2. 박스 사이징과 테두리 초기화
 
 ```css
-코드 복사
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  box-sizing: border-box;
+  border: 0 solid;
+}
+```
+
+- `box-sizing: border-box`는 패딩과 보더를 width 계산에 포함시켜 **레이아웃 계산을 예측 가능하게** 함
+- `border` 클래스 사용 시 `1px solid currentColor`가 적용되도록 사전 정리
+
+### 3. 외부 라이브러리와의 충돌 예방
+
+Preflight는 전역 요소에 영향을 주기 때문에, 외부 라이브러리(Google Maps 등)와 충돌할 수 있습니다.
+
+이 경우 `@layer base`를 활용해 덮어쓰는 방식으로 문제를 해결할 수 있습니다.
+
+```css
+@layer base {
+  .google-map * {
+    border-style: none;
+  }
+}
+```
+
+## 글로벌 CSS와 Preflight 충돌 여부
+
+- **Preflight는 초기화** 목적 (margin, padding, border 등 제거)
+- **글로벌 CSS는 설정 추가** 목적 (배경색, 폰트 등 지정)
+- 따라서, 역할이 다르며 충돌보다는 **우선순위가 중요**
+
+예시:
+
+```css
+@layer base {
+  body {
+    background-color: var(--color-sub);
+  }
+}
+```
+
+Preflight 이후에 `@layer base`로 선언하면 정상 작동합니다.
+
+## 참고 링크
+
+- [Preflight 공식 문서](https://tailwindcss.com/docs/preflight)
+- [Preflight 스타일시트 원본](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css)
+
+## 요약
+
+| 항목               | 설명                                   |
+| ------------------ | -------------------------------------- |
+| 목적               | 브라우저 기본 스타일 제거, 일관성 확보 |
+| 주요 기능          | margin/padding 제거, border 초기화 등  |
+| 적용 방법          | `@import "tailwindcss"` 시 자동 포함   |
+| 우선순위 조정 방법 | `@layer base` 사용하여 덮어쓰기        |
+| 충돌 방지 방법     | 외부 라이브러리 영역은 별도로 override |
+
+### 제목 요소는 스타일이 적용되지 않음
+
+모든 제목 요소(`h1`부터 `h6`)는 기본적으로 스타일이 적용되지 않으며, 일반 텍스트와 동일한 글꼴 크기와 두께를 가집니다:
+
+```css
 h1,
 h2,
 h3,
@@ -56,51 +115,44 @@ h6 {
 }
 ```
 
-이렇게 하는 이유는 두 가지입니다:
+이러한 처리 방식에는 두 가지 이유가 있습니다:
 
-- 실수로 타입 스케일에서 벗어나지 않도록 도와줍니다. 기본적으로 브라우저는 Tailwind의 기본 타입 스케일에는 없는 크기를 제목에 할당하며, 여러분의 타입 스케일에도 반드시 존재하는 것은 아닙니다.
+- **타입 스케일(type scale)에서 무심코 벗어나는 것을 방지할 수 있습니다.**
+  브라우저는 기본적으로 Tailwind의 타입 스케일에 존재하지 않는 글꼴 크기를 제목 요소에 적용하므로, 자신만의 스케일을 사용할 경우 예기치 않은 스타일이 적용될 수 있습니다.
+- **UI 개발에서는 제목 요소를 시각적으로 강조하지 않는 것이 일반적입니다.**
+  기본적으로 제목을 스타일 없이 처리함으로써, 개발자가 의도적으로 스타일을 적용하도록 유도합니다.
 
-- UI 개발에서 제목은 종종 시각적으로 강조되지 않게 해야 합니다. 기본적으로 제목을 스타일링하지 않으면, 제목에 적용하는 모든 스타일이 의도적이고 신중하게 이뤄집니다.
+기본 제목 스타일을 프로젝트에 추가하고 싶다면 [base 스타일을 추가](https://www.notion.so/docs/adding-custom-styles#adding-base-styles)하면 됩니다.
 
-자신의 프로젝트에 기본 제목 스타일을 추가하려면 자체 기본 스타일을 추가하면 됩니다.
+### 리스트는 스타일이 적용되지 않음
 
-페이지의 기사 스타일 부분에 적절한 기본 제목 스타일을 선택적으로 도입하고 싶다면, `@tailwindcss/typography` 플러그인을 사용하는 것이 좋습니다.
-
-## 목록 스타일이 제거됩니다
-
-정렬된 목록과 정렬되지 않은 목록은 기본적으로 스타일이 제거되며, 숫자나 글머리 기호가 없고 여백이나 패딩도 없습니다.
+순서 있는 리스트(`ol`)와 순서 없는 리스트(`ul`)는 기본적으로 불릿이나 번호가 없는 상태로 처리됩니다:
 
 ```css
-코드 복사
 ol,
-ul {
+ul,
+menu {
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 ```
 
-목록을 스타일링하고 싶다면 list-style-type 및 list-style-position 유틸리티를 사용할 수 있습니다:
+리스트에 스타일을 적용하고 싶다면, 다음과 같은 유틸리티 클래스를 사용할 수 있습니다:
 
 ```html
-코드 복사
-<ul class="list-disc list-inside">
+<ul class="list-inside list-disc">
   <li>One</li>
   <li>Two</li>
   <li>Three</li>
 </ul>
 ```
 
-프로젝트에 기본 목록 스타일을 추가하려면 자체 기본 스타일을 추가하면 됩니다.
+기본 리스트 스타일을 프로젝트에 추가하고 싶다면 [base 스타일을 추가](https://www.notion.so/docs/adding-custom-styles#adding-base-styles)하면 됩니다.
 
-페이지의 기사 스타일 부분에 기본 목록 스타일을 선택적으로 도입하고 싶다면, `@tailwindcss/typography` 플러그인을 사용하는 것이 좋습니다.
+### 접근성 고려 사항
 
-### 접근성 고려사항
-
-스타일이 제거된 목록은 VoiceOver에서 목록으로 인식되지 않습니다. 목록 스타일을 유지하지 않으면서 콘텐츠가 실제 목록이라면, 해당 요소에 "list" 역할을 추가하세요:
+스타일이 제거된 리스트는 [VoiceOver 같은 화면 낭독기에서 리스트로 인식되지 않을 수 있습니다](https://unfetteredthoughts.net/2017/09/26/voiceover-and-list-style-type-none/). 콘텐츠가 진짜 리스트라면, 스타일을 제거하더라도 아래와 같이 `role="list"`를 추가하는 것이 좋습니다:
 
 ```html
-코드 복사
 <ul role="list">
   <li>One</li>
   <li>Two</li>
@@ -108,12 +160,11 @@ ul {
 </ul>
 ```
 
-## 이미지는 block 레벨로 설정됩니다
+### 이미지 요소는 block-level로 처리됨
 
-이미지 및 기타 대체 요소(`svg`, `video`, `canvas` 등)는 기본적으로 `display: block`으로 설정됩니다.
+이미지 및 기타 치환 요소(`svg`, `video`, `canvas`, `audio` 등)는 기본적으로 `display: block`이 적용됩니다:
 
 ```css
-코드 복사
 img,
 svg,
 video,
@@ -127,17 +178,17 @@ object {
 }
 ```
 
-이는 브라우저의 기본 `display: inline`을 사용할 때 발생할 수 있는 예기치 않은 정렬 문제를 방지하는 데 도움이 됩니다.
+이는 브라우저의 기본값인 `inline` 사용 시 발생할 수 있는 예기치 않은 정렬 문제를 방지해줍니다.
 
-이 요소 중 하나를 `block`이 아닌 `inline`으로 설정하려면 `inline` 유틸리티를 사용하세요:
+이러한 요소를 `block`이 아닌 `inline`으로 바꾸고 싶다면 `inline` 유틸리티 클래스를 사용하면 됩니다:
 
 ```html
-<img class="inline" src="..." alt="...">
+<img class="inline" src="..." alt="..." />
 ```
 
-## 이미지는 상위 너비에 맞춰집니다
+### 이미지 크기 자동 제한
 
-이미지와 비디오는 본래의 비율을 유지하면서 상위 너비에 맞춰집니다.
+이미지와 비디오는 고유한 종횡비(aspect ratio)를 유지한 채 부모 요소의 너비에 맞춰지도록 제한됩니다:
 
 ```css
 img,
@@ -147,76 +198,56 @@ video {
 }
 ```
 
-이는 컨테이너를 넘치는 것을 방지하고 기본적으로 반응형이 되도록 합니다. 이 동작을 무시하려면 `max-w-none` 유틸리티를 사용하세요:
+이 설정은 컨테이너를 넘치지 않도록 방지하며, 기본적으로 반응형(responsive)으로 작동하게 만듭니다. 만약 이러한 동작을 해제하고 싶다면 `max-w-none` 유틸리티 클래스를 사용하면 됩니다:
 
 ```html
-<img class="max-w-none" src="..." alt="...">
-```
-
-## 테두리 스타일이 전역적으로 재설정됩니다
-
-단순히 `border` 클래스를 추가하여 테두리를 쉽게 추가할 수 있도록, Tailwind는 모든 요소의 기본 테두리 스타일을 다음 규칙으로 재설정합니다:
-
-```css
-*,
-::before,
-::after {
-  border-width: 0;
-  border-style: solid;
-  border-color: theme('borderColor.DEFAULT', currentColor);
-}
-```
-
-`border` 클래스는 `border-width` 속성만 설정하기 때문에, 이 재설정을 통해 해당 클래스를 추가할 때 항상 설정한 기본 테두리 색상으로 고정된 1px 테두리가 추가됩니다.
-
-Google 지도와 같은 일부 타사 라이브러리와 통합할 때 예기치 않은 결과가 발생할 수 있습니다.
-
-이와 같은 상황에 직면할 때는 Preflight 스타일을 사용자 정의 CSS로 덮어써 해결할 수 있습니다:
-
-```css
-.google-map * {
-  border-style: none;
-}
+<img class="max-w-none" src="..." alt="..." />
 ```
 
 ## Preflight 확장하기
 
-Preflight 위에 자신만의 기본 스타일을 추가하려면, `@layer base `지시어를 사용하여 CSS에 추가하면 됩니다:
+Preflight 위에 자신만의 기본 스타일을 추가하고 싶다면 `@layer base`를 사용하여 `base` 레이어에 작성하면 됩니다:
 
 ```css
-@tailwind base;
-
 @layer base {
   h1 {
-    @apply text-2xl;
+    font-size: var(--text-2xl);
   }
   h2 {
-    @apply text-xl;
+    font-size: var(--text-xl);
   }
   h3 {
-    @apply text-lg;
+    font-size: var(--text-lg);
   }
   a {
-    @apply text-blue-600 underline;
+    color: var(--color-blue-600);
+    text-decoration-line: underline;
   }
 }
-
-@tailwind components;
-
-@tailwind utilities;
 ```
 
-기본 스타일 추가에 대한 자세한 내용은 해당 문서를 참조하세요.
+자세한 내용은 [기본 스타일 추가하기 문서](https://www.notion.so/docs/adding-custom-styles#adding-base-styles)를 참고하세요.
 
 ## Preflight 비활성화하기
 
-Tailwind를 기존 프로젝트에 통합하거나 자체 기본 스타일을 제공하기 위해 Preflight를 완전히 비활성화하려면, `tailwind.config.js` 파일의 `corePlugins` 섹션에서 `preflight`를 `false`로 설정하면 됩니다:
+Tailwind를 기존 프로젝트에 통합하거나, 직접 작성한 기본 스타일을 사용하고 싶을 경우 **Preflight를 완전히 비활성화**할 수 있습니다.
 
-```js
-tailwind.config.js
-module.exports = {
-  corePlugins: {
-    preflight: false,
-  }
-}
+기본적으로 `@import "tailwindcss";`는 다음과 같은 내용을 포함합니다:
+
+```css
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+```
+
+Preflight를 비활성화하려면, `preflight.css`만 생략하고 나머지 항목은 그대로 유지하면 됩니다:
+
+```css
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+/* @import "tailwindcss/preflight.css" layer(base); */ /* 주석 처리 또는 제거 */
+@import "tailwindcss/utilities.css" layer(utilities);
 ```
