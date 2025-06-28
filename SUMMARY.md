@@ -336,3 +336,8 @@
     - [TDD](./topics/testing/test-driven-development.md)
   - [Git](./topics/git/README.md)
     - [재택근무용 GitHub 계정 설정 가이드](./topics/git/multiple-github-accounts-with-ssh.md)
+    - [GitHub 리포지토리에서 파일 관리](./topics/git/github-directory.md)
+    - [GitHub 리포지토리 설정](./topics/git/github-settings.md)
+    - [Git Config](./topics/git/git-config.md)
+    - [Fork & Clone](./topics/git/fork-clone.md)
+    - [깃 브랜치](./topics/git/git-branch.md)
