@@ -243,6 +243,85 @@ $ git rebase --abort
 
 ## 작업 상태 확인 및 복원
 
+### `git stash`
+
+현재 워킹 디렉토리와 스테이지된 변경 사항(`Tracked` 파일)을 임시로 스택에 저장(stash) 하고, 작업 디렉토리를 깨끗한 상태로 만듦
+
+#### `git stash -m`
+
+stash 항목에 메시지를 붙이는 옵션
+
+```bash
+git stash -m "로그인 유효성 체크 중간 저장"
+```
+
+```bash
+stash@{0}: On feature/login: 로그인 기능 중간 저장
+stash@{1}: On feature/login: 긴급 패치 전 상태 백업
+```
+
+#### `git stash -u` 또는 `git stash --include-untracked`
+
+`untracked` 파일들도 같이 저장함 (.gitignore에 없는 파일들)
+
+#### `git stash list`
+
+저장된 stash 목록을 확인
+
+#### `git stash apply [stash@{n}]`
+
+지정한 stash 항목을 다시 적용 (작업 디렉토리에 병합됨)
+
+```bash
+git stash apply stash@{1}   # 특정 stash 적용
+git stash apply             # 최신 stash 적용
+```
+
+#### `git stash pop`
+
+stash에 저장된 내용을 워킹 디렉토리에 적용하고, 적용한 stash 항목을 목록에서 삭제
+`git stash apply`와 비슷하지만 목록에서 제거까지 함
+
+```bash
+# 아래 두 동작을 연속적으로 한 번에 실행한 것과 같음
+git stash apply stash@{0}   # (1) 워킹 디렉토리에 적용
+git stash drop stash@{0}    # (2) 적용한 항목을 삭제
+```
+
+#### 리모트 저장소의 업데이트를 받기 원하는데, 아직 커밋할 준비가 안되었을 때
+
+```bash
+# 1. 변경사항 임시 저장
+git stash
+
+# 2. 공통 브랜치 최신 커밋 가져오기
+git fetch origin
+
+# 3. 공통 브랜치를 내 브랜치에 반영
+git merge origin/develop
+# or
+git rebase origin/develop
+
+# 4. stash 복원
+git stash pop
+```
+
+#### 현재 작업을 한 브랜치에서 하다가 다른 브랜치로 바꿔야 할 때
+
+```bash
+# 1. 변경사항 임시 저장
+git stash
+
+# 2. 브랜치 전환
+git switch hotfix
+
+# 3. 작업 끝낸 후 원래 브랜치로 돌아와서
+git switch feature/login
+
+# 4. stash 복원
+git stash pop
+```
+
 ### `git restore [옵션] <파일 경로>`
 
 수정한 파일을 복원 (되돌리기)

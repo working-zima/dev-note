@@ -111,7 +111,7 @@ chmod 600 ~/.ssh/config
 
 ## 5. GitHub 회사 계정에 공개키 등록
 
-1. 회사 GitHub에 로그인 (https://github.com/settings/keys)
+1. 회사 GitHub에 로그인 (<https://github.com/settings/keys>)
 2. **Settings → SSH and GPG keys → New SSH key**
 3. **Title**: `Home PC SSH` (어떤 이름이든 OK)
 4. **Key**: `id_ed25519_company.pub` 파일 내용을 복사해 붙여넣기
