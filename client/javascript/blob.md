@@ -8,6 +8,9 @@ JavaScript 표준의 `ArrayBuffer` 및 뷰와 함께 사용됩니다.\
 
 어떤 파일이든 포괄적으로 담을 수 있는 브라우저의 파일 객체 이며, 이미지, 비디오, 텍스트 파일 등을 처리하는 데 유용하며, 파일 시스템을 직접 다루지 않으면서도 파일이나 데이터를 조작할 수 있도록 해줍니다.
 
+즉,자바스크립트에서 메모리에 있는 데이터를 파일처럼 다루고 싶을 때 사용하는 객체입니다.\
+일반 텍스트, 이미지, 바이너리 데이터를 → **다운로드/미리보기/전송** 가능하게 만들어줍니다.
+
 ## blob 특징
 
 - 불변성: 한 번 생성된 `Blob`은 직접 수정할 수 없으며, JavaScript 문자열과 비슷하게 동작합니다.\
@@ -110,6 +113,123 @@ input.addEventListener("change", (event) => {
   }
 });
 ```
+
+## Blob 사용 예시
+
+### 일반적인 문자열
+
+```jsx
+let text = "Hello, world!";
+```
+
+→ 이건 그냥 문자열일 뿐,
+
+이걸 바로 파일처럼 **다운로드하거나 미리보기** 할 수는 없어요.
+
+### Blob으로 감싸면?
+
+```jsx
+let blob = new Blob([text], { type: "text/plain" });
+```
+
+→ 이제 이건 **파일처럼 쓸 수 있는 이진 덩어리**가 된 거예요!
+
+```jsx
+let url = URL.createObjectURL(blob);
+let link = document.createElement("a");
+link.href = url;
+link.download = "hello.txt";
+link.click();
+```
+
+→ 이렇게 하면 브라우저가 **파일 다운로드 창을 띄움**
+
+## 또 다른 실전 Blob 예: 이미지 미리보기
+
+- 사용자가 이미지를 업로드하면 `File` 객체가 생기는데,
+- 이걸 미리보기로 보여주고 싶다면?
+
+```jsx
+let file = input.files[0];
+let url = URL.createObjectURL(file); // 이때 file은 Blob임
+
+image.src = url; // 미리보기 가능
+```
+
+| 상황                                              | Blob이 필요한 이유                            |
+| ------------------------------------------------- | --------------------------------------------- |
+| 문자열, 이미지, JSON 등을 파일처럼 다루고 싶을 때 | Blob으로 감싸면 파일처럼 보임                 |
+| 다운로드 링크 만들고 싶을 때                      | Blob → URL → `<a download>`                   |
+| 이미지/비디오 미리보기 하고 싶을 때               | Blob URL을 `<img>`나 `<video>`의 `src`로 사용 |
+| 서버에 파일로 업로드하기 전에 가공할 때           | Blob을 `FormData`에 담아 전송 가능            |
+
+## 1. `Uint8Array → Blob → 다운로드`
+
+```jsx
+// 1. 이진 데이터 만들기
+let bytes = new Uint8Array([72, 101, 108, 108, 111]); // "Hello" in ASCII
+
+// 2. Blob으로 감싸기
+let blob = new Blob([bytes], { type: "text/plain" });
+
+// 3. Blob을 URL로 변환
+let url = URL.createObjectURL(blob);
+
+// 4. 다운로드 링크 생성 및 클릭
+let link = document.createElement("a");
+link.href = url;
+link.download = "hello.txt";
+link.click();
+```
+
+ASCII 코드 `[72, 101, 108, 108, 111]`은 `"Hello"`이므로 → `hello.txt`라는 텍스트 파일이 다운로드됩니다.
+
+## 2. `Blob → File` 변환
+
+자바스크립트에서 `Blob`을 `File`로 바꾸려면:
+
+```jsx
+let blob = new Blob(["My content"], { type: "text/plain" });
+
+let file = new File([blob], "myfile.txt", {
+  type: "text/plain",
+  lastModified: Date.now(),
+});
+
+console.log(file.name); // "myfile.txt"
+console.log(file instanceof File); // true
+console.log(file instanceof Blob); // true
+```
+
+`File` 생성자는 `[blob]`, `파일이름`, `옵션` 순으로 받습니다.
+
+이제 이 `file` 객체는 업로드용 `FormData`에 넣거나 그대로 `input.files[0]`처럼 쓸 수 있어요.
+
+## 3. `Blob 생성 → 이미지 미리보기`
+
+```jsx
+// 예: data URL을 Blob으로 바꿔 이미지 미리보기
+let imageData = atob(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADElEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+); // 1x1 PNG
+
+let byteArray = new Uint8Array(imageData.length);
+for (let i = 0; i < imageData.length; i++) {
+  byteArray[i] = imageData.charCodeAt(i);
+}
+
+let blob = new Blob([byteArray], { type: "image/png" });
+let url = URL.createObjectURL(blob);
+
+// 이미지 태그에 넣어서 미리보기
+let img = document.createElement("img");
+img.src = url;
+document.body.appendChild(img);
+```
+
+이 예제는 실제 1픽셀짜리 PNG 이미지를 생성해서 `img.src = blob-url`로 설정합니다.
+
+→ 이미지 파일이 없어도, **메모리에서 만든 이미지**를 미리보기 가능
 
 ## blob 메서드
 
