@@ -344,3 +344,6 @@
     - [깃 명령어](./topics/git/git-commands.md)
   - [Kintone](./topics/kintone/README.md)
     - [Quick Start](./topics/kintone/quick-start/overview.md)
+    - [전역 JavaScript 및 CSS 커스터마이징](./topics/kintone/customizing/system-wide.md)
+    - [Customize-uploader를 사용하여 JavaScript 및 CSS 파일 업로드하기](./topics/kintone/tool-guides/customize-uploader.md)
+    - [Kintone 커스터마이징 개발을 위한 Visual Studio Code 설정 가이드](./topics/kintone/tool-guides/vsc-setup.md)
