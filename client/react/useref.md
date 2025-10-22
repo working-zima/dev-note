@@ -11,7 +11,7 @@
 리액트에서 `useRef` 훅을 import함으로 사용 가능합니다.
 
 ```tsx
-import { useRef } from 'react';
+import { useRef } from "react";
 
 const ref = useRef(initialValue);
 ```
@@ -24,17 +24,28 @@ const ref = useRef(initialValue);
 `useRef`로부터 받는 참조 값들은 `current` 속성을 가지고 있습니다.
 
 ```tsx
-import { useRef } from 'react';
+import { useRef, useEffect } from "react";
 
-const myRef = useRef()
+export default function Example() {
+  const playerNameRef = useRef(null);
 
-<input
-  ref={palyerName}
-  type="text"
-/>
+  useEffect(() => {
+    // 마운트 후에는 DOM이 연결되어 current가 생깁니다.
+    console.log(playerNameRef.current); // <input ...>
+    console.log(playerNameRef.current?.value); // 초기 value (빈 문자열)
+  }, []);
 
-console.log(palyerName.current) // <input type='text'>
-console.log(palyerName.current.value) // input에 입력된 값
+  const logValue = () => {
+    console.log(playerNameRef.current.value);
+  };
+
+  return (
+    <>
+      <input ref={playerNameRef} type="text" placeholder="이름" />
+      <button onClick={logValue}>값 로그</button>
+    </>
+  );
+}
 ```
 
 ### 주의 (Refs로 DOM 제어)
@@ -47,14 +58,14 @@ console.log(palyerName.current.value) // input에 입력된 값
 어떻게(How) 변경할지를 명시적으로 작성합니다.
 
 ```jsx
-import { useRef } from 'react';
+import { useRef } from "react";
 
 function App() {
   const textRef = useRef(null);
 
   const changeColor = () => {
     if (textRef.current) {
-      textRef.current.style.color = 'red';
+      textRef.current.style.color = "red";
     }
   };
 
@@ -73,15 +84,15 @@ function App() {
 무엇(What)을 원하는지 선언적으로 작성합니다.
 
 ```jsx
-import { useState } from 'react';
+import { useState } from "react";
 
 function App() {
-  const [color, setColor] = useState('black');
+  const [color, setColor] = useState("black");
 
   return (
     <div>
       <div style={{ color }}>Hello, world!</div>
-      <button onClick={() => setColor('red')}>Change Color</button>
+      <button onClick={() => setColor("red")}>Change Color</button>
     </div>
   );
 }
@@ -95,26 +106,23 @@ function App() {
 참조를 사용하는 목적이 페이지의 모든 종류의 값들을 읽고 조정하기 위해서는 아니면서 코드를 많이 줄여 줄 수 있다면 사용해볼 수 있는 방법입니다.
 
 ```jsx
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
 export default function Player() {
-  const playerName = useRef()
+  const playerName = useRef();
 
   const [enteredPlayerName, setEnteredPlayerName] = useState(null);
 
   function handleClick() {
     setEnteredPlayerName(playerName.current.value); // 값을 조작이 아닌 읽어들이는데 사용
-    playerName.current.value = ''; // 명령적 사용
+    playerName.current.value = ""; // 명령적 사용
   }
 
   return (
     <section id="player">
-      <h2>Welcome { enteredPlayerName ?? 'unknown entity'}</h2>
+      <h2>Welcome {enteredPlayerName ?? "unknown entity"}</h2>
       <p>
-        <input
-          ref={playerName}
-          type="text"
-        />
+        <input ref={playerName} type="text" />
         <button onClick={handleClick}>Set Name</button>
       </p>
     </section>
@@ -129,24 +137,21 @@ export default function Player() {
 위의 예시에서 state를 사용하지 않는다면 어떻게 될까요?
 
 ```jsx
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
 export default function Player() {
-  const playerName = useRef()
+  const playerName = useRef();
 
   function handleClick() {
-    playerName.current.value = ''; // 명령적 사용
+    playerName.current.value = ""; // 명령적 사용
   }
 
-// state 대신 playerName.current.value 사용
+  // state 대신 playerName.current.value 사용
   return (
     <section id="player">
-      <h2>Welcome { playerName.current.value ?? 'unknown entity'}</h2>
+      <h2>Welcome {playerName.current.value ?? "unknown entity"}</h2>
       <p>
-        <input
-          ref={playerName}
-          type="text"
-        />
+        <input ref={playerName} type="text" />
         <button onClick={handleClick}>Set Name</button>
       </p>
     </section>
@@ -171,15 +176,15 @@ targetTime의 시간 이전에 `Stop Challenge` 버튼을 클릭하지 않으면
 ```jsx
 import { useRef, useState } from "react";
 
-export default function TimerChallenge({title, targetTime}) {
-  const timer = useRef()
+export default function TimerChallenge({ title, targetTime }) {
+  const timer = useRef();
 
   const [timerStarted, setTimerStarted] = useState(false);
-  const [timerExpired, setTimerExpired] = useState(false)
+  const [timerExpired, setTimerExpired] = useState(false);
 
   function handleStart() {
     timer.current = setTimeout(() => {
-      setTimerExpired(true)
+      setTimerExpired(true);
     }, targetTime * 1000);
 
     setTimerStarted(true);
@@ -194,18 +199,18 @@ export default function TimerChallenge({title, targetTime}) {
       <h2>{title}</h2>
       {timerExpired && <p>You lost!</p>}
       <p className="challenge-time">
-        {targetTime} second{targetTime > 1 ? 's' : ''}
+        {targetTime} second{targetTime > 1 ? "s" : ""}
       </p>
       <p>
         <button onClick={timerStarted ? handleStop : handleStart}>
-          {timerStarted ? 'Stop' : 'Start'} Challenge
+          {timerStarted ? "Stop" : "Start"} Challenge
         </button>
       </p>
-      <p className={timerStarted ? 'active' : undefined}>
-        {timerStarted ? 'Time is Running...' : 'Timer inactive'}
+      <p className={timerStarted ? "active" : undefined}>
+        {timerStarted ? "Time is Running..." : "Timer inactive"}
       </p>
     </section>
-  )
+  );
 }
 ```
 
@@ -221,15 +226,15 @@ export default function TimerChallenge({title, targetTime}) {
 ```jsx
 import { useState } from "react";
 
-export default function TimerChallenge({title, targetTime}) {
-  let timer
+export default function TimerChallenge({ title, targetTime }) {
+  let timer;
 
   const [timerStarted, setTimerStarted] = useState(false);
-  const [timerExpired, setTimerExpired] = useState(false)
+  const [timerExpired, setTimerExpired] = useState(false);
 
   function handleStart() {
     timer = setTimeout(() => {
-      setTimerExpired(true)
+      setTimerExpired(true);
     }, targetTime * 1000);
 
     setTimerStarted(true);
@@ -244,18 +249,18 @@ export default function TimerChallenge({title, targetTime}) {
       <h2>{title}</h2>
       {timerExpired && <p>You lost!</p>}
       <p className="challenge-time">
-        {targetTime} second{targetTime > 1 ? 's' : ''}
+        {targetTime} second{targetTime > 1 ? "s" : ""}
       </p>
       <p>
         <button onClick={timerStarted ? handleStop : handleStart}>
-          {timerStarted ? 'Stop' : 'Start'} Challenge
+          {timerStarted ? "Stop" : "Start"} Challenge
         </button>
       </p>
-      <p className={timerStarted ? 'active' : undefined}>
-        {timerStarted ? 'Time is Running...' : 'Timer inactive'}
+      <p className={timerStarted ? "active" : undefined}>
+        {timerStarted ? "Time is Running..." : "Timer inactive"}
       </p>
     </section>
-  )
+  );
 }
 ```
 
@@ -270,15 +275,15 @@ export default function TimerChallenge({title, targetTime}) {
 ```jsx
 import { useState } from "react";
 
-let timer
+let timer;
 
-export default function TimerChallenge({title, targetTime}) {
+export default function TimerChallenge({ title, targetTime }) {
   const [timerStarted, setTimerStarted] = useState(false);
-  const [timerExpired, setTimerExpired] = useState(false)
+  const [timerExpired, setTimerExpired] = useState(false);
 
   function handleStart() {
     timer = setTimeout(() => {
-      setTimerExpired(true)
+      setTimerExpired(true);
     }, targetTime * 1000);
 
     setTimerStarted(true);
@@ -293,18 +298,18 @@ export default function TimerChallenge({title, targetTime}) {
       <h2>{title}</h2>
       {timerExpired && <p>You lost!</p>}
       <p className="challenge-time">
-        {targetTime} second{targetTime > 1 ? 's' : ''}
+        {targetTime} second{targetTime > 1 ? "s" : ""}
       </p>
       <p>
         <button onClick={timerStarted ? handleStop : handleStart}>
-          {timerStarted ? 'Stop' : 'Start'} Challenge
+          {timerStarted ? "Stop" : "Start"} Challenge
         </button>
       </p>
-      <p className={timerStarted ? 'active' : undefined}>
-        {timerStarted ? 'Time is Running...' : 'Timer inactive'}
+      <p className={timerStarted ? "active" : undefined}>
+        {timerStarted ? "Time is Running..." : "Timer inactive"}
       </p>
     </section>
-  )
+  );
 }
 ```
 
@@ -314,7 +319,7 @@ export default function TimerChallenge({title, targetTime}) {
 부모에서 `ref`를 생성하고, 자식의 노드에 연결할 때 쓰는 것입니다.
 
 ```jsx
-const SomeComponent = forwardRef((props, ref) => {})
+const SomeComponent = forwardRef((props, ref) => {});
 ```
 
 `ref` (참조)는 `prop` (속성)이 아니기 때문에 다른 컴포넌트 또는 다른 컴포넌트의 요소에도 전달할 수 없습니다.\
@@ -332,7 +337,7 @@ const dialog = useRef();
 ```
 
 ```jsx
-import { forwardRef } from "react"
+import { forwardRef } from "react";
 
 const FancyButton = forwardRef((props, ref) => (
   <button ref={ref} className="FancyButton">
@@ -355,16 +360,20 @@ const FancyButton = forwardRef((props, ref) => (
 `useEffect` 의 의존성을 생각하면 될거 같습니다.
 
 ```jsx
-import { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from "react";
 
 const MyInput = forwardRef(function MyInput(props, ref) {
-  useImperativeHandle(ref, () => {
-    return {
-      // ... 메서드를 여기에 입력하세요 ...
-    };
-  }, []);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        // ... 메서드를 여기에 입력하세요 ...
+      };
+    },
+    []
+  );
   // ...
-})
+});
 ```
 
 #### 사용법
@@ -373,8 +382,8 @@ const MyInput = forwardRef(function MyInput(props, ref) {
 자식 컴포넌트인 `MyInput` 의 `input` 에 focus 효과를 주고 싶습니다.
 
 ```jsx
-import { useRef } from 'react';
-import MyInput from './MyInput.js';
+import { useRef } from "react";
+import MyInput from "./MyInput.js";
 
 export default function Form() {
   const ref = useRef(null);
@@ -403,18 +412,23 @@ export default function Form() {
 이때 `input` 을 조작하기 위한 `ref` 를 `input` 에 연결해줍니다.
 
 ```jsx
-import { forwardRef, useRef, useImperativeHandle } from 'react';
+import { forwardRef, useRef, useImperativeHandle } from "react";
 
 const MyInput = forwardRef(function MyInput(props, ref) {
   const inputRef = useRef(null); // input을 조작하기 위한 ref
 
-  useImperativeHandle(ref, () => { // 상위 컴포넌트에 전달하기 위한 ref
-    return {
-      focus() {
-        inputRef.current.focus();
-      }
-    };
-  }, []);
+  useImperativeHandle(
+    ref,
+    () => {
+      // 상위 컴포넌트에 전달하기 위한 ref
+      return {
+        focus() {
+          inputRef.current.focus();
+        },
+      };
+    },
+    []
+  );
 
   return <input {...props} ref={inputRef} />;
 });
@@ -430,7 +444,7 @@ export default MyInput;
 
 ```tsx
 interface MutableRefObject<T> {
-    current: T;
+  current: T;
 }
 ```
 
@@ -447,7 +461,7 @@ localRef.current += 1;
 #### `MutableRefObject`
 
 ```tsx
-import { useRef, MutableRefObject, useEffect } from 'react';
+import { useRef, MutableRefObject, useEffect } from "react";
 
 // MutableRefObject를 Props로 받는 자식 컴포넌트
 type ChildProps = {
@@ -487,7 +501,7 @@ export default ParentComponent;
 
 ```tsx
 interface RefObject<T> {
-    readonly current: T | null;
+  readonly current: T | null;
 }
 ```
 
@@ -510,7 +524,7 @@ if (inputRef.current) {
   inputRef.current.value = "";
 }
 
-<input ref={inputRef} />
+<input ref={inputRef} />;
 ```
 
 #### RefObject
@@ -518,7 +532,7 @@ if (inputRef.current) {
 반환 타입이 `RefObject<T>`이기 때문에 매개변수로 사용하는 경우 타입은 `RefObject<T>`으로 해야 합니다.
 
 ```tsx
-import { useRef, RefObject } from 'react';
+import { useRef, RefObject } from "react";
 
 // inputRef를 매개변수로 사용하는 함수
 const focusInput = (inputRef: RefObject<HTMLInputElement>) => {
@@ -536,7 +550,11 @@ const App = () => {
 
   return (
     <div>
-      <input ref={inputRef} type="text" placeholder="Click the button to focus me" />
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder="Click the button to focus me"
+      />
       <button onClick={handleClick}>Focus the input</button>
     </div>
   );
@@ -555,7 +573,7 @@ export default App;
 #### `MutableRefObject<T | undefined>`
 
 ```tsx
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect } from "react";
 
 // MutableRefObject를 매개변수로 사용하는 함수
 const usePrevious = <T,>(value: T): MutableRefObject<T | undefined> => {
@@ -607,17 +625,17 @@ export default App;
 ```tsx
 const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
-{categories.map(
-  (category, idx) => (
+{
+  categories.map((category, idx) => (
     <button
       key={category.id}
       ref={(el) => {
-        buttonsRef.current[idx] = el
+        buttonsRef.current[idx] = el;
       }}
     >
       {category.name}
     </button>
-  ))
+  ));
 }
 ```
 
