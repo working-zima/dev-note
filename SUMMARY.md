@@ -350,4 +350,4 @@
   - [M365](./topics/m365/README.md)
     - [Power BI](./topics/m365/power-bi/README.md)
       - [Project Settings](./topics/m365/power-bi/project-settings.md)
-      - [Power Query Editor](./topics/m365/power-bi/power-query.md.md)
+      - [Power Query Editor](./topics/m365/power-bi/power-query.md)
