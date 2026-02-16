@@ -495,8 +495,6 @@ const ParentComponent = () => {
 export default ParentComponent;
 ```
 
-<br/>
-
 ### `useRef(initialValue: T | null): RefObject`
 
 ```tsx

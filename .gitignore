@@ -1,5 +1,6 @@
 # Environment Variable
 .env
+._*
 
 # Logs
 logs
@@ -140,3 +141,6 @@ output
 
 # SWC
 .swc
+
+# macOS
+.DS_Store
