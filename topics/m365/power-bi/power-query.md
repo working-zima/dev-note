@@ -46,13 +46,40 @@ Power Query에서 작업을 마쳤다면 반드시 '닫기 및 적용'을 눌러
 
 #### 리본 메뉴 보기 탭
 
+![리본 메뉴 보기 탭](./img/power-query/query-overview-view-ribbon.png)
+
 #### 리본 메뉴 도구 탭
 
 ### 2. Power Query 편집기 쿼리 창
 
 ![왼쪽 쿼리 창](./img/power-query/query-overview-the-left-pane.png)
 
-### 3. Power Query 편집기 테이블 보기
+### 3. Power Query 편집기 데이터 창
+
+![가운데 데이터 창](./img/power-query/query-overview-the-center-pane.png)
+
+#### 데이터 형식
+
+![데이터 형식](./img/power-query/type.png)
+
+- 숫자 관련
+  - 10진수 → 일반 소수 숫자 (예: 12.34)
+  - 고정 10진수 → 소수점 자릿수 고정\
+    부동소수점 방식으로 계산 하는 컴퓨터(이진법 계산)의 오차를 줄이기 위한 형식으로 금액은 소수점 오차가 발생하면 안 되기 때문에, 고정 10진수를 사용하는 것이 안전
+  - 정수 → 소수점 없는 숫자
+  - 백분율 → % 형식 숫자
+
+- 날짜/시간 관련
+  - 날짜/시간 → 날짜 + 시간
+  - 날짜 → 날짜만
+  - 시간 → 시간만
+  - 날짜/시간/표준 시간대 → 시간대 포함
+  - 기간 → 날짜 차이(예: 5일)
+
+- 기타
+  - 텍스트 → 문자 데이터
+  - True/False → 참/거짓
+  - 이진 → 파일, 이미지 등 바이너리 데이터
 
 ### 4. Power Query 편집기 쿼리 설정 창
 
