@@ -42,23 +42,24 @@ Power Query에서 작업을 마쳤다면 반드시 '닫기 및 적용'을 눌러
 
 #### 리본 메뉴 변환 탭
 
-#### 리본 메뉴 열 추가 탭
+![리본 메뉴 변환 탭](./img/power-query/ribbon-menu-transform00.png)
 
-#### 리본 메뉴 보기 탭
+- 데이터 형식 검색
+  - 열의 값을 보고 자동으로 형식을 추정해서 바꿔주는 기능
+  - 완벽하게 정확하지는 않기 때문에 검토 필요
 
-![리본 메뉴 보기 탭](./img/power-query/query-overview-view-ribbon.png)
+- 추출
+  - 문자열에서 일부만 잘라서 가져오는 기능
+  - 값을 나누지는 않고, 필요한 부분만 뽑음
 
-#### 리본 메뉴 도구 탭
+- 열 분할
+  - 하나의 열에 붙어 있는 값을 여러 열로 나누는 기능
 
-### 2. Power Query 편집기 쿼리 창
+- 서식
+  - 공백 제거로 문자열 앞뒤의 불필요한 공백을 제거
+  - 줄바꿈 등 눈에 보이지 않는 특수 문자(제어 문자)를 제거
 
-![왼쪽 쿼리 창](./img/power-query/query-overview-the-left-pane.png)
-
-### 3. Power Query 편집기 데이터 창
-
-![가운데 데이터 창](./img/power-query/query-overview-the-center-pane.png)
-
-#### 데이터 형식
+##### 데이터 형식
 
 ![데이터 형식](./img/power-query/type.png)
 
@@ -80,6 +81,29 @@ Power Query에서 작업을 마쳤다면 반드시 '닫기 및 적용'을 눌러
   - 텍스트 → 문자 데이터
   - True/False → 참/거짓
   - 이진 → 파일, 이미지 등 바이너리 데이터
+
+#### 리본 메뉴 보기 탭
+
+![리본 메뉴 보기 탭](./img/power-query/query-overview-view-ribbon.png)
+
+- 수식 입력줄
+  - 현재 적용된 변환 수식을 보여줌
+  - M 코드가 표시됨
+
+- 열 분포
+  - 각 열의 값 분포를 그래프로 보여줌
+  - 고유값 수 확인 가능
+
+- 열 품질
+  - 유효 / 오류 / 빈 값 비율 표시
+
+### 2. Power Query 편집기 쿼리 창
+
+![왼쪽 쿼리 창](./img/power-query/query-overview-the-left-pane.png)
+
+### 3. Power Query 편집기 데이터 창
+
+![가운데 데이터 창](./img/power-query/query-overview-the-center-pane.png)
 
 ### 4. Power Query 편집기 쿼리 설정 창
 
