@@ -71,18 +71,17 @@
 ### 피벗 (한 행에 서로 다른 cost열이 3개가 있어 합계를 구하기 어려움)
 
 1. stores 의 building-consts, land and development costs, other related cost 를 모두 선택 후 변환 탭의 열 피벗 해제
-2.
 
 ### 그룹 생성
 
 1. 쿼리 에디터 좌측 쿼리 패널 우클릭 후 새 그룹 -> 이름을 Helper Tables 로 하여 생성
-2. sales 2017, 2018,2019를 Helper Tables 그룹으로 이동
+2. sales 2017, 2018, 2019, Stores - construction costs를 Helper Tables 그룹으로 이동
 
 ## 2. 모델, 테이블 관리
 
 ### 데이터 패털에서 테이블 숨기기
 
-1. 메인 화면 우측 데이터 패널에서 sales 2017, 2018, 2019 우클릭 후 숨기기
+1. 메인 화면 우측 데이터 패널에서 sales 2017, 2018, 2019, Stores - construction costs을 우클릭 후 숨기기
 2. 숨겨진 항목 표시, 모두 숨기기 취소를 통해 숨겨진 테이블 확인 가능
 
 ### 카테고리 별 매출 그래프 (모델 연결이 안되어 있을 시 어떻게 되는지 확인이 목적)
@@ -99,6 +98,13 @@
 1. store의 state를 누적세로막대형으로 생성
 2. sales의 revenue를 y축에 추가
 3. sales의 store id와 stores의 store id 연결
+
+### 모델 관계 와 필터 방향 설명
+
+1. 설명은 너무 깊지 않게 하기
+2. 설명 후 테이블 두 개 만들기
+3. 첫 테이블은 city와 revenue
+4. 두 번째 테이블은 store_id와 store size (필터 방향 때문에 적합하지 않음을 증명)
 
 ## 3. 그래프
 
