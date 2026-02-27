@@ -349,6 +349,8 @@
     - [Kintone 커스터마이징 개발을 위한 Visual Studio Code 설정 가이드](./topics/kintone/tool-guides/vsc-setup.md)
   - [M365](./topics/m365/README.md)
     - [Power BI](./topics/m365/power-bi/README.md)
+      - [DAX](./topics/m365/power-bi/dax.md)
+      - [Model View](./topics/m365/power-bi/model-view.md)
       - [Project Settings](./topics/m365/power-bi/project-settings.md)
       - [Power Query Editor](./topics/m365/power-bi/power-query.md)
       - [Report View](./topics/m365/power-bi/report-view.md)

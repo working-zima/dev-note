@@ -42,3 +42,7 @@ XMLA는 데이터 모델을 처리하는 Power BI 엔진(SSAS 엔진)과 대화�
 #### 모델 메모리 크기 제한
 
 Power BI가 실행될 때 메모리에 올라가는 데이터 용량(30만 건 이하, 컬럼 10~20개, PBIX 파일 크기가 300MB 이하라면 Pro까지 가능)
+
+## 참고
+
+[Power BI 보고서 및 대시보드 만들기 설명서](https://learn.microsoft.com/ko-kr/power-bi/create-reports/)
