@@ -354,4 +354,4 @@
       - [Project Settings](./topics/m365/power-bi/project-settings.md)
       - [Power Query Editor](./topics/m365/power-bi/power-query.md)
       - [Report View](./topics/m365/power-bi/report-view.md)
-      - [교육 준비](./topics/m365/power-bi/study.md)
+      - [교육 준비](./topics/m365/power-bi/practical-training.md)
