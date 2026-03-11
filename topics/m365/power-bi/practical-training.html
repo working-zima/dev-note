@@ -1,0 +1,1286 @@
+<!doctype html>
+<html>
+  <head>
+    <title>practical-training.md</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+    <style>
+      /* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+      /*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+      body {
+        font-family: var(
+          --vscode-markdown-font-family,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe WPC",
+          "Segoe UI",
+          "Ubuntu",
+          "Droid Sans",
+          sans-serif
+        );
+        font-size: var(--vscode-markdown-font-size, 14px);
+        padding: 0 26px;
+        line-height: var(--vscode-markdown-line-height, 22px);
+        word-wrap: break-word;
+      }
+
+      #code-csp-warning {
+        position: fixed;
+        top: 0;
+        right: 0;
+        color: white;
+        margin: 16px;
+        text-align: center;
+        font-size: 12px;
+        font-family: sans-serif;
+        background-color: #444444;
+        cursor: pointer;
+        padding: 6px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+      }
+
+      #code-csp-warning:hover {
+        text-decoration: none;
+        background-color: #007acc;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+      }
+
+      body.scrollBeyondLastLine {
+        margin-bottom: calc(100vh - 22px);
+      }
+
+      body.showEditorSelection .code-line {
+        position: relative;
+      }
+
+      body.showEditorSelection .code-active-line:before,
+      body.showEditorSelection .code-line:hover:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -12px;
+        height: 100%;
+      }
+
+      body.showEditorSelection li.code-active-line:before,
+      body.showEditorSelection li.code-line:hover:before {
+        left: -30px;
+      }
+
+      .vscode-light.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.15);
+      }
+
+      .vscode-light.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.4);
+      }
+
+      .vscode-light.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+      }
+
+      .vscode-dark.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .vscode-dark.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(255, 255, 255, 0.6);
+      }
+
+      .vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+      }
+
+      .vscode-high-contrast.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(255, 160, 0, 0.7);
+      }
+
+      .vscode-high-contrast.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(255, 160, 0, 1);
+      }
+
+      .vscode-high-contrast.showEditorSelection
+        .code-line
+        .code-line:hover:before {
+        border-left: none;
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus,
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 1px solid -webkit-focus-ring-color;
+        outline-offset: -1px;
+      }
+
+      hr {
+        border: 0;
+        height: 2px;
+        border-bottom: 2px solid;
+      }
+
+      h1 {
+        padding-bottom: 0.3em;
+        line-height: 1.2;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: normal;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      table > thead > tr > th {
+        text-align: left;
+        border-bottom: 1px solid;
+      }
+
+      table > thead > tr > th,
+      table > thead > tr > td,
+      table > tbody > tr > th,
+      table > tbody > tr > td {
+        padding: 5px 10px;
+      }
+
+      table > tbody > tr + tr > td {
+        border-top: 1px solid;
+      }
+
+      blockquote {
+        margin: 0 7px 0 5px;
+        padding: 0 16px 0 10px;
+        border-left-width: 5px;
+        border-left-style: solid;
+      }
+
+      code {
+        font-family:
+          Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace,
+          "Droid Sans Fallback";
+        font-size: 1em;
+        line-height: 1.357em;
+      }
+
+      body.wordWrap pre {
+        white-space: pre-wrap;
+      }
+
+      pre:not(.hljs),
+      pre.hljs code > div {
+        padding: 16px;
+        border-radius: 3px;
+        overflow: auto;
+      }
+
+      pre code {
+        color: var(--vscode-editor-foreground);
+        tab-size: 4;
+      }
+
+      /** Theming */
+
+      .vscode-light pre {
+        background-color: rgba(220, 220, 220, 0.4);
+      }
+
+      .vscode-dark pre {
+        background-color: rgba(10, 10, 10, 0.4);
+      }
+
+      .vscode-high-contrast pre {
+        background-color: rgb(0, 0, 0);
+      }
+
+      .vscode-high-contrast h1 {
+        border-color: rgb(0, 0, 0);
+      }
+
+      .vscode-light table > thead > tr > th {
+        border-color: rgba(0, 0, 0, 0.69);
+      }
+
+      .vscode-dark table > thead > tr > th {
+        border-color: rgba(255, 255, 255, 0.69);
+      }
+
+      .vscode-light h1,
+      .vscode-light hr,
+      .vscode-light table > tbody > tr + tr > td {
+        border-color: rgba(0, 0, 0, 0.18);
+      }
+
+      .vscode-dark h1,
+      .vscode-dark hr,
+      .vscode-dark table > tbody > tr + tr > td {
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      /* Tomorrow Theme */
+      /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+      /* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+      /* Tomorrow Comment */
+      .hljs-comment,
+      .hljs-quote {
+        color: #8e908c;
+      }
+
+      /* Tomorrow Red */
+      .hljs-variable,
+      .hljs-template-variable,
+      .hljs-tag,
+      .hljs-name,
+      .hljs-selector-id,
+      .hljs-selector-class,
+      .hljs-regexp,
+      .hljs-deletion {
+        color: #c82829;
+      }
+
+      /* Tomorrow Orange */
+      .hljs-number,
+      .hljs-built_in,
+      .hljs-builtin-name,
+      .hljs-literal,
+      .hljs-type,
+      .hljs-params,
+      .hljs-meta,
+      .hljs-link {
+        color: #f5871f;
+      }
+
+      /* Tomorrow Yellow */
+      .hljs-attribute {
+        color: #eab700;
+      }
+
+      /* Tomorrow Green */
+      .hljs-string,
+      .hljs-symbol,
+      .hljs-bullet,
+      .hljs-addition {
+        color: #718c00;
+      }
+
+      /* Tomorrow Blue */
+      .hljs-title,
+      .hljs-section {
+        color: #4271ae;
+      }
+
+      /* Tomorrow Purple */
+      .hljs-keyword,
+      .hljs-selector-tag {
+        color: #8959a8;
+      }
+
+      .hljs {
+        display: block;
+        overflow-x: auto;
+        color: #4d4d4c;
+        padding: 0.5em;
+      }
+
+      .hljs-emphasis {
+        font-style: italic;
+      }
+
+      .hljs-strong {
+        font-weight: bold;
+      }
+
+      /*
+ * Markdown PDF CSS
+ */
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu",
+          "Droid Sans", sans-serif, "Meiryo";
+        padding: 0 12px;
+      }
+
+      pre {
+        background-color: #f8f8f8;
+        border: 1px solid #cccccc;
+        border-radius: 3px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+      }
+
+      pre:not(.hljs) {
+        padding: 23px;
+        line-height: 19px;
+      }
+
+      blockquote {
+        background: rgba(127, 127, 127, 0.1);
+        border-color: rgba(0, 122, 204, 0.5);
+      }
+
+      .emoji {
+        height: 1.4em;
+      }
+
+      code {
+        font-size: 14px;
+        line-height: 19px;
+      }
+
+      /* for inline code */
+      :not(pre):not(.hljs) > code {
+        color: #c9ae75; /* Change the old color so it seems less like an error */
+        font-size: inherit;
+      }
+
+      /* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+      .page {
+        page-break-after: always;
+      }
+    </style>
+
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+  </head>
+  <body>
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme:
+          document.body.classList.contains("vscode-dark") ||
+          document.body.classList.contains("vscode-high-contrast")
+            ? "dark"
+            : "default",
+      });
+    </script>
+    <h1 id="%EC%8B%A4%EC%8A%B5-%EA%B0%80%EC%9D%B4%EB%93%9C">실습 가이드</h1>
+    <h2 id="1-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EA%B0%80%EA%B3%B5">
+      1. 데이터 가공
+    </h2>
+    <p>쿼리는 데이터를 불러오고 가공하는 하나의 데이터 처리 단위</p>
+    <p>기초 단위 광역단위</p>
+    <h3
+      id="1-1-sales2017csv-%ED%8C%8C%EC%9D%BC-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0"
+    >
+      1-1 sales2017.csv 파일 가져오기
+    </h3>
+    <ol>
+      <li>Power BI 실행</li>
+      <li>홈 탭 → 데이터 가져오기 → CSV</li>
+      <li><code>sales2017.csv</code> 선택 후 변환 데이터 클릭</li>
+    </ol>
+    <h3
+      id="1-2-%EB%B6%88%ED%95%84%EC%9A%94%ED%95%9C-%ED%96%89-%EC%A0%9C%EA%B1%B0"
+    >
+      1-2 불필요한 행 제거
+    </h3>
+    <ol>
+      <li>파워 쿼리 편집기에서 홈 탭 → 행 제거 → 상위 행 제거</li>
+      <li>숫자 <code>2</code> 를 입력 후 확인</li>
+    </ol>
+    <h3
+      id="1-3-%EC%B2%AB-%ED%96%89%EC%9D%84-%EC%97%B4%EC%9D%98-%EB%A8%B8%EB%A6%AC%EA%B8%80%EB%A1%9C-%EC%82%AC%EC%9A%A9"
+    >
+      1-3 첫 행을 열의 머리글로 사용
+    </h3>
+    <ol>
+      <li>파워 쿼리 편집기에서 홈 탭 -&gt; 첫 행을 머리글로 사용</li>
+    </ol>
+    <h3
+      id="1-4-%EB%B6%88-%ED%95%84%EC%9A%94%ED%95%9C-%EC%97%B4%EA%B3%BC-%ED%96%89-%EC%A0%9C%EA%B1%B0"
+    >
+      1-4 불 필요한 열과 행 제거
+    </h3>
+    <ol>
+      <li>파워 쿼리 편집기에서 보기 탭 -&gt; 열 품질 체크</li>
+      <li>홈 탭 -&gt; 행 제거 -&gt; 빈 행 제거</li>
+      <li>
+        <code>product_id</code> 머리글 화살표 -&gt; <code>비어 있음</code>,
+        <code>NA</code> 체크 해제
+      </li>
+      <li>
+        <code>order_id(unique)</code> 머리글 -&gt; 행 제거 -&gt; 중복된 항목
+        제거
+      </li>
+      <li>홈 탭 -&gt; 열 선택 -&gt; <code>column3</code> 머리글 체크 해제</li>
+    </ol>
+    <h3 id="1-5-%EC%97%B4-%ED%83%80%EC%9E%85-%EC%A7%80%EC%A0%95">
+      1-5 열 타입 지정
+    </h3>
+    <ol>
+      <li>
+        파워쿼리 편집기에서 모든 열 선택 -&gt; 변환 탭 -&gt; 데이터 형식 검색
+      </li>
+      <li>
+        데이터 미리보기 에서 오류 발생 열 찾기 (<code>price</code>,
+        <code>delevery_date_format2</code>)
+      </li>
+      <li>쿼리 설정창 -&gt; 최근 적용된 단계 삭제</li>
+      <li>
+        <code>price</code> 머리글 화살표 -&gt; 추가 로드 -&gt;
+        <code>NA</code> 체크 해제
+      </li>
+      <li>
+        <code>delivery_date_format2</code> 머리글 타입 -&gt; 로캘 사용 -&gt;
+        데이터 형식: <code>날짜</code>, 로캘: <code>영어(영국)</code>
+      </li>
+      <li>모든 열 선택 -&gt; 변환 탭 -&gt; 데이터 형식 검색</li>
+      <li>
+        <code>revenue</code>, <code>price</code> 머리글 타입 -&gt;
+        <code>고정 10 진수</code>
+      </li>
+    </ol>
+    <h3
+      id="1-6-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9D%BC%EA%B4%84-%EB%B3%80%EA%B2%BD"
+    >
+      1-6 데이터 일괄 변경
+    </h3>
+    <ol>
+      <li>
+        파워쿼리 편집기에서 <code>pormo_bin_1</code> -&gt; 홈 탭 -&gt; 값 바꾸기
+        -&gt; 찾을 값: <code>verylow</code>, 바꿀 항목: <code>very low</code>
+      </li>
+      <li>
+        <code>sales</code> -&gt; 홈 탭 -&gt; 값 바꾸기 -&gt; 찾을 값:
+        <code>sales</code>(*sales 앞 공백) -&gt; 바꿀 항복: 공백
+      </li>
+      <li><code>sales</code> 머리글 타입 -&gt; <code>정수</code></li>
+    </ol>
+    <h3 id="1-7-%EA%B3%B5%EB%B0%B1-%EC%A0%95%EB%A6%AC">1-7 공백 정리</h3>
+    <ol>
+      <li>홈 탭 → 데이터 가져오기 → CSV</li>
+      <li><code>stores.csv</code> -&gt; 변환 데이터</li>
+      <li>파워 쿼리 편집기에서 홈 탭 -&gt; 첫 행을 머리글로 사용</li>
+      <li>모든 열 선택 -&gt; 변환 탭 -&gt; 데이터 형식 검색</li>
+      <li>
+        <code>province - district</code> 머리글 -&gt; 홈 탭 -&gt; 열 분할 -&gt;
+        구분 기호 기준 -&gt; 구분 기호 선택 또는 입력: <code>사용자 지정</code>,
+        <code>-</code>
+      </li>
+      <li>
+        <code>province - district.1</code>의 이름을 <code>province</code>,
+        <code>province - district.2</code>의 이름을 <code>district</code>로 변경
+      </li>
+      <li>
+        <code>province</code>, <code>district</code> 머리글 우클릭 -&gt; 변환
+        -&gt; 공백 제거
+      </li>
+    </ol>
+    <h3 id="1-8-%EC%97%AC%EB%B0%B1-%EC%A0%9C%EA%B1%B0">1-8 여백 제거</h3>
+    <ol>
+      <li>홈 탭 → 데이터 가져오기 → CSV</li>
+      <li><code>products.csv</code> -&gt; 변환 데이터</li>
+      <li>파워 쿼리 편집기에서 홈 탭 -&gt; 첫 행을 머리글로 사용</li>
+      <li>모든 열 선택 -&gt; 변환 탭 -&gt; 데이터 형식 검색</li>
+      <li><code>product (brand)</code> 머리글 우클릭 -&gt; 변환 -&gt; 정리</li>
+    </ol>
+    <h3
+      id="1-9-%EC%BF%BC%EB%A6%AC-%EC%B6%94%EA%B0%80-%ED%96%89-%ED%99%95%EC%9E%A5"
+    >
+      1-9 쿼리 추가 (행 확장)
+    </h3>
+    <ol>
+      <li>홈 탭 → 데이터 가져오기 → CSV</li>
+      <li><code>sales2018.csv</code>, <code>sales2019.csv</code> -&gt; 로드</li>
+      <li>홈 탭 -&gt; 데이터 변환</li>
+      <li>
+        파워 쿼리 편집기에서 홈 탭 -&gt; 첫 행을 머리글로 사용
+        (<code>sales2018</code>, <code>sales2019</code> 모두)
+      </li>
+      <li>
+        <code>sales</code> 쿼리 선택 -&gt; 변환 탭 -&gt; 데이터 형식 검색
+        (<code>sales2018</code>, <code>sales2019</code> 모두)
+      </li>
+      <li>
+        <code>price</code>, <code>revenue</code> 타입을
+        <code>고정 10진수</code>로 변경 (<code>sales2018</code>,
+        <code>sales2019</code> 모두)
+      </li>
+      <li>
+        <code>sales 2017</code> 쿼리의 <code>order_id (unique)</code>의 이름을
+        <code>order_id</code>로 변경
+      </li>
+      <li>
+        홈 탭 -&gt; 열 선택 -&gt; <code>delivery_date_format2</code> 머리글 체크
+        해제
+      </li>
+      <li>
+        홈 탭 -&gt; <code>sales2018</code> 선택 -&gt; 쿼리 추가 -&gt; 쿼리를 새
+        항목으로 추가 -&gt; 3개 이상의 테이블
+      </li>
+      <li>
+        추가할 테이블: <code>sales2017</code>,<code>sales2018</code>,<code
+          >sales2019</code
+        >
+      </li>
+      <li>새 항목으로 추가된 쿼리의 이름을 <code>sales</code>로 변경</li>
+    </ol>
+    <h3
+      id="1-10-%EC%BF%BC%EB%A6%AC-%EB%B3%91%ED%95%A9-%EC%97%B4-%ED%99%95%EC%9E%A5"
+    >
+      1-10 쿼리 병합 (열 확장)
+    </h3>
+    <ol>
+      <li>홈 탭 → 데이터 가져오기 → Excel 통합 문서</li>
+      <li><code>costs.xlsx</code> -&gt; 데이터 변환</li>
+      <li>파워 쿼리 편집기에서 홈 탭 -&gt; 첫 행을 머리글로 사용</li>
+      <li>변환 탭 -&gt; 데이터 형식 검색</li>
+      <li><code>stores</code> 쿼리 선택 -&gt; 홈 탭 -&gt; 쿼리 병합</li>
+      <li>
+        병합 창 -&gt; <code>costs</code> 쿼리 선택 -&gt; 위 아래 쿼리 모두
+        <code>store_id</code> 열 선택
+      </li>
+      <li>
+        <code>stores</code> 쿼리의 <code>costs</code> 머리글 화살표 -&gt;
+        <code>store_id</code>, <code>원래 열 ~ 접두사로 사용</code> 체크 해제
+      </li>
+    </ol>
+    <h3
+      id="1-11-%ED%94%BC%EB%B2%97-%ED%95%9C-%ED%96%89%EC%97%90-%EC%84%9C%EB%A1%9C-%EB%8B%A4%EB%A5%B8-cost%EC%97%B4%EC%9D%B4-3%EA%B0%9C%EA%B0%80-%EC%9E%88%EC%96%B4-%ED%95%A9%EA%B3%84%EB%A5%BC-%EA%B5%AC%ED%95%98%EA%B8%B0-%EC%96%B4%EB%A0%A4%EC%9B%80"
+    >
+      1-11 피벗 (한 행에 서로 다른 cost열이 3개가 있어 합계를 구하기 어려움)
+    </h3>
+    <ol>
+      <li>
+        파워 쿼리 편집기에서 <code>stores</code> 쿼리 -&gt;
+        <code>building-consts</code>, <code>land and development costs</code>,
+        <code>other related cost</code> 모두 선택 -&gt; 변환 탭 -&gt; 열 피벗
+        해제
+      </li>
+      <li>
+        <code>값</code> -&gt; <code>cost</code>, <code>특성</code> -&gt;
+        <code>cost type</code> 으로 이름 변경
+      </li>
+    </ol>
+    <h3 id="1-12-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1">1-12 그룹 생성</h3>
+    <ol>
+      <li>
+        파워 쿼리 편집기에서 좌측 쿼리 창 우클릭 -&gt; 새 그룹 -&gt; 이름:
+        <code>Helper Tables</code>
+      </li>
+      <li>
+        <code>sales2017</code>, <code>sales2018</code>, <code>sales2019</code>,
+        <code>costs</code>를 <code>Helper Tables</code> 그룹으로 이동
+      </li>
+    </ol>
+    <h3
+      id="1-13-m%EC%96%B8%EC%96%B4-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EA%B0%80%EA%B3%B5%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%ED%95%A8%EC%88%98%ED%98%95-%EC%BF%BC%EB%A6%AC-%EC%96%B8%EC%96%B4--%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A7%80%EC%A0%95-%EC%97%B4"
+    >
+      1-13 M언어 (데이터를 가공하기 위한 함수형 쿼리 언어) + 사용자 지정 열
+    </h3>
+    <ol>
+      <li>
+        파워 쿼리 편집기에서 <code>products</code> 쿼리 -&gt; 열추가 탭 -&gt;
+        사용자 지정 열 클릭
+      </li>
+      <li>
+        새 열 이름: <code>volume</code>, 사용자 지정 열 수식:
+        <code>[length]*[depth]*[width]</code>
+      </li>
+      <li><code>volume</code> 머리글 타입 -&gt; <code>10진수</code></li>
+    </ol>
+    <h3
+      id="1-14-%EC%9A%94%EC%9D%BC-%EC%9E%90%EC%8B%9D-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%A7%8C%EB%93%A4%EA%B8%B0--%EC%98%88%EC%A0%9C%EC%9D%98-%EC%97%B4--%EC%A1%B0%EA%B1%B4-%EC%97%B4"
+    >
+      1-14 요일 자식 테이블 만들기 + 예제의 열 + 조건 열
+    </h3>
+    <ol>
+      <li>파워 쿼리 편집기에서 <code>sales</code> 쿼리 우클릭 후 참조</li>
+      <li>참조로 추가된 새 쿼리를 <code>dates</code> 로 이름 변경</li>
+      <li><code>order_date</code> 머리글 우 클릭 -&gt; 다른 열 제거</li>
+      <li><code>order date</code> 머리글 우 클릭 -&gt; 중복된 항목 제거</li>
+      <li>열 추가 탭 -&gt; 예제의 열</li>
+      <li>첫 열 더블 클릭 -&gt; 요일 이름</li>
+      <li>
+        <code>요일 이름</code> 선택 -&gt; 열 추가 탭 -&gt; 예제의 열(선택
+        항목에서)
+      </li>
+      <li>
+        첫 열 더블 클릭 -&gt; <code>월</code> 입력 -&gt;
+        <code>요일 약어</code> 로 이름 변경
+      </li>
+      <li>
+        열 추가 탭 -&gt; 조건 열 -&gt; 요일 이름: <code>요일 약어</code>,
+        연산자: <code>같음</code>, 값: <code>월</code>, 출력: <code>1</code>
+      </li>
+      <li>9 번을 일요일 까지 반복 (출력은 이전 숫자에 +1 을 하며)</li>
+      <li><code>요일 순서</code> 로 이름 변경</li>
+      <li><code>요일 순서</code> 머리글 타입 -&gt; <code>정수</code></li>
+    </ol>
+    <h2
+      id="2-%EB%AA%A8%EB%8D%B8-%ED%85%8C%EC%9D%B4%EB%B8%94-%EA%B4%80%EB%A6%AC"
+    >
+      2. 모델, 테이블 관리
+    </h2>
+    <h3
+      id="2-1-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%8C%A8%EB%84%90%EC%97%90%EC%84%9C-%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%88%A8%EA%B8%B0%EA%B8%B0"
+    >
+      2-1 데이터 패널에서 테이블 숨기기
+    </h3>
+    <ol>
+      <li>
+        메인 화면 우측 데이터 패널 -&gt; <code>sales2017</code>,
+        <code>sales2018</code>, <code>sales2019</code>,
+        <code>costs</code> 우클릭 -&gt; 숨기기
+      </li>
+      <li>숨겨진 항목 표시, 모두 숨기기 취소를 통해 숨겨진 테이블 확인 가능</li>
+    </ol>
+    <h3
+      id="2-2-category-%EB%B3%84-revenue-%EA%B7%B8%EB%9E%98%ED%94%84--sales-%EC%BF%BC%EB%A6%AC%EC%99%80-products-%EC%BF%BC%EB%A6%AC-%EB%8B%A4%EB%8C%80%EC%9D%BC-%EA%B4%80%EA%B3%84-%EC%97%B0%EA%B2%B0"
+    >
+      2-2 category 별 revenue 그래프 + sales 쿼리와 products 쿼리 다대일 관계
+      연결
+    </h3>
+    <ol>
+      <li>
+        홈 탭 -&gt; 삽입 -&gt; 시각적 개체: <code>누적 세로 막대형 차트</code>
+      </li>
+      <li>
+        <code>누적 세로 막대형 차트</code> 에서 데이터 패널 -&gt; prduct 쿼리
+        -&gt; x축: <code>category</code>
+      </li>
+      <li>데이터 패널 -&gt; sales 쿼리 -&gt; y축: <code>revenue</code></li>
+      <li>좌측 <code>모델보기</code> -&gt; 데이터 모델</li>
+      <li>
+        <code>sales</code> 쿼리의 <code>poduct_id</code> 와
+        <code>porducts</code> 쿼리의 <code>product_id</code> 연결
+      </li>
+      <li>
+        관계 편집 창 -&gt; Cardinality: <code>다 대 일</code>, 교차 필터 방향:
+        <code>Single</code>
+      </li>
+    </ol>
+    <h3
+      id="2-3-province-%EB%B3%84-revenue-%EA%B7%B8%EB%9E%98%ED%94%84--sales-%EC%BF%BC%EB%A6%AC%EC%99%80-stores-%EC%BF%BC%EB%A6%AC-%EB%8B%A4%EB%8C%80%EB%8B%A4-%EA%B4%80%EA%B3%84-%EC%97%B0%EA%B2%B0"
+    >
+      2-3 province 별 revenue 그래프 + sales 쿼리와 stores 쿼리 다대다 관계 연결
+    </h3>
+    <ol>
+      <li>
+        홈 탭 -&gt; 삽입 -&gt; 시각적 개체: <code>누적 세로 막대형 차트</code>
+      </li>
+      <li>
+        <code>누적 세로 막대형 차트</code> 에서 데이터 패널 -&gt; prduct 쿼리
+        -&gt; x축: <code>province</code>
+      </li>
+      <li>데이터 패널 -&gt; sales 쿼리 -&gt; y축: <code>revenue</code></li>
+      <li>좌측 <code>모델보기</code> -&gt; 데이터 모델</li>
+      <li>
+        <code>sales</code> 쿼리의 <code>store_id</code> 와
+        <code>stores</code> 쿼리의 <code>store_id</code> 연결
+      </li>
+      <li>
+        관계 편집 창 -&gt; Cardinality: <code>다 대 다</code>, 교차 필터 방향:
+        <code>단일(stores가 sales를 필터링)</code>
+      </li>
+    </ol>
+    <h3
+      id="2-4-date-%EC%BF%BC%EB%A6%AC%EC%99%80-sales-%EC%BF%BC%EB%A6%AC-%EB%8B%A4%EB%8C%80%EC%9D%BC-%EA%B4%80%EA%B3%84-%EC%97%B0%EA%B2%B0"
+    >
+      2-4 date 쿼리와 sales 쿼리 다대일 관계 연결
+    </h3>
+    <ol>
+      <li>좌측 <code>모델보기</code> -&gt; 데이터 모델</li>
+      <li>
+        <code>sales</code> 쿼리의 <code>order_date</code> 와
+        <code>dates</code> 쿼리의 <code>order_date</code>를 연결
+      </li>
+      <li>
+        관계 편집 창 -&gt; Cardinality: <code>다 대 일</code>, 교차 필터 방향:
+        <code>Single</code>
+      </li>
+    </ol>
+    <h2 id="3-%EA%B7%B8%EB%9E%98%ED%94%84">3. 그래프</h2>
+    <p>기초 구역 별 평균 제품 가격</p>
+    <h3
+      id="3-1-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9A%94%EC%95%BD-%EB%82%B4%EC%9A%A9-%EB%B3%80%EA%B2%BD-district-%EA%B0%84-%EA%B0%80%EA%B2%A9-%EC%88%98%EC%A4%80%EC%9D%98-%EC%B0%A8%EC%9D%B4"
+    >
+      3-1 데이터 요약 내용 변경 (district 간 가격 수준의 차이)
+    </h3>
+    <ol>
+      <li>1 페이지 이름 <code>Overview</code> 로 변경</li>
+      <li>새 페이지 -&gt; 2 페이지 이름 <code>Detail</code> 로 변경</li>
+      <li>
+        Detail 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>누적 세로 막대형 차트</code>
+      </li>
+      <li>
+        <code>누적 세로 막대형 차트</code> -&gt; 데이터 패널 -&gt; stores 쿼리
+        -&gt; x축: <code>district</code>
+      </li>
+      <li>데이터 패널 -&gt; sales 쿼리 -&gt; y축: <code>price</code></li>
+      <li>
+        빌드 패널 y축 -&gt; 데이터 옵션 -&gt; price 합계: <code>평균</code>
+      </li>
+    </ol>
+    <h3
+      id="3-2-%EB%B2%94%EB%A1%80-%EA%B0%81-%EC%B9%B4%ED%85%8C%EA%B3%A0%EB%A6%AC%EB%B3%84-%ED%94%84%EB%A1%9C%EB%AA%A8%EC%85%98-%EB%A7%A4%EC%B6%9C-%EB%B9%84%EC%A4%91"
+    >
+      3-2 범례 (각 카테고리별 프로모션 매출 비중)
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; <code>누적 세로 막대형 차트</code> 에서 데이터
+        패널 -&gt; stores 쿼리 -&gt; x축: <code>category</code>, y축:
+        <code>revenue</code>
+      </li>
+      <li>
+        category 별 revenue 합계 누적 세로 막대형 차트 -&gt; 빌드 패널 -&gt;
+        범례: sales 쿼리의 <code>promo_type1</code>
+      </li>
+      <li>범례 제거</li>
+    </ol>
+    <h3
+      id="3-3-%EC%B6%95%EC%86%8C-%EB%8B%A4%EC%A4%91-%ED%95%AD%EB%AA%A9-%EA%B8%B0%EC%B4%88-%EA%B5%AC%EC%97%AD-%EB%B3%84%EB%A1%9C-%EB%82%98%EB%88%A0-%EB%B3%B4%EA%B8%B0"
+    >
+      3-3 축소 다중 항목 (기초 구역 별로 나눠 보기)
+    </h3>
+    <ol>
+      <li>
+        category 별 revenue 합계 누적 세로 막대형 차트 -&gt; 빌드 패널 -&gt;
+        축소 다중 항목: stores 쿼리의 <code>district</code>
+      </li>
+      <li>축소 다중 항목 제거</li>
+    </ol>
+    <h3
+      id="3-4-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%A0%88%EC%9D%B4%EB%B8%94-%EB%88%84%EC%A0%81-%EC%84%B8%EB%A1%9C-%EB%A7%89%EB%8C%80%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-4 데이터 레이블 (누적 세로 막대형 차트)
+    </h3>
+    <ol>
+      <li>
+        서식 패널 -&gt; 데이터 레이블 -&gt; 옵션 -&gt; 위치:
+        <code>바깥쪽 끝</code>
+      </li>
+      <li>
+        서식 패널 -&gt; 데이터 레이블 -&gt; 배경 -&gt; 투명도: <code>26</code>
+      </li>
+      <li>
+        서식 패널 -&gt; 데이터 레이블 -&gt; 값 -&gt; 색: <code>흰색</code>
+      </li>
+    </ol>
+    <h3
+      id="3-5-%EA%B4%91%EC%97%AD-%EA%B5%AC%EC%97%AD-%EB%B3%84-%EB%A7%A4%EC%B6%9C-%EB%B9%84%EC%9C%A8-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%9B%90%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-5 광역 구역 별 매출 비율 만들기 (원형 차트)
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>원형 차트</code>
+      </li>
+      <li>
+        <code>원형 차트</code> 에서 데이터 패널 -&gt; 범례:
+        <code>province</code>, 값: <code>revenue</code>
+      </li>
+      <li>서식 패널 -&gt; 범례 제거</li>
+      <li>
+        서식 패널 -&gt; 세부 정보 레이블 -&gt; 옵션 -&gt; 레이블 내용:
+        <code>범주와 총 퍼센트</code>
+      </li>
+      <li>빌드 패널 -&gt; 자세히: <code>district</code></li>
+      <li>빌드 패널 -&gt; 자세히 제거</li>
+      <li>원형 차트 -&gt; 더보기(...) -&gt; 축정렬 -&gt; 바꿔보기</li>
+    </ol>
+    <h3
+      id="3-6-%EB%8B%A4%EC%A4%91-x%EC%B6%95-%EB%93%9C%EB%A6%B4-%ED%83%90%EC%83%89-%EB%88%84%EC%A0%81-%EC%84%B8%EB%A1%9C-%EB%A7%89%EB%8C%80%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-6 다중 X축 드릴 탐색 (누적 세로 막대형 차트)
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; category 별 revenue 합계 누적 세로 막대형 차트
+        -&gt; 데이터 패털: <code>subcategory</code> 추가
+      </li>
+      <li>sub_category를 X축에 추가</li>
+    </ol>
+    <h3
+      id="3-7-%EB%82%A0%EC%A7%9C-%ED%83%80%EC%9E%85-%EB%93%9C%EB%A6%B4-%ED%83%90%EC%83%89-%EA%BA%BD%EC%9D%80%EC%84%A0%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-7 날짜 타입 드릴 탐색 (꺽은선형 차트)
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>꺽은선형 차트</code>
+      </li>
+      <li>
+        <code>꺽은선형 차트</code> 에서 데이터 패널 -&gt; dates 쿼리 -&gt; x축:
+        <code>order_date</code>
+      </li>
+      <li>데이터 패널 -&gt; sales 쿼리 -&gt; Y축: <code>revenue</code></li>
+    </ol>
+    <h3
+      id="3-8-%EB%B3%B4%EC%A1%B0-y%EC%B6%95%EA%B3%BC-%EA%B3%84%EC%97%B4-%EB%A0%88%EC%9D%B4%EB%B8%94-%EA%BA%BD%EC%9D%80%EC%84%A0%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-8 보조 Y축과 계열 레이블 (꺽은선형 차트)
+    </h3>
+    <ol>
+      <li>
+        order_date 별 revenue로 꺽인선형 차트 -&gt; Y축: <code>sales</code> 추가
+      </li>
+      <li>Y축: <code>sales</code>를 보조 Y축에 옮기기</li>
+      <li>서식 패널 -&gt; 계열 레이블</li>
+    </ol>
+    <h3
+      id="3-9-%ED%99%95%EB%8C%80%EC%B6%95%EC%86%8C-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%8D%94-%EA%BA%BD%EC%9D%80%EC%84%A0%ED%98%95-%EC%B0%A8%ED%8A%B8"
+    >
+      3-9 확대/축소 슬라이더 (꺽은선형 차트)
+    </h3>
+    <ol>
+      <li>
+        order_date 별 revenue로 꺽인선형 차트 -&gt; 서식 패널 -&gt; 확대/축소
+        슬라이더
+      </li>
+      <li>확대/축소 슬라이더 -&gt; Y축 끄기</li>
+    </ol>
+    <h3
+      id="3-10-top-3-%ED%95%84%ED%84%B0-%EA%B4%91%EC%97%AD-%EA%B5%AC%EC%97%AD-%EB%B3%84-%EB%A7%A4%EC%B6%9C-top-3"
+    >
+      3-10 Top 3 필터 (광역 구역 별 매출 Top 3)
+    </h3>
+    <ol>
+      <li>province 별 revenue 원형 차트 -&gt; 필터 패널</li>
+      <li>필터 패널 -&gt; province -&gt; 필터 형식: <code>상위 N</code></li>
+      <li>
+        항목 표시: <code>위쪽 3</code>, 값: <code>revenue</code> -&gt; 필터 적용
+      </li>
+    </ol>
+    <h3
+      id="3-11-%EC%A0%9C%ED%92%88-%EC%9C%A0%ED%98%95%EB%B3%84-%EB%A7%A4%EC%B6%9C-%ED%8A%B8%EB%A6%AC%EB%A7%B5"
+    >
+      3-11 제품 유형별 매출 (트리맵)
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>Treemap</code>
+      </li>
+      <li>빌드 패널 -&gt; 범주: <code>type</code>, 값: `revenue</li>
+    </ol>
+    <h3
+      id="3-12-%EA%B8%B0%EB%B3%B8-%ED%95%84%ED%84%B0--%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%B0%A8%ED%8A%B8-%EB%82%A0%EC%A7%9C%EB%B3%84-%EB%A7%A4%EC%B6%9C%EA%B3%BC-%EC%A3%BC%EB%AC%B8-%EA%B1%B4%EC%88%98"
+    >
+      3-12 기본 필터 + 테이블 차트 (날짜별 매출과 주문 건수)
+    </h3>
+    <ol>
+      <li>
+        Detail 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>테이블</code>
+      </li>
+      <li>
+        테이블 -&gt; 빌드 패널 열 -&gt; date 쿼리 -&gt; <code>order_date</code>
+      </li>
+      <li>
+        빌드 패널 -&gt; 열 -&gt; order_date의 데이터 옵션 (화살표) -&gt; 데이터
+        -&gt; 날짜: <code>order_date</code>
+      </li>
+      <li>
+        데이터 패널 -&gt; order_date -&gt; 열 도구 탭 -&gt; 서식:
+        <code>Short Date</code>
+      </li>
+      <li>
+        테이블 -&gt; 빌드 패널 -&gt; 열: <code>revenue</code>
+        <code>order_id</code> 추가
+      </li>
+      <li>
+        이름 변경(order_date -&gt; Date, 합계 revenue -&gt; Revenue, 합계
+        order_id -&gt; Orders)
+      </li>
+      <li>
+        빌드 패널 -&gt; 열 -&gt; Orders의 데이터 옵션 (화살표) -&gt; 요약:
+        <code>개수(고유)</code>
+      </li>
+      <li>
+        빌드 패널 -&gt; 열 -&gt; Revenue의 데이터 옵션 (화살표) -&gt; 요약:
+        <code>요약 안 함</code>
+      </li>
+      <li>
+        필터 패널 -&gt; Revenue 필터 카드 확장 -&gt; 필터 형식:
+        <code>기본 필터링</code>, 모두 선택 후 <code>(공백)</code>,
+        <code>0</code> 체크 해제
+      </li>
+      <li>
+        빌드 패널 -&gt; 열 -&gt; Revenue의 데이터 옵션(화살표) -&gt; 요약:
+        <code>합계</code>
+      </li>
+    </ol>
+    <h3 id="3-13-%EC%9A%94%EC%9D%BC-%EC%A0%95%EB%A0%AC">3-13 요일 정렬</h3>
+    <ol>
+      <li>
+        Detail 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>누적 세로 막대형 차트</code>
+      </li>
+      <li>
+        누적 세로 막대형 차트 -&gt; 빌드 패널 -&gt; 데이터:
+        <code>요일 약어</code>, <code>revenue</code>
+      </li>
+      <li>
+        요일 약어별 revenue 누적 세로 막대형 차트 -&gt; 데이터 패널 -&gt; 요일
+        약어 -&gt; 열 도구 탭 -&gt; 열 기준 정렬 -&gt; <code>요일 약어</code>
+      </li>
+      <li>차트의 추가 옵션(...) -&gt; 축 정렬 -&gt; <code>요일 약어</code></li>
+      <li>
+        요일 약어별 revenue 누적 세로 막대형 차트 -&gt; 추가 옵션(...) -&gt; 축
+        정렬 -&gt; 체크 해제
+      </li>
+    </ol>
+    <h3 id="3-14-%EB%A7%B5-%EC%B0%A8%ED%8A%B8">3-14 맵 차트</h3>
+    <ol>
+      <li>
+        옵션 -&gt; 보안 -&gt; 사용자 지정 시각적 개체를 보고서에 추가할 때 보안
+        경고 표시, ArcGIS for Power BI 사용 체크 하기 (선택)
+      </li>
+      <li>
+        Detail 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>맵 차트(Azure)</code> -&gt; 위치:<code>province</code>
+      </li>
+      <li>
+        맵 차트 -&gt; 빌드 패널 -&gt; 위도: <code>latitude</code>, 경도:
+        <code>longtitude</code>
+      </li>
+      <li>빌드 패널 -&gt; 위치: <code>district</code> 추가</li>
+      <li>빌드 패널 -&gt; 거품 크기: <code>revenue</code></li>
+      <li>
+        서식 패널 -&gt; 거품형 -&gt; 색 -&gt; 조건부 서식 -&gt; 서식 스타일:
+        <code>그라데이션</code> -&gt; 필드를 기반: <code>revenue</code>
+      </li>
+      <li>
+        Azure 맵 차트일 경우 -&gt; 서식 패널 -&gt; 표식 -&gt; 색 -&gt; 조건부
+        서식 -&gt; 서식 스타일: <code>그라데이션</code> -&gt; 필드를 기반:
+        <code>revenue</code>
+      </li>
+      <li>서식 패널 -&gt; 지도 설정 -&gt; 보기 -&gt; 자동 확대/축소 해제</li>
+    </ol>
+    <h3
+      id="3-15-%EB%93%9C%EB%A1%AD%EB%8B%A4%EC%9A%B4-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%84%9C"
+    >
+      3-15 드롭다운 슬라이서
+    </h3>
+    <ol>
+      <li>홈 탭 -&gt; 삽입 -&gt; 시각적 개체: <code>슬라이서</code></li>
+      <li>
+        슬라이서 -&gt; 데이터 패널 -&gt; stores 쿼리의 <code>store_id</code>
+      </li>
+      <li>서식 패널 -&gt; 슬라이서 설정 -&gt; 스타일: <code>드롭다운</code></li>
+      <li>
+        슬라이서 설정 -&gt; 선택: <code>Ctrl 키를 통한 다중선택</code>,
+        <code>모두 선택 옵션 표시</code>
+      </li>
+      <li>
+        빌드 패널 -&gt; 빌드 -&gt; <code>store_id</code>를 <code>매장</code>으로
+        이름 변경
+      </li>
+      <li>슬라이서 -&gt; 추가 옵션(...) -&gt; 검색</li>
+    </ol>
+    <h3 id="3-16-%EC%82%AC%EC%9D%B4-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%84%9C">
+      3-16 사이 슬라이서
+    </h3>
+    <ol>
+      <li>홈 탭 -&gt; 삽입 -&gt; 시각적 개체: <code>슬라이서</code></li>
+      <li>슬라이서 -&gt; 데이터 패널 -&gt; stores 쿼리의 <code>cost</code></li>
+    </ol>
+    <h3
+      id="3-17-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%84%9C-%EB%8F%99%EA%B8%B0%ED%99%94"
+    >
+      3-17 슬라이서 동기화
+    </h3>
+    <ol>
+      <li>
+        슬라이서 선택 -&gt; 슬라이서 동기화 패널 -&gt; 동기화, 표시 모두 체크
+      </li>
+    </ol>
+    <h3 id="3-18-%EC%83%81%ED%98%B8-%EC%9E%91%EC%9A%A9-%ED%8E%B8%EC%A7%91">
+      3-18 상호 작용 편집
+    </h3>
+    <ol>
+      <li>province 별 revenue 원형차트 -&gt; 서식 탭 -&gt; 상호 작용 편집</li>
+      <li>category별 revenue 그래프를 필터로 변경</li>
+      <li>서식 탭 -&gt; 상호 작용 편집 종료</li>
+    </ol>
+    <h3
+      id="3-19-%EB%93%9C%EB%A6%B4-%EC%8A%A4%EB%A3%A8-revenue-%EA%B4%80%EB%A0%A8-%EC%83%81%EC%84%B8-%ED%8E%98%EC%9D%B4%EC%A7%80"
+    >
+      3-19 드릴 스루 (revenue 관련 상세 페이지)
+    </h3>
+    <ol>
+      <li>Details 페이지 -&gt; 빈 캔버스 선택 -&gt; 서식 패널</li>
+      <li>페이지 정보 -&gt; 페이지 유형: <code>드릴스루</code></li>
+      <li>페이지 정보 -&gt; 데이터 추가: <code>revenue</code></li>
+      <li>
+        Overview 페이지 -&gt; revenue가 포함된 차트에 -&gt; 특정 값을 우클릭
+      </li>
+      <li>드릴 스루 -&gt; Details</li>
+      <li>Detail 페이지 -&gt; 우클릭 -&gt; 숨기기</li>
+    </ol>
+    <h3 id="3-20-%EB%93%9C%EB%A6%B4-%EC%8A%A4%EB%A3%A8-%EB%B2%84%ED%8A%BC">
+      3-20 드릴 스루 버튼
+    </h3>
+    <ol>
+      <li>
+        Overview 페이지 -&gt; 삽입 탭 -&gt; 단추 -&gt; 비어 있음 -&gt; 서식 패널
+        -&gt; 작업
+      </li>
+      <li>
+        작업 -&gt; 유형: <code>드릴 스루</code> -&gt; 대상: <code>Details</code>
+      </li>
+      <li>
+        서식 패널 -&gt; 단추 스타일 -&gt; 설정 적용 대상 상태:
+        <code>사용 안함</code>, 텍스트: <code>매출을 선택하세요</code>
+      </li>
+      <li>
+        단추 스타일 -&gt; 설정 적용 대상 상태: <code>기본 값</code>, 텍스트:
+        <code>상세페이지로 이동</code>
+      </li>
+    </ol>
+    <h3 id="3-21-%EB%B6%81%EB%A7%88%ED%81%AC">3-21 북마크</h3>
+    <ol>
+      <li>사용자 지정 -&gt; 책갈피 패널, 선택 패널</li>
+      <li>책갈피 패널 -&gt; 추가 -&gt; 이름: <code>연도별</code></li>
+      <li>
+        연도별 추가 옵션(...) -&gt; <code>데이터</code>,
+        <code>선택된 시각적 개체</code> 체크 -&gt; 업데이트
+      </li>
+      <li>책갈피 패널 -&gt; 추가 -&gt; 이름: <code>연월별</code></li>
+      <li>
+        연도별 revenue와 sale 꺽은선형 차트 -&gt; 계층 구조에서 한 수준 아래
+        확장 2번 클릭
+      </li>
+      <li>
+        연월별 추가 옵션(...) -&gt; <code>데이터</code>,
+        <code>선택된 시각적 개체</code> 체크 -&gt; 업데이트
+      </li>
+      <li>삽입 탭 -&gt; 단추 -&gt; 탐색기 -&gt; 책갈피 탐색기</li>
+      <li>연도별 revenue와 sale 꺽은선형 차트 위에 위치</li>
+    </ol>
+    <h3 id="3-22-%ED%88%B4%ED%8C%81">3-22 툴팁</h3>
+    <ol>
+      <li>새 페이지 -&gt; 페이지 이름 <code>Tooltip</code></li>
+      <li>
+        빈 캔버스 -&gt; 서식 패널 -&gt; 페이지 정보 -&gt; 페이지 유형:
+        <code>도구 설명</code>
+      </li>
+      <li>
+        서식 패널 -&gt; 페이지 정보 -&gt; 도구 설명 표시 켜기:
+        <code>요일 약어</code>
+      </li>
+      <li>
+        Tooltip 페이지 -&gt; 홈 탭 -&gt; 삽입 -&gt; 시각적 개체:
+        <code>누적 세로 막대형 차트</code>
+      </li>
+      <li>
+        누적 세로 막대형 차트 -&gt; 빌드 패널 -&gt; X축: <code>category</code>,
+        Y축: <code>revenue</code>
+      </li>
+      <li>
+        누적 세로 막대형 차트 -&gt; 필터 패널 -&gt; category의 필터 형식:
+        <code>상위 N</code>, 위쪽: <code>3</code>, 값:
+        <code>revenue</code> -&gt; 필터 적용
+      </li>
+      <li>Tooltip 페이지 -&gt; 숨기기</li>
+    </ol>
+    <h3 id="3-23-%EC%84%9C%EC%8B%9D">3-23 서식</h3>
+    <h4 id="%EC%99%BC%EC%AA%BD-%EC%9C%84-%EA%B7%B8%EB%9E%98%ED%94%84">
+      왼쪽 위 그래프
+    </h4>
+    <ol>
+      <li>
+        서식 패널 -&gt; 크기 및 위치 -&gt; 높이: <code>268</code>, 너비:
+        <code>588</code>, 가로: <code>40</code>, 세로: <code>136</code>
+      </li>
+      <li>배경 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+      <li>시각적 테두리 -&gt; 둥근 모서리: <code>24</code></li>
+      <li>구분선</li>
+    </ol>
+    <h4 id="%EC%98%A4%EB%A5%B8%EC%AA%BD-%EC%9C%84-%EA%B7%B8%EB%9E%98%ED%94%84">
+      오른쪽 위 그래프
+    </h4>
+    <ol>
+      <li>
+        서식 패널 -&gt; 크기 및 위치 -&gt; 높이: <code>268</code>, 너비:
+        <code>588</code>, 가로: <code>652</code>, 세로: <code>136</code>
+      </li>
+      <li>배경 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+      <li>시각적 테두리 -&gt; 둥근 모서리: <code>24</code></li>
+      <li>구분선</li>
+    </ol>
+    <h4 id="%EC%99%BC%EC%AA%BD-%EC%95%84%EB%9E%98-%EA%B7%B8%EB%9E%98%ED%94%84">
+      왼쪽 아래 그래프
+    </h4>
+    <ol>
+      <li>
+        서식 패널 -&gt; 크기 및 위치 -&gt; 높이: <code>268</code>, 너비:
+        <code>588</code>, 가로: <code>40</code>, 세로: <code>428</code>
+      </li>
+      <li>배경 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+      <li>시각적 테두리 -&gt; 둥근 모서리: <code>24</code></li>
+      <li>구분선</li>
+    </ol>
+    <h4
+      id="%EC%98%A4%EB%A5%B8%EC%AA%BD-%EC%95%84%EB%9E%98-%EA%B7%B8%EB%9E%98%ED%94%84"
+    >
+      오른쪽 아래 그래프
+    </h4>
+    <ol>
+      <li>
+        서식 패널 -&gt; 크기 및 위치 -&gt; 높이: <code>268</code>, 너비:
+        <code>588</code>, 가로: <code>652</code>, 세로: <code>428</code>
+      </li>
+      <li>배경 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+      <li>시각적 테두리 -&gt; 둥근 모서리: <code>24</code></li>
+      <li>구분선</li>
+    </ol>
+    <h4 id="%EC%B1%85%EA%B0%88%ED%94%BC-%EB%8B%A8%EC%B6%94">책갈피 단추</h4>
+    <ol>
+      <li>
+        책갈피 단추 -&gt; 크기 및 위치 -&gt; 높이: <code>32</code>, 너비:
+        <code>180</code>
+      </li>
+      <li>책갈피 단추 -&gt; 스타일 -&gt; 설정적용 대상: <code>기본값</code></li>
+      <li>채우기 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+      <li>테두리 -&gt; 색: <code>흰색</code></li>
+      <li>
+        책갈피 단추 -&gt; 스타일 -&gt; 설정적용 대상: <code>선택한 상태</code>
+      </li>
+      <li>채우기 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+    </ol>
+    <h4 id="overview-%ED%8E%98%EC%9D%B4%EC%A7%80">Overview 페이지</h4>
+    <ol>
+      <li>
+        빈 캔버스 -&gt; 서식 패널 -&gt; 캔버스 배경 -&gt; 색 -&gt; 다른색 -&gt;
+        헥스: <code>#3A3A3A</code>
+      </li>
+      <li>삽입 탭 -&gt; 텍스트 상자</li>
+      <li>
+        텍스트 상자 -&gt; 서식 패널 -&gt; 크기 및 위치 -&gt; 높이:
+        <code>46</code>, 너비: <code>352</code>, 가로: <code>40</code>, 세로:
+        <code>20</code>
+      </li>
+      <li>배경 -&gt; 투명도: <code>100%</code></li>
+      <li>
+        제목 -&gt; 텍스트: <code>매출 성과 분석 대시보드</code>, 글자크기:
+        <code>24</code>, 텍스트 색상: <code>흰색</code>
+      </li>
+    </ol>
+    <h4 id="%EB%93%9C%EB%A6%B4%EC%8A%A4%EB%A3%A8-%EB%8B%A8%EC%B6%94">
+      드릴스루 단추
+    </h4>
+    <ol>
+      <li>
+        드릴스루 단추 -&gt; 서식 패널 -&gt; 크기 및 스타일 -&gt; 크기 및 위치
+        -&gt; 높이: <code>40</code>, 너비: <code>140</code>, 가로:
+        <code>40</code>, 세로: <code>76</code>
+      </li>
+      <li>단추 스타일 -&gt; 설정 적용 대상 -&gt; 상태: <code>기본값</code></li>
+      <li>도형 -&gt; 둥근 모서리: <code>24</code></li>
+      <li>텍스트 -&gt; 글꼴색: <code>검정</code></li>
+      <li>채우기 -&gt; 색: <code>흰색, 10% 더 어둡게</code></li>
+    </ol>
+    <h4
+      id="%EB%93%9C%EB%A1%AD%EB%8B%A4%EC%9A%B4-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%84%9C"
+    >
+      드롭다운 슬라이서
+    </h4>
+    <ol>
+      <li>
+        드롭다운 슬라이서 -&gt; 서식 패널 -&gt; 크기 및 스타일 -&gt; 크기 및
+        위치 -&gt; 높이: <code>92</code>, 너비: <code>292</code>
+      </li>
+      <li>크기 및 스타일 -&gt; 배경 -&gt; 투명도: <code>100%</code></li>
+      <li>
+        슬라이서 머리글 -&gt; 텍스트 -&gt; 제목 텍스트: <code>매장</code>,
+        글꼴색: <code>흰색</code>
+      </li>
+      <li>값 -&gt; 색: <code>흰색</code></li>
+      <li>값 -&gt; 배경 -&gt; 색: <code>#3A3A3A</code></li>
+    </ol>
+    <h4
+      id="%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%8D%94-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EC%84%9C"
+    >
+      슬라이더 슬라이서
+    </h4>
+    <ol>
+      <li>
+        드롭다운 슬라이서 -&gt; 서식 패널 -&gt; 크기 및 스타일 -&gt; 크기 및
+        위치 -&gt; 높이: <code>92</code>, 너비: <code>292</code>
+      </li>
+      <li>크기 및 스타일 -&gt; 배경 -&gt; 투명도: <code>100%</code></li>
+      <li>
+        슬라이서 머리글 -&gt; 텍스트 -&gt; 제목 텍스트:
+        <code>초기 투자 비용</code>, 글꼴색: <code>흰색</code>
+      </li>
+      <li>값 -&gt; 글꼴 색: <code>흰색</code></li>
+      <li>값 -&gt; 배경 -&gt; 색: <code>#3A3A3A</code></li>
+      <li>슬라이더 -&gt; 색: <code>흰색</code></li>
+    </ol>
+    <h4 id="detail-%ED%8E%98%EC%9D%B4%EC%A7%80">Detail 페이지</h4>
+    <ol>
+      <li>
+        빈 캔버스 -&gt; 서식 패널 -&gt; 캔버스 배경 -&gt; 색 -&gt; 다른색 -&gt;
+        헥스: <code>#3A3A3A</code>
+      </li>
+      <li>삽입 탭 -&gt; 텍스트 상자</li>
+      <li>
+        텍스트 상자 -&gt; 서식 패널 -&gt; 크기 및 위치 -&gt; 높이:
+        <code>46</code>, 너비: <code>352</code>, 가로: <code>40</code>, 세로:
+        <code>20</code>
+      </li>
+      <li>배경 -&gt; 투명도: <code>100%</code></li>
+      <li>
+        제목 -&gt; 텍스트: <code>상세 페이지</code>, 글자크기: <code>24</code>,
+        텍스트 색상: <code>흰색</code>
+      </li>
+    </ol>
+    <h4 id="%EB%92%A4%EB%A1%9C-%EB%8B%A8%EC%B6%94">뒤로 단추</h4>
+    <ol>
+      <li>
+        단추 버튼 -&gt; 서식 패널 -&gt; 크기 및 스타일 -&gt; 크기 및 위치 -&gt;
+        높이: <code>40</code>, 너비: <code>128</code>, 가로: <code>40</code>,
+        세로: <code>80</code>
+      </li>
+      <li>
+        단추 스타일 -&gt; 상태: <code>기본값</code>, 텍스트:
+        <code>소개 페이지</code>
+      </li>
+      <li>
+        단추 스타일 -&gt; 상태: <code>가리킬 때</code>, 글꼴 색:
+        <code>흰색</code>,
+      </li>
+      <li>아이콘 -&gt; 선 색: <code>흰색</code></li>
+    </ol>
+    <h2 id="4-%EB%B0%B0%ED%8F%AC">4. 배포</h2>
+    <ol>
+      <li>홈 탭의 게시 -&gt; <code>내 작업 영역</code></li>
+      <li>로그인</li>
+      <li><code>https://powerbi.microsoft.com/</code> 접속</li>
+      <li>로그인</li>
+      <li>설정 -&gt; 거버넌스 및 관리 -&gt; 관리 포털</li>
+      <li>프로 또는 프리미엄 라이센스가 아닌 경우 평가판 신청</li>
+    </ol>
+  </body>
+</html>
