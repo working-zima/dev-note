@@ -350,6 +350,7 @@
   - [M365](./topics/m365/README.md)
     - [Power BI](./topics/m365/power-bi/README.md)
       - [DAX](./topics/m365/power-bi/dax.md)
+      - [Power Query M](./topics/m365/power-bi/m-language.md)
       - [Model View](./topics/m365/power-bi/model-view.md)
       - [Project Settings](./topics/m365/power-bi/project-settings.md)
       - [Power Query Editor](./topics/m365/power-bi/power-query.md)
