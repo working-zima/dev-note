@@ -124,7 +124,7 @@
 ### 2-2 category 별 revenue 그래프 + sales 쿼리와 products 쿼리 다대일 관계 연결
 
 1. 홈 탭 -> 삽입 -> 시각적 개체: `누적 세로 막대형 차트`
-2. `누적 세로 막대형 차트` 에서 데이터 패널 -> prduct 쿼리 -> x축: `category`
+2. `누적 세로 막대형 차트` 에서 데이터 패널 -> prducts 쿼리 -> x축: `category`
 3. 데이터 패널 -> sales 쿼리 -> y축: `revenue`
 4. 좌측 `모델보기` -> 데이터 모델
 5. `sales` 쿼리의 `poduct_id` 와 `porducts` 쿼리의 `product_id` 연결
@@ -133,7 +133,7 @@
 ### 2-3 province 별 revenue 그래프 + sales 쿼리와 stores 쿼리 다대다 관계 연결
 
 1. 홈 탭 -> 삽입 -> 시각적 개체: `누적 세로 막대형 차트`
-2. `누적 세로 막대형 차트` 에서 데이터 패널 -> prduct 쿼리 -> x축: `province`
+2. `누적 세로 막대형 차트` 에서 데이터 패널 -> product 쿼리 -> x축: `province`
 3. 데이터 패널 -> sales 쿼리 -> y축: `revenue`
 4. 좌측 `모델보기` -> 데이터 모델
 5. `sales` 쿼리의 `store_id` 와 `stores` 쿼리의 `store_id` 연결
@@ -158,7 +158,7 @@
 
 ### 3-2 범례 (각 카테고리별 프로모션 매출 비중)
 
-1. Overview 페이지 -> `누적 세로 막대형 차트` 에서 데이터 패널 -> stores 쿼리 -> x축: `category`, y축: `revenue`
+1. Overview 페이지 -> x축: `category`, y축: `revenue`인 `누적 세로 막대형 차트` 선택
 2. category 별 revenue 합계 누적 세로 막대형 차트 -> 빌드 패널 -> 범례: sales 쿼리의 `promo_type1`
 3. 범례 제거
 
@@ -169,14 +169,14 @@
 
 ### 3-4 데이터 레이블 (누적 세로 막대형 차트)
 
-1. 서식 패널 -> 데이터 레이블 -> 옵션 -> 위치: `바깥쪽 끝`
+1. category 별 revenue 합계 누적 세로 막대형 차트 -> 서식 패널 -> 데이터 레이블 -> 옵션 -> 위치: `바깥쪽 끝`
 2. 서식 패널 -> 데이터 레이블 -> 배경 -> 투명도: `26`
 3. 서식 패널 -> 데이터 레이블 -> 값 -> 색: `흰색`
 
 ### 3-5 광역 구역 별 매출 비율 만들기 (원형 차트)
 
-1. Overview 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `원형 차트`
-2. `원형 차트` 에서 데이터 패널 -> 범례: `province`, 값: `revenue`
+1. Overview 페이지 -> 범례: `province`, 값: `revenue`인 차트 선택
+2. 홈 탭 -> 삽입 -> 시각적 개체: `원형 차트`
 3. 서식 패널 -> 범례 제거
 4. 서식 패널 -> 세부 정보 레이블 -> 옵션 -> 레이블 내용: `범주와 총 퍼센트`
 5. 빌드 패널 -> 자세히: `district`
@@ -214,7 +214,7 @@
 ### 3-11 제품 유형별 매출 (트리맵)
 
 1. Overview 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `Treemap`
-2. 빌드 패널 -> 범주: `type`, 값: `revenue
+2. 빌드 패널 -> 범주: products의 `type`, 값: sales의 `revenue`
 
 ### 3-12 기본 필터 + 테이블 차트 (날짜별 매출과 주문 건수)
 
@@ -222,7 +222,7 @@
 2. 테이블 -> 빌드 패널 열 -> date 쿼리 -> `order_date`
 3. 빌드 패널 -> 열 -> order_date의 데이터 옵션 (화살표) -> 데이터 -> 날짜: `order_date`
 4. 데이터 패널 -> order_date -> 열 도구 탭 -> 서식: `Short Date`
-5. 테이블 -> 빌드 패널 -> 열: `revenue` `order_id` 추가
+5. 테이블 -> 빌드 패널 -> 열: `revenue`, `order_id` 추가
 6. 이름 변경(order_date -> Date, 합계 revenue -> Revenue, 합계 order_id -> Orders)
 7. 빌드 패널 -> 열 -> Orders의 데이터 옵션 (화살표) -> 요약: `개수(고유)`
 8. 빌드 패널 -> 열 -> Revenue의 데이터 옵션 (화살표) -> 요약: `요약 안 함`
@@ -233,9 +233,9 @@
 
 1. Detail 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `누적 세로 막대형 차트`
 2. 누적 세로 막대형 차트 -> 빌드 패널 -> 데이터: `요일 약어`, `revenue`
-3. 요일 약어별 revenue 누적 세로 막대형 차트 -> 데이터 패널 -> 요일 약어 -> 열 도구 탭 -> 열 기준 정렬 -> `요일 약어`
+3. 요일 약어별 revenue 누적 세로 막대형 차트 -> 데이터 패널 -> 요일 약어 -> 열 도구 탭 -> 열 기준 정렬 -> `요일 순서`
 4. 차트의 추가 옵션(...) -> 축 정렬 -> `요일 약어`
-5. 요일 약어별 revenue 누적 세로 막대형 차트 -> 추가 옵션(...) -> 축 정렬 -> 체크 해제
+5. 요일 약어별 revenue 누적 세로 막대형 차트 -> 추가 옵션(...) -> 축 정렬 -> 요일 약어, 오름차순 정렬
 
 ### 3-14 맵 차트
 
@@ -404,3 +404,109 @@
 4. 로그인
 5. 설정 -> 거버넌스 및 관리 -> 관리 포털
 6. 프로 또는 프리미엄 라이센스가 아닌 경우 평가판 신청
+
+## 5. DAX
+
+### 5-1 DAX를 활용하여 새 열 추가
+
+1. 새 페이지 -> 1 페이지 이름 `DAX` 로 변경
+2. 데이터 패널: `sales` 선택 -> 테이블 도구 탭 -> 새열
+3. 프로모션 할인값 적용 된 Price 구하기
+   ```js
+   Discounted Prices =
+     IF(
+       sales[promo_discount_2] = "NA" || sales[promo_discount_2] = "",
+       sales[price],
+       sales[price] * VALUE(sales[promo_discount_2]) / 100
+     )
+   ```
+
+### 5-2 프로모션이 포함된 매출액을 측정값으로 구하기
+
+1. 홈 탭 -> 데이터 입력 -> 이름:`Measure Table` -> 로드
+2. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+     // 프로모션이 포함된 매출액 구하기(판매 개수 * 할인가)
+     Discounted Revenue =
+        SUMX(
+          sales,
+          sales[sales] * sales[Discounted Prices]
+        )
+   ```
+
+### 5-3 다른 테이블 값 사용하여 판매된 제품의 총 부피 구하기
+
+1. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+    Cost of Fullfillment =
+      SUMX(
+        sales,
+        sales[sales] * RELATED(products[volume])
+      )
+   ```
+2. DAX 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `테이블`
+3. order_id 추가 -> 요약: `요약 안 함`
+4. `sales`, `volume`, `Cost of Fullfillment` 추가
+
+### 5-4 DAX를 통해 필터 걸기 (서울, 경기 운송료가 2배 더 비싸게)
+
+1. DAX 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `슬라이서` -> stores의 `province` 추가
+2. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+   // 모든 행에 대한 필터를 `store[province] = "경기도"`로 덮어씀
+   Cost of Fullfillment (경기도) =
+     CALCULATE(
+       SUMX(sales, sales[sales] * RELATED(products[volume])) / 1000,
+       stores[province] = "경기도"
+     )
+   ```
+3. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+   // FILTER로 조건에 맞는 행(stores[province] = "경기도")만 남긴 테이블을 만듦
+   // CALCULATE로 그 테이블에 해당하는 데이터만 놓고 계산함
+   Cost of Fullfillment (경기도, 필터) =
+     CALCULATE(
+         SUMX(sales, sales[sales] * RELATED(products[volume])) / 1000,
+         FILTER(
+             stores,
+             stores[province] = "경기도"
+         )
+     )
+   ```
+4. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+   // 경기도 또는 서울특별시의 경우 2배로 적용
+   Cost of Fullfillment (수도권, 필터) =
+     CALCULATE(
+       (SUMX(sales, sales[sales] * RELATED(products[volume])) / 1000) * 2,
+       FILTER(stores, stores[province] = "경기도" || stores[province] = "서울특별시")
+     ) +
+     CALCULATE(
+       SUMX(sales, sales[sales] * RELATED(products[volume])) / 1000,
+       FILTER(stores, stores[province] <> "경기도" && stores[province] <> "서울특별시")
+     )
+   ```
+5. DAX 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `테이블`
+6. 테이블 차트에 `province`, `Cost of Fullfillment` ,`Cost of Fullfillment (경기도)`, `Cost of Fullfillment (경기도, 필터)`, `Cost of Fullfillment (수도권, 필터)` 추가
+7. 데이터 패널 -> `Measure Table의 Cost of Fullfillment (수도권, 필터)` 선택 -> 측정값 도구 탭 -> 통화 표시, 소수 자릿수: `0`
+
+#### 5-5 도시별 비용 비율 테이블
+
+1. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+   All Costs =
+    CALCULATE(
+      [Cost of Fullfillment (수도권, 필터)], ALL(stores)
+    )
+   ```
+2. DAX 페이지 -> 홈 탭 -> 삽입 -> 시각적 개체: `테이블`
+3. 테이블 차트에 `province`, `Cost of Fullfillment (수도권, 필터)`, `ALL Costs` 추가
+4. 빌드 패널 -> 열의 `Cost of Fullfillment (수도권, 필터)` 우클릭 -> 다음으로 값 표시 -> 총합계의 백분율
+5. `Cost of Fullfillment (수도권, 필터)` 추가
+6. 데이터 패널 -> `Measure Table` 우클릭 -> 새 측정값
+   ```js
+   Percentage Cost = [Cost of Fullfillment (수도권, 필터)] / [All Costs]
+   ```
+7. 테이블 차트에 `Percentage Cost` 추가
+8. 데이터 패널 `Percentage Cost` -> 측정값 도구 -> 백분율로 표시
+9. 총합계의 백분율로 된 `Cost of Fullfillment (수도권, 필터)`, `All Costs` 삭제
