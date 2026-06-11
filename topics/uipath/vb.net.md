@@ -3056,3 +3056,986 @@ password_String = New System.Net.NetworkCredential(String.Empty, Password).Passw
 예제 프로젝트 다운로드:
 
 https://drive.google.com/drive/folders/10nkLSSS__Z6JmnS_95CW6UyQP-Xd35QV?usp=sharing
+
+## 5 Email
+
+### 5.1 이메일 본문 / 제목 / 발신자 정보 가져오기
+
+이메일은 사용자와 로봇 간의 커뮤니케이션 목적으로 자동화에서 널리 사용됩니다.
+
+때로는 이메일이 프로세스의 입력값 역할을 하기도 합니다.
+
+UiPath 액티비티를 사용하여 이메일의 Body, Subject, Sender 정보를 가져오는 방법을 살펴보겠습니다.
+
+#### Implementation with UiPath
+
+Gmail 서버에서 이메일을 읽고, 이메일 정보를 가져오는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Get IMAP Mail Messages 액티비티를 디자인 패널에 추가하고, 아래와 같이 필요한 매개변수를 입력합니다.
+
+Gmail 설정에서 “less secure apps”를 허용해야 한다는 점을 기억하세요.
+
+다음 링크에서 설정할 수 있습니다.
+
+https://myaccount.google.com/lesssecureapps
+
+![alt text](image-192.png)
+
+#### Step 2
+
+For Each 액티비티를 디자인 패널에 추가하고, 위에서 생성한 메일 List를 전달합니다.
+
+속성 패널에서 TypeArgument를 다음으로 변경합니다.
+
+```vb
+System.Net.Mail.MailMessage
+```
+
+![alt text](image-193.png)
+
+#### Step 3
+
+Message Box 액티비티 3개를 디자인 패널에 추가합니다.
+
+받은 메일의 다음 정보를 표시합니다.
+
+![alt text](image-194.png)
+
+#### Step 4
+
+이제 워크플로우를 실행합니다.
+
+Mail Sender:
+
+![alt text](image-195.png)
+
+Mail Subject:
+
+![alt text](image-196.png)
+
+Mail Body:
+
+![alt text](image-197.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1gynb4AgdD_-fmHwoK3aeqHVC5UNTnb4g?usp=sharing
+
+### 5.2 메일에서 특정 파일 다운로드하기
+
+메일은 자동화 프로세스에서 입력값을 받거나, 로봇의 진행 상황을 사용자에게 알리는 데 널리 사용됩니다.
+
+UiPath는 이메일에서 첨부 파일을 다운로드할 수 있는 기능을 제공합니다.
+
+기본적으로는 사용 가능한 모든 첨부 파일을 다운로드합니다.
+
+하지만 특정 확장자의 파일만 다운로드하고 싶다면 어떻게 해야 할까요?
+
+그 방법을 살펴보겠습니다.
+
+```vb
+Filter = ".*(.xlsx|.XLSX|.xls|.pdf)"
+```
+
+> Note
+>
+> 원하는 확장자(EXTENSIONS)를 전달합니다.
+>
+> 이것은 Regex 표현식이며, | 는 “또는(Or)”을 의미합니다.
+>
+> 특정 이름을 가진 파일만 다운로드하도록 설정할 수도 있습니다.
+
+#### Implementation with UiPath
+
+계정에서 이메일을 읽은 뒤, 요구사항에 맞는 첨부 파일만 다운로드하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Get IMAP Mail Messages 액티비티를 디자인 패널에 추가하고, 필요한 필드들을 속성에 입력합니다.
+
+![alt text](image-198.png)
+
+#### Step 2
+
+For Each 액티비티를 디자인 패널에 추가하고, 위의 newMailList 변수를 전달합니다.
+
+속성 창에서 Type을 다음으로 변경합니다.
+
+```vb
+System.Net.Mail.MailMessage
+```
+
+![alt text](image-199.png)
+
+#### Step 3
+
+For Each 액티비티 안에 Message Box 액티비티를 추가합니다.
+
+메일 제목을 표시하기 위해 다음 값을 전달합니다.
+
+```vb
+item.Subject
+```
+
+![alt text](image-200.png)
+
+#### Step 4
+
+Message Box 액티비티 바로 아래에 Save Attachments 액티비티를 추가합니다.
+
+아래와 같이 필요한 필드를 입력합니다.
+
+![alt text](image-201.png)
+
+#### Step 5
+
+마지막으로 워크플로우를 실행합니다.
+
+정의한 조건에 따라 파일을 다운로드할 수 있습니다.
+
+![alt text](image-202.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1uOv0tRT9YArRAF1-jXV5QG_7Xt8MkacD?usp=sharing
+
+### 5.3 메일 목록 순서 뒤집기
+
+이메일은 우리가 자동화하는 많은 프로세스에 사용됩니다.
+
+UiPath의 기본 액티비티를 사용하면 이메일을 FIFO(First In First Out) 순서로 받게 됩니다.
+
+하지만 LIFO(Last In First Out) 순서로 처리하고 싶다면 어떻게 해야 할까요?
+
+그 방법을 살펴보겠습니다.
+
+```vb
+new_MailList = old_MailList.OrderBy(Function(x) x.Headers("date")).ToList
+```
+
+> Note
+>
+> 1. old_MailList 는 Get Mail Message 액티비티의 출력으로 얻는 기본 메일 목록입니다.
+> 2. new_MailList 는 LIFO 순서로 정렬된 새로운 메일 목록입니다.
+
+#### Implementation with UiPath
+
+이메일 계정에서 메일을 읽고, FIFO 대신 LIFO 순서로 제공하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Get IMAP Mail Messages 액티비티를 디자인 패널에 추가하고 필요한 속성을 입력합니다.
+
+본인의 Gmail 주소와 비밀번호를 사용합니다.
+
+Gmail 설정에서 "less secure apps"를 허용해야 합니다.
+
+다음 링크에서 설정할 수 있습니다.
+
+https://myaccount.google.com/lesssecureapps
+
+![alt text](image-203.png)
+
+#### Step 2
+
+Assign 액티비티를 디자인 패널에 추가하고 위에서 설명한 코드를 입력합니다.
+
+예:
+
+```vb
+mails_List.OrderBy(Function(x) x.Headers("date")).ToList
+```
+
+![alt text](image-204.png)
+
+#### Step 3
+
+For Each 액티비티를 디자인 패널에 추가합니다.
+
+위에서 생성한 newMailList 변수를 전달합니다.
+
+속성 창에서 Type을 다음으로 변경합니다.
+
+```vb
+System.Net.Mail.MailMessage
+```
+
+![alt text](image-205.png)
+
+#### Step 4
+
+For Each 액티비티 안에 Message Box 액티비티를 추가합니다.
+
+메일 제목을 표시하기 위해 다음 값을 전달합니다.
+
+```vb
+item.Subject
+```
+
+![alt text](image-206.png)
+
+#### Step 5
+
+워크플로우를 실행합니다.
+
+![alt text](image-207.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1LpiTH3g5BJ2HHix3q5YLjvguWkraGdI2?usp=sharing
+
+## 6 DateTime Operations
+
+### 6.1 날짜 차이 구하기 (일, 월, 년)
+
+날짜(Date) 관련 작업은 비즈니스 자동화에서 매우 자주 사용됩니다.
+
+일부 자동화에서는 날짜 차이를 기준으로 의사결정을 해야 하는 경우가 있습니다.
+
+문자열(String) 형식으로 작성된 두 날짜 사이의 차이를 계산하는 방법을 살펴보겠습니다.
+
+```vb
+required_Difference =
+DateDiff(
+    DateInterval.Day,
+    Convert.ToDateTime(date1),
+    Convert.ToDateTime(date2)
+).ToString
+```
+
+> Note
+>
+> 1. date1 을 첫 번째 날짜로 변경합니다.
+> 2. date2 를 두 번째 날짜로 변경합니다.
+> 3. required_Difference 를 결과를 저장할 문자열 변수로 변경합니다.
+> 4. 일(day) 차이를 구하려면 DateInterval.Day 를 사용합니다.
+> 5. 월(month) 차이를 구하려면 DateInterval.Month 를 사용합니다.
+> 6. 년(year) 차이를 구하려면 DateInterval.Year 를 사용합니다.
+
+#### Implementation with UiPath
+
+두 개의 날짜를 입력받아 일(day) 차이를 표시하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Message Box 액티비티를 디자인 패널에 추가하고 위에서 설명한 코드를 입력합니다.
+
+> Note
+>
+> 날짜 형식은 다음 패턴을 따릅니다.
+>
+> month/day/year
+> Date1 = "1/16/2020"
+> Date2 = "1/30/2020"
+
+![alt text](image-208.png)
+
+#### Step 2
+
+마지막으로 워크플로우를 실행하면 날짜 차이를 확인할 수 있습니다.
+
+이 예제에서는 14일 차이가 반환됩니다.
+
+![alt text](image-209.png)
+
+마찬가지로 월(month) 차이와 년(year) 차이도 계산할 수 있습니다.
+
+(위의 Note 참고)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1Rou3zFx_0g68zFoY0nNTlvXw7gAenLWP?usp=sharing
+
+### 6.2 UiPath에서 시간 비교하기
+
+자동화 프로세스를 수행하다 보면 시간에 따라 서로 다른 워크플로우를 실행해야 하는 경우가 있습니다.
+
+그렇다면 이를 어떻게 구현할 수 있을까요?
+
+```vb
+DateTime.Parse(DateTime.Now.ToString("HH:mm:ss")) < DateTime.Parse(TimeVar)
+```
+
+> Note
+>
+> TimeVar 를 원하는 시간 값으로 변경합니다.
+>
+> 예:
+>
+> 18:00:00 또는 02:00:00 등
+
+#### Implementation with UiPath
+
+현재 시간을 지정한 시간과 비교한 뒤, 적절한 메시지를 표시하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+If 액티비티를 디자인 패널에 추가합니다.
+
+조건(Condition) 속성에 위에서 설명한 코드를 입력하고, 비교 시간은 18:00:00 으로 설정합니다.
+
+![alt text](image-210.png)
+
+#### Step 2
+
+Message Box 액티비티를 디자인 패널에 추가하고 아래 문구를 입력합니다.
+
+Before 6pm
+
+![alt text](image-211.png)
+
+#### Step 3
+
+Message Box 액티비티를 하나 더 추가하고 아래 문구를 입력합니다.
+
+After 6pm
+
+![alt text](image-212.png)
+
+#### Step 4
+
+현재 Windows 컴퓨터에 설정된 시간에 따라 적절한 메시지가 표시됩니다.
+
+![alt text](image-213.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1oIVoKPvrnZRWPw3jf4a2RIklW-SWJctT?usp=sharing
+
+### 6.3 한 달의 일 수 구하기
+
+때로는 특정 월에 포함된 날짜 수를 계산해야 하는 경우가 있습니다.
+
+예를 들어, 어떤 프로세스는 월의 마지막 날에 실행되어야 하거나 마지막 날을 기준으로 특정 날짜에 실행되어야 할 수 있습니다.
+
+월의 일 수를 구하는 방법을 살펴보겠습니다.
+
+```vb
+Int date_Variable = DateTime.DaysInMonth(year, month)
+```
+
+> Note
+>
+> 1. year 를 원하는 연도(Year)로 변경합니다.
+> 2. month 를 원하는 월(Month)로 변경합니다.
+
+#### Implementation with UiPath
+
+연도(Year)와 월(Month)을 입력받아 해당 월의 일 수를 출력하는 워크플로우를 만들어 보겠습니다.
+
+예:
+
+Year = 2020
+Month = 2
+
+#### Step 1
+
+Input Dialog 액티비티를 디자인 패널에 추가합니다.
+
+사용자가 입력한 연도(Year)를 저장할 변수를 생성합니다.
+
+![alt text](image-214.png)
+
+#### Step 2
+
+Input Dialog 액티비티를 하나 더 추가합니다.
+
+사용자가 입력한 월(Month)을 저장할 변수를 생성합니다.
+
+![alt text](image-215.png)
+
+#### Step 3
+
+Message Box 액티비티를 디자인 패널에 추가합니다.
+
+일 수(Days Count)를 표시합니다.
+
+![alt text](image-216.png)
+
+#### Step 4
+
+마지막으로 실행합니다!
+
+![alt text](image-217.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1oBghLjI3lLX9E7JkQ04CD65lRkM8l43J?usp=sharing
+
+### 6.4 DateTime을 String으로 변환하기
+
+비즈니스 프로세스마다 요구하는 DateTime 형식이 다를 수 있습니다.
+
+사용 가능한 DateTime 패턴을 확인하고 적절한 형식을 선택하세요.
+
+![alt text](image-218.png)
+
+#### 날짜(Date) 형식
+
+##### 1. d
+
+월의 날짜를 나타냅니다.
+
+예: `1, 2, 16, 31`
+
+##### 2. dd
+
+앞에 0을 포함한 월의 날짜를 나타냅니다.
+
+예: `01, 05, 14, 31`
+
+##### 3. ddd
+
+요일의 약식 이름을 나타냅니다.
+
+예: `Mon, Tues, Wed`
+
+##### 4. dddd
+
+요일의 전체 이름을 나타냅니다.
+
+예: `Monday, Tuesday, Wednesday`
+
+#### 월(Month) 형식
+
+**5. M**
+
+월 번호를 나타냅니다.
+
+예: `1, 5, 12`
+
+**6. MM**
+
+앞에 0을 포함한 월 번호를 나타냅니다.
+
+예: `04, 09, 12`
+
+**7. MMM**
+
+월 이름의 약식 표기를 나타냅니다.
+
+예: `Jan, May, Dec`
+
+**8. MMMM**
+
+월 이름의 전체 표기를 나타냅니다.
+
+예: `January, June, December`
+
+#### 연도(Year) 형식
+
+**9. y**
+
+연도를 축약하여 나타냅니다.
+
+예: `2019 → 19`
+
+**10. yy**
+
+앞에 0을 포함한 연도 형식을 나타냅니다.
+
+예: `2019 → 019`
+
+**11. yyy**
+
+연도를 나타냅니다.
+
+예: `2019`
+
+**12. yyyy**
+
+연도를 나타냅니다.
+
+예: `2019`
+
+#### 시간(Hour) 형식
+
+**13. h**
+
+12시간 형식을 나타냅니다.
+
+예: `4, 11, 2`
+
+**14. hh**
+
+앞에 0을 포함한 12시간 형식을 나타냅니다.
+
+예: `04, 05, 12`
+
+**15. H**
+
+24시간 형식을 나타냅니다.
+
+예: `13, 18, 22`
+
+**16. HH**
+
+앞에 0을 포함한 24시간 형식을 나타냅니다.
+
+예: `04, 09, 22`
+
+\*\*분(Minute) 형식
+
+**17. m**
+
+분을 나타냅니다.
+
+예: `12, 40, 56`
+
+**18. mm**
+
+앞에 0을 포함한 분을 나타냅니다.
+
+예: `04, 09, 23`
+
+#### 초(Second) 형식
+
+**19. s**
+
+초를 나타냅니다.
+
+예: `9, 35, 40`
+
+**20. ss**
+
+앞에 0을 포함한 초를 나타냅니다.
+
+예: `04, 09, 35`
+
+### 6.5 밀리초(Milliseconds)를 TimeSpan으로 변환하기
+
+경우에 따라 시간을 밀리초(Milliseconds)가 아닌 TimeSpan 형식으로 전달해야 할 수 있습니다.
+
+예를 들어 Delay 액티비티는 입력값으로 TimeSpan을 요구합니다.
+
+이를 어떻게 처리하는지 살펴보겠습니다.
+
+```vb
+TimeSpan.FromMilliseconds(milliseconds)
+```
+
+> Note
+>
+> milliseconds 는 밀리초 단위의 정수(Integer)입니다.
+
+예: `3000`
+
+#### Implementation with UiPath
+
+3000 밀리초를 TimeSpan으로 변환해 보겠습니다.
+
+예: `00:00:03`
+
+#### Step 1
+
+Delay 액티비티를 디자인 패널에 추가합니다.
+
+![alt text](image-219.png)
+
+#### Step 2
+
+Delay 액티비티의 Duration 속성에 아래 코드를 입력합니다.
+
+```vb
+TimeSpan.FromMilliseconds(3000)
+```
+
+![alt text](image-220.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1pZNHS1I79TnF-59x5sOAFmyWCB3qetNC?usp=sharing
+
+### 6.6 TimeStamp를 12시간 / 24시간 형식으로 변환하기
+
+프로세스에 따라 요구되는 DateTime 형식이 다를 수 있습니다.
+
+TimeStamp 형식을 변환하는 방법을 살펴보겠습니다.
+
+12시간 형식(DateTime in 12-hour format)
+24시간 형식(DateTime in 24-hour format)
+
+#### 6.6.1 DateTime in 12-hour format
+
+```vb
+DateTime.Now.ToString("h:mm:ss tt")
+```
+
+설명
+
+- `DateTime.Now` = 현재 날짜와 시간을 가져옵니다.
+- `.ToString("h:mm:ss tt")` = 현재 날짜와 시간을 12시간 형식으로 변환합니다.
+
+Message Box 액티비티를 디자인 패널에 추가하고 위 코드를 입력합니다.
+
+![alt text](image-221.png)
+
+#### 6.6.2 DateTime in 24-hour format
+
+```vb
+DateTime.Now.ToString("HH:mm:ss tt")
+```
+
+설명
+
+- DateTime.Now = 현재 날짜와 시간을 가져옵니다.
+- .ToString("HH:mm:ss tt") = 현재 날짜와 시간을 24시간 형식으로 변환합니다.
+
+Message Box 액티비티를 디자인 패널에 추가하고 위 코드를 입력합니다.
+
+![alt text](image-222.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1tnrnoip0HSCuIaF9sPzguFYyYlQxZ9na?usp=sharing
+
+### 6.7 String을 DateTime으로 변환 및 DateTime 조작하기
+
+이 섹션에서는 다양한 DateTime 조작 방법을 살펴보겠습니다.
+
+1. String을 DateTime 데이터 형식으로 변환하기
+2. 날짜 문자열을 다른 형식으로 변환하기
+3. 날짜에 시(Hour), 분(Minute), 초(Second) 추가하기
+4. 날짜에 일(Day) 추가 또는 제거하기
+
+#### 6.7.1 String을 DateTime 데이터 형식으로 변환하기
+
+문자열(String)을 DateTime 데이터 형식으로 변환하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Assign 액티비티를 디자인 패널에 추가하고 문자열 값과 DateTime 형식을 지정합니다.
+
+결과를 표시하기 위해 Write Line 액티비티를 사용합니다.
+
+예: 입력값이 `19/09/2019` 형식이라면 `dd/MM/yyyy`를 사용합니다.
+
+입력값이 `2019/09/19` 형식이라면 `yyyy/MM/dd`를 사용합니다.
+
+```vb
+output_date =
+DateTime.ParseExact(
+    input_date,
+    formatconversion,
+    System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat
+)
+```
+
+![alt text](image-223.png)
+
+Output:
+
+![alt text](image-224.png)
+
+#### 6.7.2 날짜 문자열 형식 변환하기
+
+날짜 문자열을 다른 형식으로 변환하는 워크플로우를 만들어 보겠습니다.
+
+예: 입력값이 19/09/2019 형식이고 `dd/MM/yyyy` 패턴이라면, 이를 `yyyy/dd/MM` 과 같은 형식으로 변환할 수 있습니다.
+
+#### Step 2
+
+Assign 액티비티를 디자인 패널에 추가하고 문자열 값과 DateTime 형식을 지정합니다.
+
+결과를 표시하기 위해 Write Line 액티비티를 사용합니다.
+
+```vb
+output_date1 =
+DateTime.ParseExact(
+    input_date,
+    "yyyy/MM/dd",
+    System.Globalization.CultureInfo.InvariantCulture
+).ToString("yyyy/dd/MM")
+```
+
+![alt text](image-225.png)
+
+Output:
+
+![alt text](image-226.png)
+
+#### 6.7.3 날짜에 시, 분, 초 추가하기
+
+날짜와 함께 시간 정보를 포함할 수 있습니다.
+
+위에서 사용한 formatconversion 변수에 hh:mm:ss 를 추가하면 됩니다.
+
+12시간 형식: `hh:mm:ss`
+
+24시간 형식: `HH:mm:ss`
+
+Output:
+
+![alt text](image-227.png)
+
+#### 6.7.4 날짜에 일 추가 또는 제거하기
+
+DateTime 변수에 일(Day), 시(Hour), 초(Second) 등을 추가할 수 있습니다.
+
+![alt text](image-228.png)
+
+예를 들어, 10/19/2019 인 output_date 에 15일을 추가하려면 다음 코드를 사용합니다.
+
+```vb
+output_date.AddDays(15).ToString
+```
+
+![alt text](image-229.png)
+
+Output:
+
+![alt text](image-230.png)
+
+날짜를 이전으로 이동하려면 음수 값을 사용합니다.
+
+예를 들어 15일을 빼려면:
+
+```vb
+output_date.AddDays(-15).ToString
+```
+
+![alt text](image-231.png)
+
+Output:
+
+![alt text](image-232.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1VJ7B4utKHw_2a-98i4qldFfFJqxs4Iob?usp=sharing
+
+## 7 Invoke Code
+
+프로세스가 점점 복잡해지면 직접 코드를 작성해야 하는 경우가 있습니다.
+
+UiPath에서는 VB.NET 또는 C#을 사용하여 더욱 다양한 사용자 정의(Customization)를 구현할 수 있습니다.
+
+이를 위한 액티비티가 바로 Invoke Code 입니다.
+
+사용 방법을 살펴보겠습니다.
+
+### 7.1 Invoke Code를 사용하여 컬럼 합계 구하기
+
+Invoke Code 액티비티를 사용하여 특정 컬럼의 모든 값을 합산해 보겠습니다.
+
+#### Implementation with UiPath
+
+샘플 DataTable을 입력으로 받아 총 매출(Sales)의 합계를 출력하는 워크플로우를 만들어 보겠습니다.
+
+#### Step 1
+
+Build Data Table 액티비티를 디자인 패널에 추가하고 샘플 데이터를 입력합니다.
+
+![alt text](image-233.png)
+
+#### Step 2
+
+Invoke Code 액티비티를 디자인 패널에 추가합니다.
+
+속성(Properties) 패널에서 Language가 VBNet 으로 설정되어 있는지 확인합니다.
+
+![alt text](image-234.png)
+
+#### Step 3
+
+Invoke Code 액티비티에서 Edit Arguments 를 클릭하여 아래와 같이 인수를 추가합니다.
+
+> Note
+>
+> Sample_DT는 DataTable 변수입니다. (IN Argument)
+>
+> Sum은 합계 결과를 저장하는 변수입니다. (OUT Argument)
+
+![alt text](image-235.png)
+
+#### Step 4
+
+Invoke Code 액티비티에서 Edit Code 를 클릭하고 아래 코드를 입력합니다.
+
+> Note
+>
+> 아래 코드는 모든 부서의 총 매출을 계산합니다.
+
+```vb
+Dim row As DataRow
+
+sum = 0
+
+For Each row In Sample_Dt.Rows
+    sum = CInt(row("Sales Amount").ToString) + Sum
+Next row
+```
+
+코드 설명
+
+`Dim row As DataRow`는 DataRow 형식의 row 변수를 생성합니다.
+
+`sum = 0`는 sum 변수에 0을 할당합니다.
+
+`For Each row In Sample_Dt.Rows`는 DataTable의 모든 행(Row)을 반복합니다.
+(For Each Row 액티비티와 유사)
+
+`sum = CInt(row("Sales Amount").ToString) + Sum`은 "Sales Amount" 컬럼 값을 sum 변수에 누적합니다.
+
+`Next row`는 다음 행으로 이동하며 모든 행을 처리할 때까지 반복합니다.
+
+![alt text](image-236.png)
+
+#### Step 5
+
+Message Box 액티비티를 디자인 패널에 추가하고 `Sum` 변수를 전달합니다.
+
+![alt text](image-237.png)
+
+#### Step 6
+
+마지막으로 워크플로우를 실행합니다.
+
+총 매출 값이 표시되는 것을 확인할 수 있습니다.
+
+![alt text](image-238.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1SOopLrKpkcXUuK-vTxnd9qT92pomiG76?usp=sharing
+
+### 7.2 Invoke Code를 사용하여 컬럼 처리 및 새 컬럼 추가하기
+
+Invoke Code 액티비티를 사용하여 특정 컬럼의 값을 계산한 후 새로운 컬럼에 추가해 보겠습니다.
+
+#### Implementation with UiPath
+
+#### Step 1
+
+Read Range 액티비티를 추가하여 Excel 워크시트의 데이터를 DataTable로 읽어옵니다.
+
+Add Headers 속성을 True 로 설정합니다.
+
+![alt text](image-239.png)
+
+#### Step 2
+
+Invoke Code 액티비티를 디자인 패널에 추가합니다.
+
+속성(Properties) 패널에서 Language가 VBNet 으로 설정되어 있는지 확인합니다.
+
+![alt text](image-240.png)
+
+#### Step 3
+
+Invoke Code 액티비티에서 Edit Arguments 를 클릭하고 아래와 같이 인수를 추가합니다.
+
+> Note
+>
+> Input_Dt는 입력 DataTable (In Argument)
+>
+> Final_Dt는 추가 컬럼이 포함된 최종 DataTable (Out Argument)
+
+![alt text](image-241.png)
+
+#### Step 4
+
+Invoke Code 액티비티에서 Edit Code 를 클릭하고 아래 코드를 입력합니다.
+
+> Note
+>
+> 아래 코드는 Profit Margin 컬럼 값에 100을 곱합니다.
+
+```vb
+Dim row As DataRow
+
+Input_Dt.Columns.Add("Percentage")
+
+For Each row In Input_Dt.Rows
+    row("Percentage") = Convert.ToDouble(row("Profit Margin")) * 100.00
+Next row
+
+Final_Dt = Input_Dt
+```
+
+#### Code explanation
+
+`Dim row As DataRow`는 DataRow 형식의 row 변수를 생성합니다.
+
+`Input_Dt.Columns.Add("Percentage")`는 "Percentage" 라는 이름의 새 컬럼을 생성합니다.
+
+`For Each row In Input_Dt.Rows`는 DataTable의 모든 행(Row)을 반복합니다.
+(For Each Row 액티비티와 유사)
+
+`row("Percentage") = Convert.ToDouble(row("Profit Margin")) * 100.00`은 Profit Margin 컬럼 값에 100을 곱한 뒤 해당 행의 Percentage 컬럼에 저장합니다.
+
+`Next row`는 모든 행을 처리할 때까지 다음 행으로 이동합니다.
+
+`Final_Dt = Input_Dt`는 최종 결과를 출력하기 위해 Final_Dt에 Input_Dt를 할당합니다.
+
+(또는 Edit Arguments에서 Input_Dt의 방향(Direction)을 In/Out으로 설정하면 추가 변수 없이도 처리할 수 있습니다.)
+
+![alt text](image-242.png)
+
+#### Step 5
+
+Write Range 액티비티를 사용하여 최종 DataTable을 출력합니다.
+
+Add Headers 속성을 True 로 설정합니다.
+
+![alt text](image-243.png)
+
+#### Step 6
+
+워크플로우를 실행합니다.
+
+Input:
+
+![alt text](image-244.png)
+
+Output:
+
+![alt text](image-245.png)
+
+예제 프로젝트 다운로드:
+
+https://drive.google.com/drive/folders/1HY2bhwgHyoU_sJ_IEaQ6jhGP0-mb7efE?usp=sharing
+
+## 8 결론
+
+이 eBook이 도움이 되었기를 바랍니다.
+
+자동화 프로젝트에서 VB.NET 코드나 스크립트를 사용해야 할 때 참고 자료로 활용할 수 있습니다.
+
+### 8.1 이 가이드에서 VB.NET 코드를 찾을 수 없다면 어디에서 찾아야 할까요?
+
+이 가이드는 UiPath에서 사용하는 가장 일반적인 VB.NET 활용 사례를 다루고 있습니다.
+
+하지만 VB.NET이 할 수 있는 모든 기능을 포함하고 있지는 않습니다.
+
+이 가이드에서 원하는 내용을 찾을 수 없다면 아래 순서대로 검색해 보세요.
+
+1. [UiPath Forum](https://forum.uipath.com/)
+2. [Stack Overflow](https://stackoverflow.com/)
+3. [Google 검색](https://www.google.com/)
+4. [공식 .NET 문서](https://docs.microsoft.com/en-us/dotnet)
+5. 그래도 원하는 내용을 찾을 수 없다면 [아래 그룹](https://www.facebook.com/groups/2481744772043143/)에 질문하세요.
+
+### 8.2 UiPath RPA 실력을 고급 수준으로 향상시키는 방법
+
+UiPath RPA 역량을 더 높은 수준으로 향상시키고 싶다면, 저는 Complete RPA Bootcamp 라는 고급 온라인 교육 과정을 운영하고 있습니다.
+
+자세한 내용을 알아보려면 아래의 [무료 RPA 교육 / 웨비나](https://www.completerpabootcamp.com/rpatraining)를 시청하세요.
+
+또는 아래 [링크](https://www.completerpabootcamp.com/special)를 통해 Complete RPA Bootcamp를 특별 할인(75% 할인) 가격으로 등록할 수 있습니다.
+
+Copyright © 2020 by Leon Petrou, Inc.
+
+All rights reserved. No part of this publication may be reproduced, distributed, or transmitted in any form or by any means, including photocopying,
+recording, or other electronic or mechanical methods, without the prior written permission of the publisher, except in the case of brief quotations
+embodied in critical reviews and certain other non-commercial uses permitted by copyright law. For permission requests, write to the publisher,
+with subject line “Attention: Permissions Coordinator” at the address support@completerpabootcamp.com. This eBook is not associated with the
+UiPath website or UiPath Inc. Additionally, this site is NOT endorsed by UiPath in any way. UiPath is a trademark of UiPath, Inc. Disclaimer: The
+contents of this eBook are for information purposes only. Leon Petrou, Inc. and the author Leon Petrou take no responsibility for any losses
+financially or other occurred due to the information provided in this book due to incorrect information, incomplete information or any other reason.
+Some content of this eBook has been reproduced from content on the UiPath Forum, Stack Overflow and other websites specifically Excel Cult
+authors include Sumanth Veerali and Sharath Raju. Credit is given to those respective authors.
+
+Business Address: Leon Petrou, Inc, 651 N. Broad St.Suite 206, Middletown, DE 19709, United States
