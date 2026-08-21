@@ -306,7 +306,7 @@
   - [APPENDIX](megaptera/appendix/README.md)
     - [Git Training 가이드](megaptera/appendix/git-training.md)
     - [Quick Setting Guide](megaptera/appendix/quick-setting-guide.md)
-    - [Quick Setting Guide 2026-08](megaptera/appendix/quick-setting-guide-260821.md.md)
+    - [Quick Setting Guide 2026-08](megaptera/appendix/quick-setting-guide-260821.md)
     - [Ignore Setting](megaptera/appendix/ignore-setting.md)
     - [Build & Deploy](megaptera/appendix/build-deploy.md)
     - [2주차 과제 ESLint](megaptera/appendix/airbnb-setting.md)
