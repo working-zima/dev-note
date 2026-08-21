@@ -81,7 +81,7 @@ The answer is X
 
 `Input Dialog` 액티비티를 추가하여 사용자가 숫자를 입력하도록 합니다.
 
-입력된 숫자는 문자열(`String`) 변수에 저장합니다.
+입력된 숫자는 `stringNumber` 변수에 저장합니다.
 
 ![alt text](./img/vb.net/image.png)
 
